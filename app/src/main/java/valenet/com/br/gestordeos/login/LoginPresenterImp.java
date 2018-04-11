@@ -9,7 +9,7 @@ public class LoginPresenterImp implements Login.LoginPresenter, Login.LoginInter
 
     // region constructors
     public LoginPresenterImp(Login.LoginView view) {
-        this.view= view;
+        this.view = view;
         interactor = new LoginInteractorImp(this);
     }
 
@@ -25,31 +25,30 @@ public class LoginPresenterImp implements Login.LoginPresenter, Login.LoginInter
         boolean passwordIsEmpty = password.isEmpty() ||
                 password == null;
 
-        if (emailIsEmpty){
+        if (emailIsEmpty) {
             view.showErrorEmptyUser();
             return;
         }
-        if(passwordIsEmpty) {
+        if (passwordIsEmpty) {
             view.showErrorEmptyPassword();
             return;
         }
 
+        view.hideLoginView();
         view.showProgress();
 
         interactor.login(userName, password, this);
     }
 
-
-
     @Override
     public void successLogin() {
-        view.hideProgress();
         view.navigateToOsType();
     }
 
     @Override
     public void errorLogin(String error) {
         view.hideProgress();
+        view.showLoginView();
         view.showErrorLogin(error);
     }
 

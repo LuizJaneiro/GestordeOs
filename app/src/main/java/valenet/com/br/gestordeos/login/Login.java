@@ -16,6 +16,10 @@ public interface Login {
         void showProgress();
 
         void showErrorLogin(String error);
+
+        void showLoginView();
+
+        void hideLoginView();
     }
 
     public interface LoginPresenter {

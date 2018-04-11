@@ -26,19 +26,21 @@ public class LoginInteractorImp implements Login.LoginInteractor {
 
 
     @Override
-    public void login(String userName, String password, onFinishedListener listener) {
+    public void login(String userName, String password, final onFinishedListener listener) {
         application.API_INTERFACE.getUser(userName, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if(response.isSuccessful()){
-
+                if(response.isSuccessful() && response.body() != null){
+                    int responseCode = response.code();
+                    listener.successLogin();
                 } else {
-
+                    listener.errorLogin("Ocorreu um problema ao realizar o Login. Verifique o usuário e senha!");
                 }
             }
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                listener.errorLogin("Ocorreu um problema ao realizar o Login. Verifique sua conexão com a internet!");
                 Log.d("MainActivity", "error loading from API");
             }
         });
