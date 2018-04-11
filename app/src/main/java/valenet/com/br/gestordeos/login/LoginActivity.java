@@ -28,11 +28,15 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     @BindView(R.id.btn_entrar)
     AppCompatButton btnEntrar;
 
+    private Login.LoginPresenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+
+        this.presenter = new LoginPresenterImp(this);
     }
 
     @Override
@@ -54,9 +58,35 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
                 navigateToForgotPassword();
                 break;
             case R.id.btn_entrar:
-                navigateToOsType();
+                presenter.login(editTextEmail.getText().toString(),
+                                editTextPassword.getText().toString());
                 break;
         }
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showErrorEmptyUser() {
+
+    }
+
+    @Override
+    public void showErrorEmptyPassword() {
+
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void showErrorLogin(String error) {
+
     }
 
     @Override

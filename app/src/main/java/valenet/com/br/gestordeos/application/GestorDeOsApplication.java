@@ -4,8 +4,12 @@ import android.content.Context;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.model.service.ApiInterface;
+import valenet.com.br.gestordeos.model.service.ApiUtils;
 
 public class GestorDeOsApplication extends android.app.Application {
+
+    public static final ApiInterface API_INTERFACE = ApiUtils.getService();
 
     // region Members
     private static Context appContext;
