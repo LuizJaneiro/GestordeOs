@@ -2,10 +2,17 @@ package valenet.com.br.gestordeos.application;
 
 import android.content.Context;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.model.service.ApiInterface;
+import valenet.com.br.gestordeos.model.service.ApiUtils;
 
 public class GestorDeOsApplication extends android.app.Application {
+
+    public static final ApiInterface API_INTERFACE = ApiUtils.getService();
+    public static Realm realm;
 
     // region Members
     private static Context appContext;
@@ -35,6 +42,10 @@ public class GestorDeOsApplication extends android.app.Application {
         //Fabric.with(this, new Crashlytics());
         appContext = getApplicationContext();
 
+        Realm.init(this);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+        realm = Realm.getDefaultInstance();
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Lato-Regular.ttf")
@@ -46,6 +57,10 @@ public class GestorDeOsApplication extends android.app.Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+    }
+
+    public static Realm getRealmInstance(){
+        return realm;
     }
 
     // endregion Lifecyle Methods

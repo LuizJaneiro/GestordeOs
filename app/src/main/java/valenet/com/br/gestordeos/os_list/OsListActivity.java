@@ -105,6 +105,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
