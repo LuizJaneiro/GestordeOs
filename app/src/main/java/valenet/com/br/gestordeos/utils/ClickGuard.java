@@ -1,3 +1,7 @@
+/**
+ * Created by usemobile on 11/07/2017.
+ */
+
 package valenet.com.br.gestordeos.utils;
 
 import android.os.Build;
@@ -5,7 +9,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.View.OnClickListener;
-
 import java.lang.reflect.Field;
 /**
  * Class used to guard a view to avoid multiple rapid clicks.

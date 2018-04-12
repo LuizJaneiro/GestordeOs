@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
+import io.realm.Realm;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.forgot_password.ForgotPasswordActivity;
@@ -47,7 +48,6 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
         this.presenter = new LoginPresenterImp(this);
     }
 

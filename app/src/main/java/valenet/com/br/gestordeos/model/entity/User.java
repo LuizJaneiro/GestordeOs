@@ -4,7 +4,10 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
+public class User extends RealmObject{
 
     @SerializedName("coduser")
     @Expose
@@ -50,13 +53,13 @@ public class User {
     private String loginAD;
     @SerializedName("AdmEquipeFisica")
     @Expose
-    private Object admEquipeFisica;
+    private RealmString admEquipeFisica;
     @SerializedName("AgentePlanetFone")
     @Expose
     private String agentePlanetFone;
     @SerializedName("infra")
     @Expose
-    private Object infra;
+    private RealmString infra;
     @SerializedName("PontuacaoMinima")
     @Expose
     private Integer pontuacaoMinima;
@@ -110,10 +113,10 @@ public class User {
     private Integer responsavelCarteira;
     @SerializedName("inicioJornada")
     @Expose
-    private Object inicioJornada;
+    private RealmString inicioJornada;
     @SerializedName("fimJornada")
     @Expose
-    private Object fimJornada;
+    private RealmString fimJornada;
     @SerializedName("coduser_programador")
     @Expose
     private Integer coduserProgramador;
@@ -125,121 +128,121 @@ public class User {
     private String token;
     @SerializedName("ambiente")
     @Expose
-    private Object ambiente;
+    private RealmString ambiente;
     @SerializedName("QuantidadeLimiteEquipamentos")
     @Expose
     private Integer quantidadeLimiteEquipamentos;
     @SerializedName("AtendimentosCriados")
     @Expose
-    private List<Object> atendimentosCriados = null;
+    private RealmList<RealmString> atendimentosCriados = null;
     @SerializedName("AtendimentosResponsavel")
     @Expose
-    private List<Object> atendimentosResponsavel = null;
+    private RealmList<RealmString> atendimentosResponsavel = null;
     @SerializedName("DepartamentosGestor")
     @Expose
-    private List<Object> departamentosGestor = null;
+    private RealmList<RealmString> departamentosGestor = null;
     @SerializedName("Departamento")
     @Expose
-    private Object departamento;
+    private RealmString departamento;
     @SerializedName("Logins")
     @Expose
-    private List<Object> logins = null;
+    private RealmList<RealmString> logins = null;
     @SerializedName("AtendimentosRecebidos")
     @Expose
-    private List<Object> atendimentosRecebidos = null;
+    private RealmList<RealmString> atendimentosRecebidos = null;
     @SerializedName("AtendimentosEncaminhados")
     @Expose
-    private List<Object> atendimentosEncaminhados = null;
+    private RealmList<RealmString> atendimentosEncaminhados = null;
     @SerializedName("OrdensDeServico")
     @Expose
-    private List<Object> ordensDeServico = null;
+    private RealmList<RealmString> ordensDeServico = null;
     @SerializedName("OrdensDeServicoExecutadas")
     @Expose
-    private List<Object> ordensDeServicoExecutadas = null;
+    private RealmList<RealmString> ordensDeServicoExecutadas = null;
     @SerializedName("Roles")
     @Expose
-    private List<Object> roles = null;
+    private RealmList<RealmString> roles = null;
     @SerializedName("WATCHER")
     @Expose
-    private List<Object> wATCHER = null;
+    private RealmList<RealmString> wATCHER = null;
     @SerializedName("Filas")
     @Expose
-    private List<Object> filas = null;
+    private RealmList<RealmString> filas = null;
     @SerializedName("ServicoInstalacao")
     @Expose
-    private List<Object> servicoInstalacao = null;
+    private RealmList<RealmString> servicoInstalacao = null;
     @SerializedName("RegistroUsoCaboUTP")
     @Expose
-    private List<Object> registroUsoCaboUTP = null;
+    private RealmList<RealmString> registroUsoCaboUTP = null;
     @SerializedName("Clientes")
     @Expose
-    private List<Object> clientes = null;
+    private RealmList<RealmString> clientes = null;
     @SerializedName("PosicaoEquipamento")
     @Expose
-    private List<Object> posicaoEquipamento = null;
+    private RealmList<RealmString> posicaoEquipamento = null;
     @SerializedName("EstoqueAction")
     @Expose
-    private List<Object> estoqueAction = null;
+    private RealmList<RealmString> estoqueAction = null;
     @SerializedName("ContratoEventos")
     @Expose
-    private List<Object> contratoEventos = null;
+    private RealmList<RealmString> contratoEventos = null;
     @SerializedName("PendenciasFaturamento")
     @Expose
-    private List<Object> pendenciasFaturamento = null;
+    private RealmList<RealmString> pendenciasFaturamento = null;
     @SerializedName("PendenciasFaturamento1")
     @Expose
-    private List<Object> pendenciasFaturamento1 = null;
+    private RealmList<RealmString> pendenciasFaturamento1 = null;
     @SerializedName("ServicoInstalacao1")
     @Expose
-    private List<Object> servicoInstalacao1 = null;
+    private RealmList<RealmString> servicoInstalacao1 = null;
     @SerializedName("ServicoInstalacao11")
     @Expose
-    private List<Object> servicoInstalacao11 = null;
+    private RealmList<RealmString> servicoInstalacao11 = null;
     @SerializedName("Regiao")
     @Expose
-    private List<Object> regiao = null;
+    private RealmList<RealmString> regiao = null;
     @SerializedName("OrdemDeServicoAgendadas")
     @Expose
-    private List<Object> ordemDeServicoAgendadas = null;
+    private RealmList<RealmString> ordemDeServicoAgendadas = null;
     @SerializedName("Bonificacao")
     @Expose
-    private List<Object> bonificacao = null;
+    private RealmList<RealmString> bonificacao = null;
     @SerializedName("Agenda")
     @Expose
-    private List<Object> agenda = null;
+    private RealmList<RealmString> agenda = null;
     @SerializedName("AgendaEvento")
     @Expose
-    private List<Object> agendaEvento = null;
+    private RealmList<RealmString> agendaEvento = null;
     @SerializedName("TipoRede")
     @Expose
-    private List<Object> tipoRede = null;
+    private RealmList<RealmString> tipoRede = null;
     @SerializedName("MapaAtividades")
     @Expose
-    private List<Object> mapaAtividades = null;
+    private RealmList<RealmString> mapaAtividades = null;
     @SerializedName("REGIAODESLOCAMENTO")
     @Expose
-    private List<Object> rEGIAODESLOCAMENTO = null;
+    private RealmList<RealmString> rEGIAODESLOCAMENTO = null;
     @SerializedName("EquipesFisicas")
     @Expose
-    private List<Object> equipesFisicas = null;
+    private RealmList<RealmString> equipesFisicas = null;
     @SerializedName("UsuarioProgramador")
     @Expose
-    private Object usuarioProgramador;
+    private RealmString usuarioProgramador;
     @SerializedName("ExceptionLog")
     @Expose
-    private List<Object> exceptionLog = null;
+    private RealmList<RealmString> exceptionLog = null;
     @SerializedName("Notificacao")
     @Expose
-    private List<Object> notificacao = null;
+    private RealmList<RealmString> notificacao = null;
     @SerializedName("RegistroAgente")
     @Expose
-    private List<Object> registroAgente = null;
+    private RealmList<RealmString> registroAgente = null;
     @SerializedName("LogEvento")
     @Expose
-    private List<Object> logEvento = null;
+    private RealmList<RealmString> logEvento = null;
     @SerializedName("AgendaEventosDetalhes")
     @Expose
-    private List<Object> agendaEventosDetalhes = null;
+    private RealmList<RealmString> agendaEventosDetalhes = null;
 
     public Integer getCoduser() {
         return coduser;
@@ -353,11 +356,11 @@ public class User {
         this.loginAD = loginAD;
     }
 
-    public Object getAdmEquipeFisica() {
+    public RealmString getAdmEquipeFisica() {
         return admEquipeFisica;
     }
 
-    public void setAdmEquipeFisica(Object admEquipeFisica) {
+    public void setAdmEquipeFisica(RealmString admEquipeFisica) {
         this.admEquipeFisica = admEquipeFisica;
     }
 
@@ -369,11 +372,11 @@ public class User {
         this.agentePlanetFone = agentePlanetFone;
     }
 
-    public Object getInfra() {
+    public RealmString getInfra() {
         return infra;
     }
 
-    public void setInfra(Object infra) {
+    public void setInfra(RealmString infra) {
         this.infra = infra;
     }
 
@@ -513,19 +516,19 @@ public class User {
         this.responsavelCarteira = responsavelCarteira;
     }
 
-    public Object getInicioJornada() {
+    public RealmString getInicioJornada() {
         return inicioJornada;
     }
 
-    public void setInicioJornada(Object inicioJornada) {
+    public void setInicioJornada(RealmString inicioJornada) {
         this.inicioJornada = inicioJornada;
     }
 
-    public Object getFimJornada() {
+    public RealmString getFimJornada() {
         return fimJornada;
     }
 
-    public void setFimJornada(Object fimJornada) {
+    public void setFimJornada(RealmString fimJornada) {
         this.fimJornada = fimJornada;
     }
 
@@ -553,11 +556,11 @@ public class User {
         this.token = token;
     }
 
-    public Object getAmbiente() {
+    public RealmString getAmbiente() {
         return ambiente;
     }
 
-    public void setAmbiente(Object ambiente) {
+    public void setAmbiente(RealmString ambiente) {
         this.ambiente = ambiente;
     }
 
@@ -569,299 +572,299 @@ public class User {
         this.quantidadeLimiteEquipamentos = quantidadeLimiteEquipamentos;
     }
 
-    public List<Object> getAtendimentosCriados() {
+    public RealmList<RealmString> getAtendimentosCriados() {
         return atendimentosCriados;
     }
 
-    public void setAtendimentosCriados(List<Object> atendimentosCriados) {
+    public void setAtendimentosCriados(RealmList<RealmString> atendimentosCriados) {
         this.atendimentosCriados = atendimentosCriados;
     }
 
-    public List<Object> getAtendimentosResponsavel() {
+    public RealmList<RealmString> getAtendimentosResponsavel() {
         return atendimentosResponsavel;
     }
 
-    public void setAtendimentosResponsavel(List<Object> atendimentosResponsavel) {
+    public void setAtendimentosResponsavel(RealmList<RealmString> atendimentosResponsavel) {
         this.atendimentosResponsavel = atendimentosResponsavel;
     }
 
-    public List<Object> getDepartamentosGestor() {
+    public RealmList<RealmString> getDepartamentosGestor() {
         return departamentosGestor;
     }
 
-    public void setDepartamentosGestor(List<Object> departamentosGestor) {
+    public void setDepartamentosGestor(RealmList<RealmString> departamentosGestor) {
         this.departamentosGestor = departamentosGestor;
     }
 
-    public Object getDepartamento() {
+    public RealmString getDepartamento() {
         return departamento;
     }
 
-    public void setDepartamento(Object departamento) {
+    public void setDepartamento(RealmString departamento) {
         this.departamento = departamento;
     }
 
-    public List<Object> getLogins() {
+    public RealmList<RealmString> getLogins() {
         return logins;
     }
 
-    public void setLogins(List<Object> logins) {
+    public void setLogins(RealmList<RealmString> logins) {
         this.logins = logins;
     }
 
-    public List<Object> getAtendimentosRecebidos() {
+    public RealmList<RealmString> getAtendimentosRecebidos() {
         return atendimentosRecebidos;
     }
 
-    public void setAtendimentosRecebidos(List<Object> atendimentosRecebidos) {
+    public void setAtendimentosRecebidos(RealmList<RealmString> atendimentosRecebidos) {
         this.atendimentosRecebidos = atendimentosRecebidos;
     }
 
-    public List<Object> getAtendimentosEncaminhados() {
+    public RealmList<RealmString> getAtendimentosEncaminhados() {
         return atendimentosEncaminhados;
     }
 
-    public void setAtendimentosEncaminhados(List<Object> atendimentosEncaminhados) {
+    public void setAtendimentosEncaminhados(RealmList<RealmString> atendimentosEncaminhados) {
         this.atendimentosEncaminhados = atendimentosEncaminhados;
     }
 
-    public List<Object> getOrdensDeServico() {
+    public RealmList<RealmString> getOrdensDeServico() {
         return ordensDeServico;
     }
 
-    public void setOrdensDeServico(List<Object> ordensDeServico) {
+    public void setOrdensDeServico(RealmList<RealmString> ordensDeServico) {
         this.ordensDeServico = ordensDeServico;
     }
 
-    public List<Object> getOrdensDeServicoExecutadas() {
+    public RealmList<RealmString> getOrdensDeServicoExecutadas() {
         return ordensDeServicoExecutadas;
     }
 
-    public void setOrdensDeServicoExecutadas(List<Object> ordensDeServicoExecutadas) {
+    public void setOrdensDeServicoExecutadas(RealmList<RealmString> ordensDeServicoExecutadas) {
         this.ordensDeServicoExecutadas = ordensDeServicoExecutadas;
     }
 
-    public List<Object> getRoles() {
+    public RealmList<RealmString> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Object> roles) {
+    public void setRoles(RealmList<RealmString> roles) {
         this.roles = roles;
     }
 
-    public List<Object> getWATCHER() {
+    public RealmList<RealmString> getWATCHER() {
         return wATCHER;
     }
 
-    public void setWATCHER(List<Object> wATCHER) {
+    public void setWATCHER(RealmList<RealmString> wATCHER) {
         this.wATCHER = wATCHER;
     }
 
-    public List<Object> getFilas() {
+    public RealmList<RealmString> getFilas() {
         return filas;
     }
 
-    public void setFilas(List<Object> filas) {
+    public void setFilas(RealmList<RealmString> filas) {
         this.filas = filas;
     }
 
-    public List<Object> getServicoInstalacao() {
+    public RealmList<RealmString> getServicoInstalacao() {
         return servicoInstalacao;
     }
 
-    public void setServicoInstalacao(List<Object> servicoInstalacao) {
+    public void setServicoInstalacao(RealmList<RealmString> servicoInstalacao) {
         this.servicoInstalacao = servicoInstalacao;
     }
 
-    public List<Object> getRegistroUsoCaboUTP() {
+    public RealmList<RealmString> getRegistroUsoCaboUTP() {
         return registroUsoCaboUTP;
     }
 
-    public void setRegistroUsoCaboUTP(List<Object> registroUsoCaboUTP) {
+    public void setRegistroUsoCaboUTP(RealmList<RealmString> registroUsoCaboUTP) {
         this.registroUsoCaboUTP = registroUsoCaboUTP;
     }
 
-    public List<Object> getClientes() {
+    public RealmList<RealmString> getClientes() {
         return clientes;
     }
 
-    public void setClientes(List<Object> clientes) {
+    public void setClientes(RealmList<RealmString> clientes) {
         this.clientes = clientes;
     }
 
-    public List<Object> getPosicaoEquipamento() {
+    public RealmList<RealmString> getPosicaoEquipamento() {
         return posicaoEquipamento;
     }
 
-    public void setPosicaoEquipamento(List<Object> posicaoEquipamento) {
+    public void setPosicaoEquipamento(RealmList<RealmString> posicaoEquipamento) {
         this.posicaoEquipamento = posicaoEquipamento;
     }
 
-    public List<Object> getEstoqueAction() {
+    public RealmList<RealmString> getEstoqueAction() {
         return estoqueAction;
     }
 
-    public void setEstoqueAction(List<Object> estoqueAction) {
+    public void setEstoqueAction(RealmList<RealmString> estoqueAction) {
         this.estoqueAction = estoqueAction;
     }
 
-    public List<Object> getContratoEventos() {
+    public RealmList<RealmString> getContratoEventos() {
         return contratoEventos;
     }
 
-    public void setContratoEventos(List<Object> contratoEventos) {
+    public void setContratoEventos(RealmList<RealmString> contratoEventos) {
         this.contratoEventos = contratoEventos;
     }
 
-    public List<Object> getPendenciasFaturamento() {
+    public RealmList<RealmString> getPendenciasFaturamento() {
         return pendenciasFaturamento;
     }
 
-    public void setPendenciasFaturamento(List<Object> pendenciasFaturamento) {
+    public void setPendenciasFaturamento(RealmList<RealmString> pendenciasFaturamento) {
         this.pendenciasFaturamento = pendenciasFaturamento;
     }
 
-    public List<Object> getPendenciasFaturamento1() {
+    public RealmList<RealmString> getPendenciasFaturamento1() {
         return pendenciasFaturamento1;
     }
 
-    public void setPendenciasFaturamento1(List<Object> pendenciasFaturamento1) {
+    public void setPendenciasFaturamento1(RealmList<RealmString> pendenciasFaturamento1) {
         this.pendenciasFaturamento1 = pendenciasFaturamento1;
     }
 
-    public List<Object> getServicoInstalacao1() {
+    public RealmList<RealmString> getServicoInstalacao1() {
         return servicoInstalacao1;
     }
 
-    public void setServicoInstalacao1(List<Object> servicoInstalacao1) {
+    public void setServicoInstalacao1(RealmList<RealmString> servicoInstalacao1) {
         this.servicoInstalacao1 = servicoInstalacao1;
     }
 
-    public List<Object> getServicoInstalacao11() {
+    public RealmList<RealmString> getServicoInstalacao11() {
         return servicoInstalacao11;
     }
 
-    public void setServicoInstalacao11(List<Object> servicoInstalacao11) {
+    public void setServicoInstalacao11(RealmList<RealmString> servicoInstalacao11) {
         this.servicoInstalacao11 = servicoInstalacao11;
     }
 
-    public List<Object> getRegiao() {
+    public RealmList<RealmString> getRegiao() {
         return regiao;
     }
 
-    public void setRegiao(List<Object> regiao) {
+    public void setRegiao(RealmList<RealmString> regiao) {
         this.regiao = regiao;
     }
 
-    public List<Object> getOrdemDeServicoAgendadas() {
+    public RealmList<RealmString> getOrdemDeServicoAgendadas() {
         return ordemDeServicoAgendadas;
     }
 
-    public void setOrdemDeServicoAgendadas(List<Object> ordemDeServicoAgendadas) {
+    public void setOrdemDeServicoAgendadas(RealmList<RealmString> ordemDeServicoAgendadas) {
         this.ordemDeServicoAgendadas = ordemDeServicoAgendadas;
     }
 
-    public List<Object> getBonificacao() {
+    public RealmList<RealmString> getBonificacao() {
         return bonificacao;
     }
 
-    public void setBonificacao(List<Object> bonificacao) {
+    public void setBonificacao(RealmList<RealmString> bonificacao) {
         this.bonificacao = bonificacao;
     }
 
-    public List<Object> getAgenda() {
+    public RealmList<RealmString> getAgenda() {
         return agenda;
     }
 
-    public void setAgenda(List<Object> agenda) {
+    public void setAgenda(RealmList<RealmString> agenda) {
         this.agenda = agenda;
     }
 
-    public List<Object> getAgendaEvento() {
+    public RealmList<RealmString> getAgendaEvento() {
         return agendaEvento;
     }
 
-    public void setAgendaEvento(List<Object> agendaEvento) {
+    public void setAgendaEvento(RealmList<RealmString> agendaEvento) {
         this.agendaEvento = agendaEvento;
     }
 
-    public List<Object> getTipoRede() {
+    public RealmList<RealmString> getTipoRede() {
         return tipoRede;
     }
 
-    public void setTipoRede(List<Object> tipoRede) {
+    public void setTipoRede(RealmList<RealmString> tipoRede) {
         this.tipoRede = tipoRede;
     }
 
-    public List<Object> getMapaAtividades() {
+    public RealmList<RealmString> getMapaAtividades() {
         return mapaAtividades;
     }
 
-    public void setMapaAtividades(List<Object> mapaAtividades) {
+    public void setMapaAtividades(RealmList<RealmString> mapaAtividades) {
         this.mapaAtividades = mapaAtividades;
     }
 
-    public List<Object> getREGIAODESLOCAMENTO() {
+    public RealmList<RealmString> getREGIAODESLOCAMENTO() {
         return rEGIAODESLOCAMENTO;
     }
 
-    public void setREGIAODESLOCAMENTO(List<Object> rEGIAODESLOCAMENTO) {
+    public void setREGIAODESLOCAMENTO(RealmList<RealmString> rEGIAODESLOCAMENTO) {
         this.rEGIAODESLOCAMENTO = rEGIAODESLOCAMENTO;
     }
 
-    public List<Object> getEquipesFisicas() {
+    public RealmList<RealmString> getEquipesFisicas() {
         return equipesFisicas;
     }
 
-    public void setEquipesFisicas(List<Object> equipesFisicas) {
+    public void setEquipesFisicas(RealmList<RealmString> equipesFisicas) {
         this.equipesFisicas = equipesFisicas;
     }
 
-    public Object getUsuarioProgramador() {
+    public RealmString getUsuarioProgramador() {
         return usuarioProgramador;
     }
 
-    public void setUsuarioProgramador(Object usuarioProgramador) {
+    public void setUsuarioProgramador(RealmString usuarioProgramador) {
         this.usuarioProgramador = usuarioProgramador;
     }
 
-    public List<Object> getExceptionLog() {
+    public RealmList<RealmString> getExceptionLog() {
         return exceptionLog;
     }
 
-    public void setExceptionLog(List<Object> exceptionLog) {
+    public void setExceptionLog(RealmList<RealmString> exceptionLog) {
         this.exceptionLog = exceptionLog;
     }
 
-    public List<Object> getNotificacao() {
+    public RealmList<RealmString> getNotificacao() {
         return notificacao;
     }
 
-    public void setNotificacao(List<Object> notificacao) {
+    public void setNotificacao(RealmList<RealmString> notificacao) {
         this.notificacao = notificacao;
     }
 
-    public List<Object> getRegistroAgente() {
+    public RealmList<RealmString> getRegistroAgente() {
         return registroAgente;
     }
 
-    public void setRegistroAgente(List<Object> registroAgente) {
+    public void setRegistroAgente(RealmList<RealmString> registroAgente) {
         this.registroAgente = registroAgente;
     }
 
-    public List<Object> getLogEvento() {
+    public RealmList<RealmString> getLogEvento() {
         return logEvento;
     }
 
-    public void setLogEvento(List<Object> logEvento) {
+    public void setLogEvento(RealmList<RealmString> logEvento) {
         this.logEvento = logEvento;
     }
 
-    public List<Object> getAgendaEventosDetalhes() {
+    public RealmList<RealmString> getAgendaEventosDetalhes() {
         return agendaEventosDetalhes;
     }
 
-    public void setAgendaEventosDetalhes(List<Object> agendaEventosDetalhes) {
+    public void setAgendaEventosDetalhes(RealmList<RealmString> agendaEventosDetalhes) {
         this.agendaEventosDetalhes = agendaEventosDetalhes;
     }
 

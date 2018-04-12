@@ -1,6 +1,5 @@
 package valenet.com.br.gestordeos.login;
 
-import android.app.Application;
 import android.util.Log;
 
 import retrofit2.Call;
@@ -8,7 +7,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.User;
-import valenet.com.br.gestordeos.model.service.ApiUtils;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 
 public class LoginInteractorImp implements Login.LoginInteractor {
     // region Members
@@ -31,7 +30,10 @@ public class LoginInteractorImp implements Login.LoginInteractor {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if(response.isSuccessful() && response.body() != null){
-                    int responseCode = response.code();
+                    User user = response.body();
+
+                    LoginLocal.getInstance().saveUser(user);
+
                     listener.successLogin();
                 } else {
                     listener.errorLogin("Ocorreu um problema ao realizar o Login. Verifique o usuário e senha!");

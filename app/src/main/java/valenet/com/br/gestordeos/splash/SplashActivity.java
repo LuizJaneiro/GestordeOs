@@ -12,6 +12,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.os_type.OsTypeActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -27,12 +29,10 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        intent = new Intent(this, LoginActivity.class);
-/*        if (ParseUser.getCurrentUser() == null)
-            intent = new Intent(this, Login.class);
+        if(LoginLocal.getInstance().getCurrentUser() == null)
+            intent = new Intent(this, LoginActivity.class);
         else
-            intent = new Intent(this, Home.class);*/
-
+            intent = new Intent(this, OsTypeActivity.class);
 
         new Timer().schedule(new TimerTask() {
             @Override
