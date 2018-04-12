@@ -23,6 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.forgot_password.ForgotPasswordActivity;
 import valenet.com.br.gestordeos.os_type.OsTypeActivity;
+import valenet.com.br.gestordeos.utils.ClickGuard;
 
 public class LoginActivity extends AppCompatActivity implements Login.LoginView {
 
@@ -49,6 +50,9 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         this.presenter = new LoginPresenterImp(this);
+
+        ClickGuard.guard(btnEntrar);
+        ClickGuard.guard(textViewForgotPassword);
     }
 
     @Override
@@ -60,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     @Override
     public void navigateToOsType() {
         Intent intent = new Intent(this, OsTypeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
