@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         Intent intent = new Intent(this, OsTypeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        //changes commit
     }
 
     @OnClick({R.id.text_view_forgot_password, R.id.btn_entrar})
