@@ -22,7 +22,6 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.forgot_password.ForgotPasswordActivity;
 import valenet.com.br.gestordeos.os_type.OsTypeActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 
@@ -32,8 +31,6 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     EditText editTextEmail;
     @BindView(R.id.edit_text_password)
     EditText editTextPassword;
-    @BindView(R.id.text_view_forgot_password)
-    TextView textViewForgotPassword;
     @BindView(R.id.btn_entrar)
     AppCompatButton btnEntrar;
     @BindView(R.id.login_view)
@@ -91,13 +88,6 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         });
 
         ClickGuard.guard(btnEntrar);
-        ClickGuard.guard(textViewForgotPassword);
-    }
-
-    @Override
-    public void navigateToForgotPassword() {
-        Intent intent = new Intent(this, ForgotPasswordActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -108,12 +98,9 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         //changes commit
     }
 
-    @OnClick({R.id.text_view_forgot_password, R.id.btn_entrar})
+    @OnClick({R.id.btn_entrar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.text_view_forgot_password:
-                navigateToForgotPassword();
-                break;
             case R.id.btn_entrar:
                 textInputEmail.setError(null);
                 textInputPassword.setError(null);
