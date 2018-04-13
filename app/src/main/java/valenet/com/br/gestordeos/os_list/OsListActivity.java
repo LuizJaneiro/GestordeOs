@@ -13,6 +13,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.tbruyelle.rxpermissions.RxPermissions;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -98,6 +100,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
+
+
     }
 
     @Override
