@@ -45,6 +45,9 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
         setContentView(R.layout.activity_os_type);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         textViewToolbarTitle.setText(getString(R.string.title_activity_os_type));
 
         this.presenter = new OsTypePresenterImp(this);

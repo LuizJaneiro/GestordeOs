@@ -52,6 +52,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         setContentView(R.layout.activity_os_list);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
 
         searchViewContainer.handleToolbarAnimation(toolbar);

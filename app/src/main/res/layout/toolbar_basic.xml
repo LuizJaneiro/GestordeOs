@@ -3,22 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    android:layout_height="?android:attr/actionBarSize"
+    android:background="?android:attr/colorPrimary">
 
         <TextView
             android:id="@+id/text_view_toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:text="Título activity"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
-    </RelativeLayout>
+
 </android.support.v7.widget.Toolbar>
