@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.Os;
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -37,19 +37,38 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Os item = osList.get(position);
-        ((MViewHolder) holder).textViewClientName.setText(item.getClient());
+        String clientName;
+        if(item.getCliente() == null)
+            clientName = "Nome Indefinido";
+        else
+            clientName = item.getCliente();
+
+        ((MViewHolder) holder).textViewClientName.setText(clientName);
         ((MViewHolder) holder).textViewDistance.setText(item.getDistance() + " Km");
         String details = new String();
-        details = item.getType() + " em ";
-        int day = item.getDate().getDay();
-        int month = item.getDate().getMonth();
-        int year = item.getDate().getYear();
+        details = item.getTipoAtividade() + " em ";
 
-        details += day + "/" + month + "/" + year;
+        String dateString;
+        if(item.getDataAgendamento() == null)
+            dateString = "Data Indefinida";
+        else {
+            int day = item.getDataAgendamento().getDay();
+            int month = item.getDataAgendamento().getMonth();
+            int year = item.getDataAgendamento().getYear();
+
+            dateString = day + "/" + month + "/" + year;
+        }
+
+        details += dateString;
 
         ((MViewHolder) holder).textViewDetails.setText(details);
+        ((MViewHolder) holder).osItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        //ClickGuard.guard(((MViewHolder) holder).osItemView);
+            }
+        });
+        ClickGuard.guard(((MViewHolder) holder).osItemView);
     }
 
     @Override

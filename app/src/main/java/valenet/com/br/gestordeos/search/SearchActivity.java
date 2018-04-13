@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.Os;
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -68,19 +68,12 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar po nome");
+        searchView.setHint("Buscar por nome");
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
         filtredList = new ArrayList<>();
         osList = new ArrayList<>();
-        Date date = new Date();
-        date.setDate(16);
-        date.setMonth(10);
-        date.setYear(2018);
-        for (int i = 0; i < 30; i++)
-            osList.add(new Os(2.5, date, "Corretiva Física", "Maria Lurdes"));
-        osList.add(new Os(2.5, date, "Corretiva Física", "Luiz Janeiro"));
 
 /*        if(filtredList == null || filtredList.size() == 0)
             //busca do banco a lista de os
@@ -216,7 +209,7 @@ public class SearchActivity extends AppCompatActivity {
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {
                 Os os = osListArray.get(i);
-                String name = os.getClient().toUpperCase();
+                String name = os.getCliente().toUpperCase();
 
                 name = ValenetUtils.removeAccent(name).toUpperCase();
                 s = ValenetUtils.removeAccent(s).toUpperCase();

@@ -16,5 +16,6 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_os_list" />
+    <include layout="@layout/layout_progress" />
 
 </android.support.design.widget.CoordinatorLayout>

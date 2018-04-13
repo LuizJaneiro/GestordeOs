@@ -28,8 +28,8 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     Toolbar toolbar;
     @BindView(R.id.btn_mercantil)
     AppCompatButton btnMercantil;
-    @BindView(R.id.btn_assistencia_tecnica)
-    AppCompatButton btnAssistenciaTecnica;
+    @BindView(R.id.btn_corretiva)
+    AppCompatButton btnCorretiva;
     @BindView(R.id.btn_sair)
     AppCompatButton btnSair;
     @BindView(R.id.os_type_view)
@@ -52,18 +52,18 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
 
         this.presenter = new OsTypePresenterImp(this);
 
-        ClickGuard.guard(btnAssistenciaTecnica);
+        ClickGuard.guard(btnCorretiva);
         ClickGuard.guard(btnMercantil);
         ClickGuard.guard(btnSair);
     }
 
-    @OnClick({R.id.btn_mercantil, R.id.btn_assistencia_tecnica, R.id.btn_sair})
+    @OnClick({R.id.btn_mercantil, R.id.btn_corretiva, R.id.btn_sair})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_mercantil:
                 navigateToOsList();
                 break;
-            case R.id.btn_assistencia_tecnica:
+            case R.id.btn_corretiva:
                 break;
             case R.id.btn_sair:
                 presenter.logout();

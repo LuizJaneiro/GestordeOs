@@ -11,23 +11,24 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tbruyelle.rxpermissions.RxPermissions;
-
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.Os;
+import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
 
-public class OsListActivity extends AppCompatActivity implements OsList.OsListView{
+public class OsListActivity extends AppCompatActivity implements OsList.OsListView {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
@@ -39,6 +40,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.search_view_container)
     SearchViewLayout searchViewContainer;
+    @BindView(R.id.loading_view)
+    RelativeLayout loadingView;
+
+    private OsList.OsListPresenter presenter;
 
     private ArrayList<Os> filtredList;
     private ArrayList<Os> osList;
@@ -57,6 +62,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
+
+        this.presenter = new OsListPresenterImp(this);
 
         searchViewContainer.handleToolbarAnimation(toolbar);
         searchViewContainer.setHint("Buscar por nome");
@@ -88,18 +95,11 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         filtredList = new ArrayList<>();
 
         osList = new ArrayList<>();
-        Date date = new Date();
-        date.setDate(16);
-        date.setMonth(10);
-        date.setYear(2018);
-        for (int i = 0; i < 30; i++)
-            osList.add(new Os(2.5, date, "Corretiva Física", "Maria Lurdes"));
-        osList.add(new Os(2.5, date, "Corretiva Física", "Luiz Janeiro"));
 
-        adapter = new OsItemAdapter(osList, this);
-        recyclerViewOs.setAdapter(adapter);
-        recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
+        presenter.loadOsList(1.1, 1.1,
+                LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                true,
+                1);
 
 
     }
@@ -110,7 +110,6 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         intent.putExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
-
 
 
     @Override
@@ -128,6 +127,34 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             }
         }
 
+    }
+
+    @Override
+    public void hideOsListView() {
+        this.refreshLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showOsListView() {
+        this.refreshLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        this.loadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLoading() {
+        this.loadingView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void showListOs(List<Os> osListAdapter) {
+        adapter = new OsItemAdapter(osListAdapter, this);
+        recyclerViewOs.setAdapter(adapter);
+        recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override

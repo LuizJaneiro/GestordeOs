@@ -26,13 +26,13 @@
         android:text="Mercantil" />
 
     <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_assistencia_tecnica"
+        android:id="@+id/btn_corretiva"
         style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/btn_mercantil"
         android:layout_marginTop="12dp"
-        android:text="Assistência Técnica" />
+        android:text="Corretiva" />
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_sair"
