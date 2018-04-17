@@ -12,6 +12,7 @@ import java.util.List;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -38,17 +39,36 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         Os item = osList.get(position);
         String clientName;
+        String osType;
+        String distance;
+        String dateString;
+
         if(item.getCliente() == null)
             clientName = "Nome Indefinido";
+        else {
+            String[] firstAndLastName = ValenetUtils.firstAndLastWord(item.getCliente());
+            if(firstAndLastName[1] == null)
+                clientName = firstAndLastName[0];
+            else
+                clientName = firstAndLastName[0] + " " + firstAndLastName[1];
+        }
+
+        if(item.getTipoAtividade() == null)
+            osType = "Tipo Indefinido";
         else
-            clientName = item.getCliente();
+            osType = item.getTipoAtividade();
 
-        ((MViewHolder) holder).textViewClientName.setText(clientName);
-        ((MViewHolder) holder).textViewDistance.setText(item.getDistance() + " Km");
-        String details = new String();
-        details = item.getTipoAtividade() + " em ";
+        if(item.getDistance() == null)
+            distance = "?";
+        else {
+            double distanceDouble = item.getDistance() / 1000.0;
+            distanceDouble = ValenetUtils.round(distanceDouble, 1);
+            if(distanceDouble >= 100)
+                distance = ">100";
+            else
+                distance = String.valueOf(distanceDouble);
+        }
 
-        String dateString;
         if(item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
@@ -59,9 +79,12 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             dateString = day + "/" + month + "/" + year;
         }
 
-        details += dateString;
+        ((MViewHolder) holder).textViewClientName.setText(clientName);
+        ((MViewHolder) holder).textViewDistance.setText(distance + " KM");
 
-        ((MViewHolder) holder).textViewDetails.setText(details);
+        ((MViewHolder) holder).textViewType.setText(osType);
+        ((MViewHolder) holder).textViewDate.setText(dateString);
+
         ((MViewHolder) holder).osItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,16 +104,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     class MViewHolder extends RecyclerView.ViewHolder {
         final TextView textViewClientName;
-        final TextView textViewDetails;
+        final TextView textViewType;
+        final TextView textViewDate;
         final TextView textViewDistance;
         final ViewGroup osItemView;
 
         MViewHolder(View container) {
             super(container);
-            this.textViewClientName = (TextView) container.findViewById(R.id.text_view_client_name);
-            this.textViewDetails = (TextView) container.findViewById(R.id.text_view_details);
-            this.textViewDistance = (TextView) container.findViewById(R.id.text_view_distance);
-            this.osItemView = (ViewGroup) container.findViewById(R.id.os_item_view);
+            this.textViewClientName = container.findViewById(R.id.text_view_client_name);
+            this.textViewType = container.findViewById(R.id.text_view_os_type);
+            this.textViewDate = container.findViewById(R.id.text_view_os_date);
+            this.textViewDistance = container.findViewById(R.id.text_view_distance);
+            this.osItemView = container.findViewById(R.id.os_item_view);
         }
     }
 
