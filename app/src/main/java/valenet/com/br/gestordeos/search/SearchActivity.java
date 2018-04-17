@@ -202,7 +202,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setAdapter(ArrayList<Os> list) {
-        adapter = new OsItemAdapter(list, this);
+        adapter = new OsItemAdapter(list, this, this);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -231,12 +231,12 @@ public class SearchActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             if (submit)
                 Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_SHORT, true).show();
-            adapter = new OsItemAdapter(osListArray, this);
+            adapter = new OsItemAdapter(osListArray, this, this);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);
         } else {
-            adapter = new OsItemAdapter(filteredList, this);
+            adapter = new OsItemAdapter(filteredList, this, this);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);

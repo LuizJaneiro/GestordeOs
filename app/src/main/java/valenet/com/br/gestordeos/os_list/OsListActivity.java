@@ -133,9 +133,9 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
                 if (filtredList == null || filtredList.size() == 0)
-                    adapter = new OsItemAdapter(osList, this);
+                    adapter = new OsItemAdapter(osList, this, this);
                 else
-                    adapter = new OsItemAdapter(filtredList, this);
+                    adapter = new OsItemAdapter(filtredList, this, this);
                 this.recyclerViewOs.setAdapter(adapter);
 
                 searchViewContainer.collapse();
@@ -170,7 +170,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
-        adapter = new OsItemAdapter(osListAdapter, this);
+        adapter = new OsItemAdapter(osListAdapter, this, this);
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());

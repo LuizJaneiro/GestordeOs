@@ -1,6 +1,8 @@
 package valenet.com.br.gestordeos.os_list;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,7 @@ import java.util.Locale;
 
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
+import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.DateUtils;
@@ -29,10 +32,12 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private final List<Os> osList;
     private final Context context;
+    private final Activity activity;
 
-    public OsItemAdapter(List<Os> osList, Context context) {
+    public OsItemAdapter(List<Os> osList, Context context, Activity activity) {
         this.osList = osList;
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -90,7 +95,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((MViewHolder) holder).osItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(activity, ClientActivity.class);
+                activity.startActivity(intent);
             }
         });
         ClickGuard.guard(((MViewHolder) holder).osItemView);

@@ -53,6 +53,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".os_list.OsListActivity" />
         </activity>
+        <activity
+            android:name=".client.ClientActivity"
+            android:label="@string/title_activity_client"
+            android:parentActivityName=".os_list.OsListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".os_list.OsListActivity" />
+        </activity>
     </application>
 
 </manifest>

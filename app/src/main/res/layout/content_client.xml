@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".client.ClientActivity"
+    tools:ignore="MissingPrefix"
+    tools:showIn="@layout/activity_client">
+
+
+    <FrameLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="18dp"
+                android:paddingLeft="28dp"
+                android:paddingRight="28dp"
+                android:paddingTop="18dp">
+
+                <RelativeLayout
+                    android:id="@+id/content_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/text_view_distance">
+
+                    <TextView
+                        android:id="@+id/text_view_client_name"
+                        fontPath="fonts/Lato-Bold.ttf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Maria Tereza"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="20sp"
+                        tools:ignore="MissingPrefix" />
+
+                    <TextView
+                        android:id="@+id/text_view_os_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_view_client_name"
+                        android:maxLines="1"
+                        android:text="Corretiva Física"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/text_view_os_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/text_view_os_type"
+                        android:text="03/07/2018"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="15sp" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/text_view_distance"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:text="2 Km"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="20sp"
+                    tools:ignore="MissingPrefix" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="-20dp"
+            android:layout_marginTop="54dp"
+            android:src="@drawable/valenet_logo" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/line_os_item" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/footer_layout"
+        android:layout_below="@+id/header_layout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:paddingTop="4dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_id"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="OsId:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_id"
+                    android:text="286963"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_emissao"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Emissão:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_emissao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_emissao"
+                    android:text="17/04/2018"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_solicitacao"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Solicitação:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_solicitacao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_solicitacao"
+                    android:text="INSTALAÇÃO"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_telefone"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Telefone do Cliente:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_telefone_cliente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_telefone"
+                    android:text="31989593825"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_contato"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contato:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_contato"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_contato"
+                    android:text="7067"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_tp_logradouro"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo Logradouro:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_tp_logradouro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_tp_logradouro"
+                    android:text="Rua"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_logradouro"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Logradouro:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_logradouro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_logradouro"
+                    android:text="Serra da brigida"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_numero"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Número:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_numero"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_numero"
+                    android:text="32"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_complemento"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Complemento:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_complemento"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_complemento"
+                    android:text="-"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_andar"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Andar:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_andar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_andar"
+                    android:text="-"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_bairro"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bairro:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_bairro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_bairro"
+                    android:text="Morro Santana"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_cidade"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cidade:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_cidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_cidade"
+                    android:text="Ouro Preto"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_uf"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Uf:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_uf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_uf"
+                    android:text="MG"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_cep"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cep:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_cep"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_cep"
+                    android:text="35400-000"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_observacao"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Observação:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_observacao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_observacao"
+                    android:text="VALENET 10 MBPS (FIBRA): Mensalidade por apenas99,90 por 12 meses, Instalação por apenas 190,00.Instalação com GPON.Pagamento por boleto eletrônico por e-mail. Pagamento com entrada mais 2 parcela(s).Cobrança de cabo Drop(Fibra) exedente por R$ 1,50 o metro. Casa com Tubulação. Serviço sem troca de Equipamento. \r\nleonardo.silva.morei - 17/04/18 10:34: sem contato para confirmar 98470-1119  ligação não completa"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_tipo_rede"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de rede:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_tipo_rede"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_tipo_rede"
+                    android:text="GPON"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_designacao_tipo"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo de designação:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_designacao_tipo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_designacao_tipo"
+                    android:text="HST"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_designacao_descricao"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Descrição da designação:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_designacao_descricao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_designacao_descricao"
+                    android:text="Host 62527: Maria da conceicao silva"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_rede"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rede:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_rede"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_rede"
+                    android:text="VALENET_ASJAIDIJDAIJDI"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_status"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_status"
+                    android:text="Aguardando"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_agendado_para"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Agendado para:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_agendado_para"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_agendado_para"
+                    android:text="576"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/os_mapeado"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mapeado:"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_mapeado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginTop="2.5dp"
+                    android:layout_toRightOf="@id/os_mapeado"
+                    android:text="1"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/footer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/line_os_item" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_call"
+                style="@style/ButtonClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:backgroundTint="#7DD61D"
+                android:drawableLeft="@drawable/call_icon"
+                android:drawablePadding="28dp"
+                android:paddingRight="32dp"
+                android:text="Ligar" />
+
+            <android.support.v7.widget.AppCompatButton
+                style="@style/ButtonClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="#2E3191"
+                android:drawableLeft="@drawable/nav_icon"
+                android:drawablePadding="28dp"
+                android:paddingRight="32dp"
+                android:text="Ir Para" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
