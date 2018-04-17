@@ -75,14 +75,17 @@ public class SearchActivity extends AppCompatActivity {
         filtredList = new ArrayList<>();
         osList = new ArrayList<>();
 
+        filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
+        osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+
 /*        if(filtredList == null || filtredList.size() == 0)
             //busca do banco a lista de os
             else*/
 
-        adapter = new OsItemAdapter(osList, this);
-        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewSearch.setAdapter(adapter);
+        if(filtredList == null || filtredList.size() == 0){
+            setAdapter(osList);
+        }else
+            setAdapter(filtredList);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,7 +177,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     filter(query, true);
                 } else {
-                    setAdapter();
+                    if(filtredList == null || filtredList.size() == 0)
+                        setAdapter(osList);
+                    else
+                        setAdapter(filtredList);
                 }
                 return true;
             }
@@ -184,15 +190,18 @@ public class SearchActivity extends AppCompatActivity {
                 if (!newText.isEmpty()) {
                     filter(newText, false);
                 } else {
-                    setAdapter();
+                    if(filtredList == null || filtredList.size() == 0)
+                        setAdapter(osList);
+                    else
+                        setAdapter(filtredList);
                 }
                 return true;
             }
         });
     }
 
-    public void setAdapter() {
-        adapter = new OsItemAdapter(this.osList, this);
+    public void setAdapter(ArrayList<Os> list) {
+        adapter = new OsItemAdapter(list, this);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -209,7 +218,7 @@ public class SearchActivity extends AppCompatActivity {
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {
                 Os os = osListArray.get(i);
-                String name = os.getCliente().toUpperCase();
+                String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
 
                 name = ValenetUtils.removeAccent(name).toUpperCase();
                 s = ValenetUtils.removeAccent(s).toUpperCase();

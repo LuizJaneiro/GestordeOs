@@ -107,7 +107,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public void navigateToSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 
@@ -151,6 +152,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void showListOs(List<Os> osListAdapter) {
+        this.osList = (ArrayList) osListAdapter;
         adapter = new OsItemAdapter(osListAdapter, this);
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));

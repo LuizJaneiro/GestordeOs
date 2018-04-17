@@ -56,13 +56,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         if(item.getCliente() == null)
             clientName = "Nome Indefinido";
-        else {
-            String[] firstAndLastName = ValenetUtils.firstAndLastWord(item.getCliente());
-            if(firstAndLastName[1] == null)
-                clientName = firstAndLastName[0];
-            else
-                clientName = firstAndLastName[0] + " " + firstAndLastName[1];
-        }
+        else
+            clientName = ValenetUtils.firstAndLastWord(item.getCliente());
 
         if(item.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
