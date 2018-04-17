@@ -1,6 +1,11 @@
 package valenet.com.br.gestordeos.utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+
 import java.text.Normalizer;
+import java.util.Date;
 
 public class ValenetUtils {
 
@@ -50,5 +55,20 @@ public class ValenetUtils {
         firstAndLast[1] = lastWord;
 
         return firstAndLast;
+    }
+
+    public static String convertJsonToStringDate(String json){
+        Date date = DateUtils.parseDate(json);
+        DateTime dateTime = new DateTime(date);
+
+        DateTimeFormatter fmt = new DateTimeFormatterBuilder().
+                appendDayOfMonth(2). // 2 Digito (Valor mínimo) - Preenche com 0 se for menor que 10
+                appendLiteral('/'). // Separador
+                appendMonthOfYear(2). // Mes como Texto
+                appendLiteral('/'). // Separador
+                appendYear(2, 4).   // Numero minimo para impressao (2) | Numero maximo para parse (4)
+                toFormatter();
+
+        return fmt.print(dateTime);
     }
 }

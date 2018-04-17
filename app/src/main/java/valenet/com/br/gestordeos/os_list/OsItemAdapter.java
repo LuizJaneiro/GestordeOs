@@ -83,18 +83,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
-            Date date = DateUtils.parseDate(item.getDataAgendamento());
-            DateTime dateTime = new DateTime(date);
-
-            DateTimeFormatter fmt = new DateTimeFormatterBuilder().
-                    appendDayOfMonth(2). // 2 Digito (Valor mínimo) - Preenche com 0 se for menor que 10
-                    appendLiteral('/'). // Separador
-                    appendMonthOfYear(2). // Mes como Texto
-                    appendLiteral('/'). // Separador
-                    appendYear(2, 4).   // Numero minimo para impressao (2) | Numero maximo para parse (4)
-                    toFormatter();
-
-            dateString = fmt.print(dateTime);
+            dateString = ValenetUtils.convertJsonToStringDate(item.getDataAgendamento());
         }
 
         ((MViewHolder) holder).textViewClientName.setText(clientName);
