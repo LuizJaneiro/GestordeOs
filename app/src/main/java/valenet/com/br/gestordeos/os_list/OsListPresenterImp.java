@@ -23,8 +23,9 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
 
 
     @Override
-    public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group) {
-        view.showLoading();
+    public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
+        if(!isSwipeRefresh)
+            view.showLoading();
         interactor.loadOsList(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
     }
 

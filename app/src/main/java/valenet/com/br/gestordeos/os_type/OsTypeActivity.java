@@ -19,6 +19,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.os_list.OsListActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeView {
 
@@ -61,9 +62,10 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_mercantil:
-                navigateToOsList();
+                navigateToOsList(ValenetUtils.GROUP_OS_MERCANTIL);
                 break;
             case R.id.btn_corretiva:
+                navigateToOsList(ValenetUtils.GROUP_OS_CORRETIVA);
                 break;
             case R.id.btn_sair:
                 presenter.logout();
@@ -72,8 +74,9 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     }
 
     @Override
-    public void navigateToOsList() {
+    public void navigateToOsList(int osType) {
         Intent intent = new Intent(this, OsListActivity.class);
+        intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
         startActivity(intent);
     }
 

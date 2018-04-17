@@ -68,7 +68,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar por nome");
+        searchView.setHint("Buscar por Cliente");
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
@@ -111,6 +111,7 @@ public class SearchActivity extends AppCompatActivity {
                     try {
                         InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        filter(searchEditText.getText().toString(), true);
                     } catch (Exception e) {
                         // TODO: handle exception
                     }

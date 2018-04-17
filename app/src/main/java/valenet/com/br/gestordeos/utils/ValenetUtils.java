@@ -12,6 +12,7 @@ public class ValenetUtils {
     public static final String BASE_URL = "https://api.valenet.com.br/api/";
     public static final String KEY_FILTERED_LIST = "KEY_FILTERED_LIST";
     public static final String KEY_OS_LIST = "KEY_OS_LIST";
+    public static final String KEY_OS_TYPE = "KEY_OS_TYPE";
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
 

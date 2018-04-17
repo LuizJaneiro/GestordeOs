@@ -22,7 +22,7 @@ public interface OsList {
 
     interface OsListPresenter {
         void loadOsList(Double latitude, Double longitude, Integer codUser,
-                        Boolean isSearchingByCloseOs, Integer group);
+                        Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
     }
 
     interface OsListInteractor {

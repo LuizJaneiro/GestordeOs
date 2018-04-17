@@ -52,6 +52,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
+    private Integer osType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +61,16 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
+
+        osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
 
         this.presenter = new OsListPresenterImp(this);
 
         searchViewContainer.handleToolbarAnimation(toolbar);
-        searchViewContainer.setHint("Buscar por nome");
+        searchViewContainer.setHint("Buscar por Cliente");
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -92,6 +96,16 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             }
         });
 
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.loadOsList(1.1, 1.1,
+                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        true,
+                        osType, true);
+            }
+        });
+
         filtredList = new ArrayList<>();
 
         osList = new ArrayList<>();
@@ -99,7 +113,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         presenter.loadOsList(1.1, 1.1,
                 LoginLocal.getInstance().getCurrentUser().getCoduser(),
                 true,
-                1);
+                osType, false);
 
 
     }
@@ -142,7 +156,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void hideLoading() {
-        this.loadingView.setVisibility(View.GONE);
+        if(refreshLayout.isRefreshing())
+            refreshLayout.setRefreshing(false);
+        else
+            this.loadingView.setVisibility(View.GONE);
     }
 
     @Override

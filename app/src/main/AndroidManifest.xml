@@ -36,8 +36,13 @@
         <activity
             android:name=".os_list.OsListActivity"
             android:label="@string/title_activity_os_list"
+            android:parentActivityName=".os_type.OsTypeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".os_type.OsTypeActivity" />
+        </activity>
         <activity
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
