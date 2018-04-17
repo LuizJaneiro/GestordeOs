@@ -7,11 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.DateUtils;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -41,7 +52,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String clientName;
         String osType;
         String distance;
-        String dateString;
+        String dateString = "";
 
         if(item.getCliente() == null)
             clientName = "Nome Indefinido";
@@ -72,11 +83,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
-            int day = item.getDataAgendamento().getDay();
-            int month = item.getDataAgendamento().getMonth();
-            int year = item.getDataAgendamento().getYear();
+            Date date = DateUtils.parseDate(item.getDataAgendamento());
+            DateTime dateTime = new DateTime(date);
 
-            dateString = day + "/" + month + "/" + year;
+            DateTimeFormatter fmt = new DateTimeFormatterBuilder().
+                    appendDayOfMonth(2). // 2 Digito (Valor mínimo) - Preenche com 0 se for menor que 10
+                    appendLiteral('/'). // Separador
+                    appendMonthOfYear(2). // Mes como Texto
+                    appendLiteral('/'). // Separador
+                    appendYear(2, 4).   // Numero minimo para impressao (2) | Numero maximo para parse (4)
+                    toFormatter();
+
+            dateString = fmt.print(dateTime);
         }
 
         ((MViewHolder) holder).textViewClientName.setText(clientName);

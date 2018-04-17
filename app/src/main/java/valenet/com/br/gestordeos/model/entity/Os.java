@@ -15,7 +15,7 @@ public class Os implements Parcelable{
     private Integer osid;
     @SerializedName("emissao")
     @Expose
-    private Date emissao;
+    private String emissao;
     @SerializedName("solicitacao")
     @Expose
     private String solicitacao;
@@ -90,7 +90,7 @@ public class Os implements Parcelable{
     private String statusOs;
     @SerializedName("dataAgendamento")
     @Expose
-    private Date dataAgendamento;
+    private String dataAgendamento;
     @SerializedName("agendadoPara")
     @Expose
     private Integer agendadoPara;
@@ -125,11 +125,11 @@ public class Os implements Parcelable{
         this.osid = osid;
     }
 
-    public Date getEmissao() {
+    public String getEmissao() {
         return emissao;
     }
 
-    public void setEmissao(Date emissao) {
+    public void setEmissao(String emissao) {
         this.emissao = emissao;
     }
 
@@ -325,11 +325,11 @@ public class Os implements Parcelable{
         this.statusOs = statusOs;
     }
 
-    public Date getDataAgendamento() {
+    public String getDataAgendamento() {
         return dataAgendamento;
     }
 
-    public void setDataAgendamento(Date dataAgendamento) {
+    public void setDataAgendamento(String dataAgendamento) {
         this.dataAgendamento = dataAgendamento;
     }
 
@@ -351,7 +351,7 @@ public class Os implements Parcelable{
 
     protected Os(Parcel in) {
         this.osid = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.emissao = ((Date) in.readValue((Date.class.getClassLoader())));
+        this.emissao = ((String) in.readValue((String.class.getClassLoader())));
         this.solicitacao = ((String) in.readValue((String.class.getClassLoader())));
         this.tipoAtividade = ((String) in.readValue((String.class.getClassLoader())));
         this.tipoAtividadeAtributosJson = ((String) in.readValue((String.class.getClassLoader())));
@@ -376,7 +376,7 @@ public class Os implements Parcelable{
         this.rede = ((String) in.readValue((String.class.getClassLoader())));
         this.distance = ((Double) in.readValue((Double.class.getClassLoader())));
         this.statusOs = ((String) in.readValue((String.class.getClassLoader())));
-        this.dataAgendamento = ((Date) in.readValue((Date.class.getClassLoader())));
+        this.dataAgendamento = ((String) in.readValue((String.class.getClassLoader())));
         this.agendadoPara = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.mapeado = ((Integer) in.readValue((Integer.class.getClassLoader())));
     }

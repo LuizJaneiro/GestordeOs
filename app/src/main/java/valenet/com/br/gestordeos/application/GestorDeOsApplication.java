@@ -2,6 +2,10 @@ package valenet.com.br.gestordeos.application;
 
 import android.content.Context;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import java.util.Locale;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -13,6 +17,7 @@ public class GestorDeOsApplication extends android.app.Application {
 
     public static final ApiInterface API_INTERFACE = ApiUtils.getService();
     public static Realm realm;
+    public static final Locale myLocale = new Locale("pt", "BR");
 
     // region Members
     private static Context appContext;
@@ -46,6 +51,8 @@ public class GestorDeOsApplication extends android.app.Application {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(realmConfiguration);
         realm = Realm.getDefaultInstance();
+
+        JodaTimeAndroid.init(this);
 
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/Lato-Regular.ttf")
