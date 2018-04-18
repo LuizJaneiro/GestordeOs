@@ -25,7 +25,7 @@ public class LoginInteractorImp implements Login.LoginInteractor {
 
 
     @Override
-    public void login(String userName, String password, final onFinishedListener listener) {
+    public void login(final String userName, final String password, final onFinishedListener listener) {
         application.API_INTERFACE.getUser(userName, password).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -34,7 +34,7 @@ public class LoginInteractorImp implements Login.LoginInteractor {
 
                     LoginLocal.getInstance().saveUser(user);
 
-                    listener.successLogin();
+                    listener.successLogin(userName, password);
                 } else {
                     listener.errorLogin("Ocorreu um problema ao realizar o Login. Verifique o usuário e senha!");
                 }

@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.os_type.OsTypeActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class LoginActivity extends AppCompatActivity implements Login.LoginView {
 
@@ -87,6 +89,18 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
             }
         });
 
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_EMAIL_LOGIN, Context.MODE_PRIVATE);
+        String savedEmail = null;
+        String savedPassword = null;
+        savedEmail = sharedPref.getString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, null);
+        savedPassword = sharedPref.getString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, null);
+
+        if(savedEmail != null)
+            editTextEmail.setText(savedEmail);
+
+        if(savedPassword != null)
+            editTextPassword.setText(savedPassword);
+
         ClickGuard.guard(btnEntrar);
     }
 
@@ -145,6 +159,17 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     @Override
     public void hideLoginView() {
         loginView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void saveLoginData(String userName, String password) {
+        SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_EMAIL_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+        editor.putString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, userName);
+        editor.putString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, password);
+
+        editor.commit();
     }
 
     @Override

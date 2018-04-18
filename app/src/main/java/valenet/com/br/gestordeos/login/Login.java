@@ -18,6 +18,8 @@ public interface Login {
         void showLoginView();
 
         void hideLoginView();
+
+        void saveLoginData(String userName, String password);
     }
 
     public interface LoginPresenter {
@@ -28,7 +30,7 @@ public interface Login {
         void login(String email, String password, onFinishedListener listener);
 
         interface onFinishedListener {
-            void successLogin();
+            void successLogin(String userName, String password);
 
             void errorLogin(String error);
         }
