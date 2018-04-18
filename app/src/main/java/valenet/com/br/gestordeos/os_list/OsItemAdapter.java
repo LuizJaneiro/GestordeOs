@@ -9,23 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.DateTimeFormatterBuilder;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
-import valenet.com.br.gestordeos.utils.DateUtils;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -119,10 +108,10 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         MViewHolder(View container) {
             super(container);
-            this.textViewClientName = container.findViewById(R.id.text_view_client_name);
-            this.textViewType = container.findViewById(R.id.text_view_os_type);
-            this.textViewDate = container.findViewById(R.id.text_view_os_date);
-            this.textViewDistance = container.findViewById(R.id.text_view_distance);
+            this.textViewClientName = container.findViewById(R.id.text_view_client_name_toolbar);
+            this.textViewType = container.findViewById(R.id.text_view_os_type_toolbar);
+            this.textViewDate = container.findViewById(R.id.text_view_os_date_toolbar);
+            this.textViewDistance = container.findViewById(R.id.text_view_distance_toolbar);
             this.osItemView = container.findViewById(R.id.os_item_view);
         }
     }
