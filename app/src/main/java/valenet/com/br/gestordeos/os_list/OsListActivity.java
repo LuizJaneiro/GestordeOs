@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
@@ -42,6 +45,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     SearchViewLayout searchViewContainer;
     @BindView(R.id.loading_view)
     RelativeLayout loadingView;
+    @BindView(R.id.btn_try_again)
+    AppCompatButton btnTryAgain;
+    @BindView(R.id.layout_error_conection)
+    ViewGroup layoutErrorConection;
 
     private OsList.OsListPresenter presenter;
 
@@ -156,7 +163,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void hideLoading() {
-        if(refreshLayout.isRefreshing())
+        if (refreshLayout.isRefreshing())
             refreshLayout.setRefreshing(false);
         else
             this.loadingView.setVisibility(View.GONE);
@@ -168,12 +175,30 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     }
 
     @Override
+    public void showErrorConectionView() {
+        layoutErrorConection.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorConectionView() {
+        layoutErrorConection.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
         adapter = new OsItemAdapter(osListAdapter, this, this);
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
+    }
+
+    @OnClick(R.id.btn_try_again)
+    public void onViewClicked() {
+        presenter.loadOsList(1.1, 1.1,
+                LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                true,
+                osType, false);
     }
 
     @Override

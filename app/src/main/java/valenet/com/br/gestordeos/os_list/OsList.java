@@ -17,6 +17,10 @@ public interface OsList {
 
         void showLoading();
 
+        void showErrorConectionView();
+
+        void hideErrorConectionView();
+
         void showListOs(List<Os> osListAdapter);
     }
 

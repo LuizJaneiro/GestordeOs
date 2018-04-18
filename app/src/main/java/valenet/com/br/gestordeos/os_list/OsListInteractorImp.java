@@ -1,5 +1,7 @@
 package valenet.com.br.gestordeos.os_list;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class OsListInteractorImp implements OsList.OsListInteractor {
             @Override
             public void onFailure(Call<List<Os>> call, Throwable t) {
                 listener.errorNetwork();
+                Log.d("OsListInteractor", "error loading from API");
             }
         });
     }

@@ -24,13 +24,16 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
 
     @Override
     public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
-        if(!isSwipeRefresh)
+        if(!isSwipeRefresh) {
+            view.hideErrorConectionView();
             view.showLoading();
+        }
         interactor.loadOsList(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
     }
 
     @Override
     public void successLoadingOsList(List<Os> osList) {
+        view.hideErrorConectionView();
         view.showListOs(osList);
         view.hideLoading();
         view.showOsListView();
@@ -47,7 +50,7 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
     public void errorNetwork() {
         view.hideLoading();
         view.hideOsListView();
-        //TODO: ADD ERROR NETWORK VIEW
+        view.showErrorConectionView();
     }
 
 

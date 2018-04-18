@@ -17,5 +17,6 @@
 
     <include layout="@layout/content_os_list" />
     <include layout="@layout/layout_progress" />
+    <include layout="@layout/layout_error_internet_connection" />
 
 </android.support.design.widget.CoordinatorLayout>
