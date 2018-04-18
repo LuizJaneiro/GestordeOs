@@ -19,5 +19,6 @@
     <include layout="@layout/layout_progress" />
     <include layout="@layout/layout_error_internet_connection" />
     <include layout="@layout/layout_error_from_server" />
+    <include layout="@layout/layout_empty_list" />
 
 </android.support.design.widget.CoordinatorLayout>

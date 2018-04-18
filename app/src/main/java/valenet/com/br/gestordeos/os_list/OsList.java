@@ -25,6 +25,10 @@ public interface OsList {
 
         void hideErrorServerView();
 
+        void showEmptyListView();
+
+        void hideEmptyListView();
+
         void showListOs(List<Os> osListAdapter);
     }
 

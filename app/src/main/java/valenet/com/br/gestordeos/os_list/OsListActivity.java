@@ -53,6 +53,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     AppCompatButton btnTryAgainServerError;
     @BindView(R.id.layout_error_server)
     ViewGroup layoutErrorServer;
+    @BindView(R.id.btn_reload)
+    AppCompatButton btnReload;
+    @BindView(R.id.layout_empty_list)
+    ViewGroup layoutEmptyList;
 
     private OsList.OsListPresenter presenter;
 
@@ -64,6 +68,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private Integer osType;
+    private boolean proximidade = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +117,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             public void onRefresh() {
                 presenter.loadOsList(1.1, 1.1,
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        true,
+                        proximidade,
                         osType, true);
             }
         });
@@ -123,7 +128,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         presenter.loadOsList(1.1, 1.1,
                 LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                true,
+                proximidade,
                 osType, false);
 
 
@@ -199,6 +204,16 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     }
 
     @Override
+    public void showEmptyListView() {
+        layoutEmptyList.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideEmptyListView() {
+        layoutEmptyList.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
         adapter = new OsItemAdapter(osListAdapter, this, this);
@@ -207,14 +222,15 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
     }
 
-    @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error})
+    @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
+            case R.id.btn_reload:
                 presenter.loadOsList(1.1, 1.1,
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        true,
+                        proximidade,
                         osType, false);
                 break;
         }
