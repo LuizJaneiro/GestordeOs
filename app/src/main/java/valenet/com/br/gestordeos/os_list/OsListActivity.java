@@ -49,6 +49,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     AppCompatButton btnTryAgain;
     @BindView(R.id.layout_error_conection)
     ViewGroup layoutErrorConection;
+    @BindView(R.id.btn_try_again_server_error)
+    AppCompatButton btnTryAgainServerError;
+    @BindView(R.id.layout_error_server)
+    ViewGroup layoutErrorServer;
 
     private OsList.OsListPresenter presenter;
 
@@ -185,6 +189,16 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     }
 
     @Override
+    public void showErrorServerView() {
+        layoutErrorServer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorServerView() {
+        layoutErrorServer.setVisibility(View.GONE);
+    }
+
+    @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
         adapter = new OsItemAdapter(osListAdapter, this, this);
@@ -193,17 +207,21 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
     }
 
-    @OnClick(R.id.btn_try_again)
-    public void onViewClicked() {
-        presenter.loadOsList(1.1, 1.1,
-                LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                true,
-                osType, false);
+    @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_try_again:
+            case R.id.btn_try_again_server_error:
+                presenter.loadOsList(1.1, 1.1,
+                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        true,
+                        osType, false);
+                break;
+        }
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
 }
