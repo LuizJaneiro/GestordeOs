@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".client.Fragments.ClientFragment"
-    tools:ignore="MissingPrefix">
+    tools:context=".client.Fragments.OsDataFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,22 +24,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_nome"
+                    android:id="@+id/os_id"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nome:"
+                    android:text="Id:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_nome"
+                    android:id="@+id/text_view_os_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_id"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_nome"
-                    android:text="Maria Tereza Cristina"
+                    android:text="334601"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -51,22 +50,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_telefone"
+                    android:id="@+id/os_emissao"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Telefone:"
+                    android:text="Emissão:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_telefone"
+                    android:id="@+id/text_view_os_emissao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_emissao"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_telefone"
-                    android:text="3135525492"
+                    android:text="16/10/2014"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -77,22 +76,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_contato"
+                    android:id="@+id/os_solicitacao"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contato:"
+                    android:text="Solicitação:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_contato"
+                    android:id="@+id/text_view_os_solicitacao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_solicitacao"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_contato"
-                    android:text="7067"
+                    android:text="Instalação"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -103,22 +102,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_tp_logradouro"
+                    android:id="@+id/os_tp_rede"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tipo Logradouro:"
+                    android:text="Tipo da Rede:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_tp_logradouro"
+                    android:id="@+id/text_view_os_tp_rede"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_tp_rede"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_tp_logradouro"
-                    android:text="Rua"
+                    android:text="GPON"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -129,22 +128,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_logradouro"
+                    android:id="@+id/os_tp_designacao"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Logradouro:"
+                    android:text="Tipo da designação:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_logradouro"
+                    android:id="@+id/text_view_os_tp_designacao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_tp_designacao"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_logradouro"
-                    android:text="Serra da brigida"
+                    android:text="Host 33973: BERNADETE ESTAVAO DOS SANTOS"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -155,22 +154,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_numero"
+                    android:id="@+id/os_designacao_descricao"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Número:"
+                    android:text="Descrição da Designação:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_numero"
+                    android:id="@+id/text_view_os_designacao_descricao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_designacao_descricao"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_numero"
-                    android:text="32"
+                    android:text="Host 33973: BERNADETE ESTAVAO DOS SANTOS"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -181,22 +180,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_complemento"
+                    android:id="@+id/os_rede"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Complemento:"
+                    android:text="Rede:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_complemento"
+                    android:id="@+id/text_view_os_rede"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_rede"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_complemento"
-                    android:text="-"
+                    android:text="VALENET_ETCETCETC"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -207,22 +206,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_andar"
+                    android:id="@+id/os_status"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Andar:"
+                    android:text="Status:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_andar"
+                    android:id="@+id/text_view_os_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_status"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_andar"
-                    android:text="-"
+                    android:text="Aguardando"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -233,22 +232,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_bairro"
+                    android:id="@+id/os_agendado_para"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bairro:"
+                    android:text="Agendado para:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_bairro"
+                    android:id="@+id/text_view_os_agendado_para"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_agendado_para"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_bairro"
-                    android:text="Morro Santana"
+                    android:text="576"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
@@ -259,74 +258,22 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/os_cidade"
+                    android:id="@+id/os_mapeado"
                     fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cidade:"
+                    android:text="Mapeado:"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/text_view_os_cidade"
+                    android:id="@+id/text_view_os_mapeado"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_mapeado"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_cidade"
-                    android:text="Ouro Preto"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/os_uf"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Uf:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_uf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_uf"
-                    android:text="MG"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/os_cep"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cep:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_cep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_cep"
-                    android:text="35400-000"
+                    android:text="1"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
 

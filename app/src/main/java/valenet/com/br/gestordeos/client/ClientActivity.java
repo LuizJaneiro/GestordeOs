@@ -39,8 +39,8 @@ public class ClientActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tabLayout.addTab(tabLayout.newTab().setText("Cliente"));
         tabLayout.addTab(tabLayout.newTab().setText("OS"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cliente"));
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
