@@ -42,7 +42,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        Os item = osList.get(position);
+        final Os item = osList.get(position);
         String clientName;
         String osType;
         String distance;
@@ -85,6 +85,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ClientActivity.class);
+                intent.putExtra(ValenetUtils.KEY_OS, item);
                 activity.startActivity(intent);
             }
         });

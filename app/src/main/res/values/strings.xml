@@ -9,8 +9,6 @@
     <string name="title_activity_os_list">Lista de OS</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="error_field_required">Este campo é obrigatório!</string>
-    <string name="title_activity_client">Cliente</string>
+    <string name="title_activity_client">OS</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

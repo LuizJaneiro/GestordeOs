@@ -20,11 +20,12 @@
             android:paddingTop="8dp">
 
             <RelativeLayout
+                android:id="@+id/os_layout_observacao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/text_view_os_nome"
+                    android:id="@+id/text_view_os_observacao"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_nome"

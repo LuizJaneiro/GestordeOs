@@ -21,6 +21,7 @@
             android:paddingTop="8dp">
 
             <RelativeLayout
+                android:id="@+id/os_layout_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -37,9 +38,9 @@
                     android:id="@+id/text_view_os_nome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_nome"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_nome"
                     android:text="Maria Tereza Cristina"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -47,6 +48,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_telefone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -63,9 +65,9 @@
                     android:id="@+id/text_view_os_telefone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_telefone"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_telefone"
                     android:text="3135525492"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -73,6 +75,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_contato"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -89,9 +92,9 @@
                     android:id="@+id/text_view_os_contato"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_contato"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_contato"
                     android:text="7067"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -99,6 +102,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_tp_logradouro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -115,9 +119,9 @@
                     android:id="@+id/text_view_os_tp_logradouro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_tp_logradouro"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_tp_logradouro"
                     android:text="Rua"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -125,6 +129,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_logradouro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -141,9 +146,9 @@
                     android:id="@+id/text_view_os_logradouro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_logradouro"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_logradouro"
                     android:text="Serra da brigida"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -151,6 +156,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_numero"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -167,9 +173,9 @@
                     android:id="@+id/text_view_os_numero"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_numero"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_numero"
                     android:text="32"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -177,6 +183,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_complemento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -193,9 +200,9 @@
                     android:id="@+id/text_view_os_complemento"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_complemento"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_complemento"
                     android:text="-"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -203,6 +210,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_andar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -219,9 +227,9 @@
                     android:id="@+id/text_view_os_andar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_andar"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_andar"
                     android:text="-"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -229,6 +237,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_bairro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -245,9 +254,9 @@
                     android:id="@+id/text_view_os_bairro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_bairro"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_bairro"
                     android:text="Morro Santana"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -255,6 +264,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_cidade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -271,9 +281,9 @@
                     android:id="@+id/text_view_os_cidade"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_cidade"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_cidade"
                     android:text="Ouro Preto"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -281,6 +291,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_uf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -297,9 +308,9 @@
                     android:id="@+id/text_view_os_uf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_uf"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_uf"
                     android:text="MG"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
@@ -307,6 +318,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/os_layout_cep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -323,9 +335,9 @@
                     android:id="@+id/text_view_os_cep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@id/os_cep"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:layout_below="@id/os_cep"
                     android:text="35400-000"
                     android:textColor="@color/text_color_os_item"
                     android:textSize="16sp" />
