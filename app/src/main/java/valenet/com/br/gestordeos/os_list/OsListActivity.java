@@ -1,8 +1,12 @@
 package valenet.com.br.gestordeos.os_list;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,10 +16,19 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +36,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
@@ -60,6 +82,11 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     private OsList.OsListPresenter presenter;
 
+    ReactiveLocationProvider locationProvider;
+    private Subscription locationSubscription;
+    private final static int REQUEST_CHECK_SETTINGS = 0;
+    private Location myLocation;
+
     private ArrayList<Os> filtredList;
     private ArrayList<Os> osList;
 
@@ -68,7 +95,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private Integer osType;
-    private boolean proximidade = false;
+    private boolean proximidade = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,10 +142,17 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                presenter.loadOsList(1.1, 1.1,
-                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        proximidade,
-                        osType, true);
+                if(myLocation != null)
+                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                            proximidade,
+                            osType, true);
+                else {
+                    presenter.loadOsList(1.1, 1.1,
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                            proximidade,
+                            osType, true);
+                }
             }
         });
 
@@ -126,10 +160,95 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         osList = new ArrayList<>();
 
-        presenter.loadOsList(1.1, 1.1,
-                LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                proximidade,
-                osType, false);
+
+        RxPermissions.getInstance(OsListActivity.this)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .map(new Func1<Boolean, Object>() {
+                    @Override
+                    public Object call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(OsListActivity.this);
+                            final LocationRequest locationRequest = LocationRequest.create()
+                                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                    .setNumUpdates(2)
+                                    .setInterval(10000);
+                            locationSubscription = locationProvider
+                                    .checkLocationSettings(
+                                            new LocationSettingsRequest.Builder()
+                                                    .addLocationRequest(locationRequest)
+                                                    .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+                                                    .build()
+                                    )
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnNext(new Action1<LocationSettingsResult>() {
+                                        @Override
+                                        public void call(LocationSettingsResult locationSettingsResult) {
+                                            Status status = locationSettingsResult.getStatus();
+                                            if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                                                try {
+                                                    status.startResolutionForResult(OsListActivity.this, REQUEST_CHECK_SETTINGS);
+                                                } catch (IntentSender.SendIntentException th) {
+                                                    Log.e("MainActivity", "Error opening settings activity.", th);
+                                                }
+                                            }
+                                        }
+                                    })
+                                    .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
+                                        @SuppressLint("MissingPermission")
+                                        @Override
+                                        public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
+                                            //noinspection MissingPermission
+                                            return locationProvider.getUpdatedLocation(locationRequest);
+                                        }
+                                    })
+                                    .map(new Func1<Location, Boolean>() {
+                                        @Override
+                                        public Boolean call(Location location) {
+                                            if (location != null) {
+                                                myLocation = location;
+                                                adapter.reloadData(myLocation, recyclerViewOs);
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                    })
+                                    .subscribe(new Observer<Boolean>() {
+                                        @Override
+                                        public void onCompleted() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(Boolean aBoolean) {
+
+                                        }
+                                    });
+                        } else {
+                            Toasty.error(OsListActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
+                        }
+                        return null;
+                    }
+                }).subscribe();
+
+        if(myLocation != null)
+            presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                    LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                    proximidade,
+                    osType, false);
+        else {
+            presenter.loadOsList(1.1, 1.1,
+                    LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                    proximidade,
+                    osType, false);
+        }
+
 
 
     }
@@ -149,9 +268,9 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
                 if (filtredList == null || filtredList.size() == 0)
-                    adapter = new OsItemAdapter(osList, this, this);
+                    adapter = new OsItemAdapter(osList, this, this, myLocation);
                 else
-                    adapter = new OsItemAdapter(filtredList, this, this);
+                    adapter = new OsItemAdapter(filtredList, this, this, myLocation);
                 this.recyclerViewOs.setAdapter(adapter);
 
                 searchViewContainer.collapse();
@@ -216,7 +335,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
-        adapter = new OsItemAdapter(osListAdapter, this, this);
+        adapter = new OsItemAdapter(osListAdapter, this, this, myLocation);
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());

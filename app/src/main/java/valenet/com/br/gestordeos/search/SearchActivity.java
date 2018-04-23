@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -57,6 +58,7 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<Os> osList;
     private OsItemAdapter adapter;
     private MenuItem item;
+    private Location myLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,7 +204,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setAdapter(ArrayList<Os> list) {
-        adapter = new OsItemAdapter(list, this, this);
+        adapter = new OsItemAdapter(list, this, this, myLocation);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -231,12 +233,12 @@ public class SearchActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             if (submit)
                 Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_SHORT, true).show();
-            adapter = new OsItemAdapter(osListArray, this, this);
+            adapter = new OsItemAdapter(osListArray, this, this, myLocation);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);
         } else {
-            adapter = new OsItemAdapter(filteredList, this, this);
+            adapter = new OsItemAdapter(filteredList, this, this, myLocation);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);
