@@ -78,15 +78,10 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return viewHolder;
     }
 
-    public void reloadData(Location location, RecyclerView recyclerView) {
+    public void reloadData(Location location) {
         this.myLocation = location;
         sortOsList();
-        final LayoutAnimationController controller =
-                AnimationUtils.loadLayoutAnimation(context, R.anim.layout_anim_slide_bottom);
-
-        recyclerView.setLayoutAnimation(controller);
         notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
     }
 
     @Override

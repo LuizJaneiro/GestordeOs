@@ -160,7 +160,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         osList = new ArrayList<>();
 
-
+        this.showLoading();
         RxPermissions.getInstance(OsListActivity.this)
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .map(new Func1<Boolean, Object>() {
@@ -170,7 +170,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
                             final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(OsListActivity.this);
                             final LocationRequest locationRequest = LocationRequest.create()
                                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                    .setNumUpdates(2)
+                                    .setNumUpdates(1)
                                     .setInterval(10000);
                             locationSubscription = locationProvider
                                     .checkLocationSettings(
@@ -207,9 +207,16 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
                                         public Boolean call(Location location) {
                                             if (location != null) {
                                                 myLocation = location;
-                                                adapter.reloadData(myLocation, recyclerViewOs);
+                                                presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                                                        proximidade,
+                                                        osType, false);
                                                 return true;
                                             } else {
+                                                presenter.loadOsList(1.1, 1.1,
+                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                                                        false,
+                                                        osType, false);
                                                 return false;
                                             }
                                         }
@@ -236,21 +243,6 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
                         return null;
                     }
                 }).subscribe();
-
-        if(myLocation != null)
-            presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                    LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                    proximidade,
-                    osType, false);
-        else {
-            presenter.loadOsList(1.1, 1.1,
-                    LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                    proximidade,
-                    osType, false);
-        }
-
-
-
     }
 
     @Override
@@ -258,6 +250,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 

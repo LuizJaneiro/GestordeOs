@@ -64,7 +64,6 @@ public class DateUtils{
         strdate = strdate.trim();
         if (strdate.length() > 10) {
 
-            // TODO deal with +4:00 (no zero before hour)
             if ((strdate.substring(strdate.length() - 5).indexOf("+") == 0 || strdate
                     .substring(strdate.length() - 5).indexOf("-") == 0)
                     && strdate.substring(strdate.length() - 5).indexOf(":") == 2) {
@@ -85,7 +84,7 @@ public class DateUtils{
             // replace with -0500 or +0200
             if ((dateEnd.indexOf("-") == 0 || dateEnd.indexOf("+") == 0)
                     && dateEnd.indexOf(":") == 3) {
-                // TODO deal with GMT-00:03
+                // nda
                 if ("GMT".equals(strdate.substring(strdate.length() - 9, strdate
                         .length() - 6))) {
                     Log.d(TAG, "General time zone with offset, no change");

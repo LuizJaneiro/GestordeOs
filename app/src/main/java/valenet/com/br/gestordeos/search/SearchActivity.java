@@ -79,6 +79,7 @@ public class SearchActivity extends AppCompatActivity {
 
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
 
 /*        if(filtredList == null || filtredList.size() == 0)
             //busca do banco a lista de os
@@ -115,7 +116,6 @@ public class SearchActivity extends AppCompatActivity {
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                         filter(searchEditText.getText().toString(), true);
                     } catch (Exception e) {
-                        // TODO: handle exception
                     }
                     return true;
                 }

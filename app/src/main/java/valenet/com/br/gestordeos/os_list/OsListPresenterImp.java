@@ -25,6 +25,7 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
     @Override
     public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
         if(!isSwipeRefresh) {
+            view.hideOsListView();
             view.hideErrorConectionView();
             view.hideErrorServerView();
             view.hideEmptyListView();
