@@ -1,5 +1,6 @@
 package valenet.com.br.gestordeos.client;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +51,8 @@ public class ClientActivity extends AppCompatActivity {
     AppCompatButton btnCall;
     @BindView(R.id.footer_layout)
     RelativeLayout footerLayout;
+    @BindView(R.id.btn_nav)
+    AppCompatButton btnNav;
 
     private PagerAdapter pagerAdapter;
     private Os os;
@@ -73,28 +76,28 @@ public class ClientActivity extends AppCompatActivity {
         String distance;
         String dateString = "";
 
-        if(os.getCliente() == null)
+        if (os.getCliente() == null)
             clientName = "Nome Indefinido";
         else
             clientName = ValenetUtils.firstAndLastWord(os.getCliente());
 
-        if(os.getTipoAtividade() == null)
+        if (os.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
         else
             osType = os.getTipoAtividade();
 
-        if(os.getDistance() == null)
+        if (os.getDistance() == null)
             distance = "?";
         else {
             double distanceDouble = os.getDistance() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
-            if(distanceDouble >= 100)
+            if (distanceDouble >= 100)
                 distance = ">100";
             else
                 distance = String.valueOf(distanceDouble);
         }
 
-        if(os.getDataAgendamento() == null)
+        if (os.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
             dateString = ValenetUtils.convertJsonToStringDate(os.getDataAgendamento());
@@ -110,9 +113,14 @@ public class ClientActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        if(os.getTelefoneCliente() == null) {
+        if (os.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
             btnCall.setBackgroundColor(getResources().getColor(R.color.btn_call_transparent));
+        }
+
+        if (os.getLatitude() == null || os.getLongitude() == null) {
+            btnNav.setEnabled(false);
+            btnNav.setBackgroundColor(getResources().getColor(R.color.btn_nav_transparent));
         }
 
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), os, tabLayout.getTabCount());
@@ -163,10 +171,10 @@ public class ClientActivity extends AppCompatActivity {
                 // intent.setData(Uri.parse("tel:" + "03131975107000"));
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    if (ContextCompat.checkSelfPermission(ClientActivity.this, android.Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                         startActivity(intent);
                     } else {
-                        ActivityCompat.requestPermissions(ClientActivity.this, new String[]{android.Manifest.permission.CALL_PHONE}, 0);
+                        ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 0);
                     }
                 else
                     startActivity(intent);
@@ -184,17 +192,67 @@ public class ClientActivity extends AppCompatActivity {
             @Override
             public void onShow(DialogInterface arg0) {
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));}
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
         });
         dialog.show();
 
     }
 
-    @OnClick({R.id.btn_call, R.id.footer_layout})
+    public void navigateToMap(){
+        android.app.AlertDialog.Builder builderCad;
+        builderCad = new android.app.AlertDialog.Builder(this);
+        builderCad.setTitle("Atenção");
+        builderCad.setMessage("Deseja realizar a navegação?");
+        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                Intent intent;
+                Uri gmmIntentUri = Uri.parse("geo:" + os.getLatitude()
+                        + "," + os.getLongitude()
+                        + "?q=" + os.getLatitude()
+                        + "," + os.getLongitude() + "(" + os.getCliente() + ")");
+                intent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if(intent.resolveActivity(getPackageManager()) != null)
+                            startActivity(intent);
+                    } else {
+                        ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                    }
+                else
+                    if(intent.resolveActivity(getPackageManager()) != null)
+                        startActivity(intent);
+
+            }
+        });
+        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        final android.app.AlertDialog dialog = builderCad.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
+        });
+        dialog.show();
+    }
+
+    @OnClick({R.id.btn_call, R.id.footer_layout, R.id.btn_nav})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_call:
-                this.callPhone(os.getTelefoneCliente()+"");
+                this.callPhone(os.getTelefoneCliente() + "");
+                break;
+            case R.id.btn_nav:
+                navigateToMap();
                 break;
             case R.id.footer_layout:
                 break;

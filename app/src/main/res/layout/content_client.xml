@@ -50,6 +50,7 @@
                 android:text="Ligar" />
 
             <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_nav"
                 style="@style/ButtonClient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
