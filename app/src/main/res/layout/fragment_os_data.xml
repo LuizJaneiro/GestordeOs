@@ -22,7 +22,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_id"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_id"
@@ -49,7 +50,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_emissao"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_emissao"
@@ -76,7 +78,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_solicitacao"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_solicitacao"
@@ -103,7 +106,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_tp_rede"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_tp_rede"
@@ -130,7 +134,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_tp_designacao"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_tp_designacao"
@@ -157,7 +162,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_designacao_descricao"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_designacao_descricao"
@@ -184,7 +190,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_rede"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_rede"
@@ -211,7 +218,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_status"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_status"
@@ -238,7 +246,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_agendado_para"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_agendado_para"
@@ -265,7 +274,8 @@
             <RelativeLayout
                 android:id="@+id/os_layout_mapeado"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
 
                 <TextView
                     android:id="@+id/os_mapeado"
