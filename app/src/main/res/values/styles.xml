@@ -28,7 +28,18 @@
         <item name="android:layout_marginRight">80dp</item>
     </style>
 
-    <style name="ButtonClient" parent="android:Widget.Material.Button.Colored">
+    <style name="ButtonOsBorderless" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:background">@drawable/background_btn_blue</item>
+        <item name="android:textColor">@color/text_btn</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">146dp</item>
+        <item name="android:layout_height">63dp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ButtonClient" parent="Base.Widget.AppCompat.Button.Colored">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:clickable">true</item>

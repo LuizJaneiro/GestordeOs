@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_os_filter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".os_filter.OsFilterActivity"
+    tools:showIn="@layout/activity_os_filter">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:paddingTop="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ordenar por:"
+            android:textColor="@color/colorAccent"
+            android:textSize="24dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_marginTop="20dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_distance"
+                style="@style/ButtonOsBorderless"
+                android:layout_alignParentLeft="true"
+                android:text="Distância" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_name"
+                style="@style/ButtonOsBorderless"
+                android:layout_alignParentRight="true"
+                android:text="Nome" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btn_date"
+            style="@style/ButtonOsBorderless"
+            android:text="Data" />
+    </LinearLayout>
+
+</ScrollView>

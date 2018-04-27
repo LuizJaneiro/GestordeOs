@@ -5,6 +5,7 @@
     <color name="colorAccent">#1B1C6B</color>
     <color name="text_color_light">#343695</color>
     <color name="line_color">#A6A6A6</color>
+    <color name="line_color_filter">#2E3191</color>
     <color name="text_btn">#202275</color>
     <color name="text_color_os_item">#202275</color>
     <color name="line_os_item">#707070</color>
@@ -13,4 +14,6 @@
     <color name="btn_nav_transparent">#402E3191</color>
     <color name="btn_negative_dialog">#FF3B30</color>
     <color name="btn_positive_dialog">#7DD61D</color>
+    <color name="btn_filter_selected_background">#2E3191</color>
+    <color name="btn_filter_text_color_selected">#FFFFFF</color>
 </resources>

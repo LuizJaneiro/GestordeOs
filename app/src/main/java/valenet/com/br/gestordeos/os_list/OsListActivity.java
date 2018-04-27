@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -17,6 +18,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -31,6 +35,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,6 +54,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
@@ -94,8 +100,11 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
+    private final int REQ_CODE_FILTER = 202;
+    private final int REQ_CODE_BACK_FILTER = 203;
     private Integer osType;
     private boolean proximidade = true;
+    private HashMap<String, Boolean> orderFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +120,17 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
 
         this.presenter = new OsListPresenterImp(this);
+
+        this.orderFilters = new HashMap<>();
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
 
         searchViewContainer.handleToolbarAnimation(toolbar);
         searchViewContainer.setHint("Buscar por Cliente");
@@ -246,6 +266,42 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_os_list, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        if (item.getItemId() == R.id.menu_map){
+            //TODO navigateToMap()
+            return true;
+        }
+
+        if (item.getItemId() == R.id.menu_filter){
+            navigateToFilter();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void navigateToFilter() {
+        Intent intent = new Intent(this, OsFilterActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, osList);
+        intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        startActivityForResult(intent, REQ_CODE_FILTER);
+    }
+
+    @Override
     public void navigateToSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
@@ -261,12 +317,21 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
                 if (filtredList == null || filtredList.size() == 0)
-                    adapter = new OsItemAdapter(osList, this, this, myLocation);
+                    adapter = new OsItemAdapter(osList, this, this, myLocation, null);
                 else
-                    adapter = new OsItemAdapter(filtredList, this, this, myLocation);
+                    adapter = new OsItemAdapter(filtredList, this, this, myLocation, null);
                 this.recyclerViewOs.setAdapter(adapter);
 
                 searchViewContainer.collapse();
+            }
+        }
+
+        if(requestCode == REQ_CODE_FILTER){
+            if(resultCode == REQ_CODE_BACK_FILTER){
+                this.filtredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
+                if (filtredList != null && filtredList.size() > 0)
+                    adapter = new OsItemAdapter(filtredList, this, this, myLocation, null);
+                this.recyclerViewOs.setAdapter(adapter);
             }
         }
 
@@ -328,7 +393,13 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
-        adapter = new OsItemAdapter(osListAdapter, this, this, myLocation);
+        if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+        else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+        else
+            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+
         recyclerViewOs.setAdapter(adapter);
         recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewOs.setItemAnimator(new DefaultItemAnimator());

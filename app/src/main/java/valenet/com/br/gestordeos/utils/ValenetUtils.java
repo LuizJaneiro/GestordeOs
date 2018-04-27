@@ -7,6 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
 
 import java.text.Normalizer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ValenetUtils {
@@ -20,6 +22,10 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
     public static final String SHARED_PREF_KEY_EMAIL_CLIENT = "SHARED_PREF_KEY_EMAIL_CLIENT";
     public static final String SHARED_PREF_KEY_PASSWORD_CLIENT = "SHARED_PREF_KEY_PASSWORD_CLIENT";
+    public static final String SHARED_PREF_KEY_OS_FILTER = "SHARED_PREF_KEY_OS_FILTER";
+    public static final String SHARED_PREF_KEY_OS_DISTANCE = "SHARED_PREF_KEY_OS_DISTANCE";
+    public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
+    public static final String SHARED_PREF_KEY_OS_DATE = "SHARED_PREF_KEY_OS_DATE";
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
 
@@ -79,5 +85,19 @@ public class ValenetUtils {
                 toFormatter();
 
         return fmt.print(dateTime);
+    }
+
+    public static Date convertStringToDate(String dateString){
+        if(dateString == null)
+            return null;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        Date date;
+        try {
+            date = sdf.parse(dateString);
+        } catch (ParseException e) {
+            date = null;
+            e.printStackTrace();
+        }
+        return date;
     }
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import valenet.com.br.gestordeos.R;
@@ -28,43 +29,80 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final List<Os> osList;
     private final Context context;
     private final Activity activity;
+    private final String sortOsBy;
     private Location myLocation;
 
-    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation) {
+    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy) {
         this.osList = osList;
         this.context = context;
         this.activity = activity;
         this.myLocation = myLocation;
-        if(osList != null && myLocation != null)
-            sortOsList();
+        this.sortOsBy = sortOsBy;
+        if(sortOsBy != null)
+            sortOsList(sortOsBy);
     }
 
-    private void sortOsList(){
-        Collections.sort(osList, new Comparator<Os>() {
-            @Override
-            public int compare(Os o1, Os o2) {
-                Double distance1, distance2;
-                if(o1.getLongitude() == null || o1.getLatitude() == null)
-                    distance1 = Double.MAX_VALUE;
-                else {
-                    Location location1 = new Location("");
-                    location1.setLatitude(o1.getLatitude());
-                    location1.setLongitude(o1.getLongitude());
-                    distance1 = (double) myLocation.distanceTo(location1);
+    private void sortOsList(String sortOsBy){
+        if(sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)){
+            Collections.sort(osList, new Comparator<Os>() {
+                @Override
+                public int compare(Os o1, Os o2) {
+                    return o1.getCliente().compareTo(o2.getCliente());
                 }
+            });
+        }
 
-                if(o2.getLongitude() == null || o2.getLatitude() == null)
-                    distance2 = Double.MAX_VALUE;
-                else {
-                    Location location2 = new Location("");
-                    location2.setLatitude(o2.getLatitude());
-                    location2.setLongitude(o2.getLongitude());
-                    distance2 = (double) myLocation.distanceTo(location2);
+        if(sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)){
+            Collections.sort(osList, new Comparator<Os>() {
+                @Override
+                public int compare(Os o1, Os o2) {
+                    Double distance1, distance2;
+                    if(o1.getLongitude() == null || o1.getLatitude() == null)
+                        distance1 = Double.MAX_VALUE;
+                    else {
+                        Location location1 = new Location("");
+                        location1.setLatitude(o1.getLatitude());
+                        location1.setLongitude(o1.getLongitude());
+                        distance1 = (double) myLocation.distanceTo(location1);
+                    }
+
+                    if(o2.getLongitude() == null || o2.getLatitude() == null)
+                        distance2 = Double.MAX_VALUE;
+                    else {
+                        Location location2 = new Location("");
+                        location2.setLatitude(o2.getLatitude());
+                        location2.setLongitude(o2.getLongitude());
+                        distance2 = (double) myLocation.distanceTo(location2);
+                    }
+
+                    return distance1.compareTo(distance2);
                 }
+            });
+        }
 
-                return distance1.compareTo(distance2);
-            }
-        });
+        if(sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)){
+            Collections.sort(osList, new Comparator<Os>() {
+                @Override
+                public int compare(Os o1, Os o2) {
+                    Date date1, date2;
+                    if(o1.getDataAgendamento() == null)
+                        date1 = new Date(Long.MAX_VALUE);
+                    else {
+                        String dateString = ValenetUtils.convertJsonToStringDate(o1.getDataAgendamento());
+                        date1 = ValenetUtils.convertStringToDate(dateString);
+                    }
+
+                    if(o2.getDataAgendamento() == null)
+                        date2 = new Date(Long.MAX_VALUE);
+                    else {
+                        String dateString = ValenetUtils.convertJsonToStringDate(o2.getDataAgendamento());
+                        date2 = ValenetUtils.convertStringToDate(dateString);
+                    }
+
+                    return date1.compareTo(date2);
+                }
+            });
+        }
     }
 
     @Override
@@ -76,12 +114,6 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         v = inflater.inflate(R.layout.card_os_item, parent, false);
         viewHolder = new MViewHolder(v);
         return viewHolder;
-    }
-
-    public void reloadData(Location location) {
-        this.myLocation = location;
-        sortOsList();
-        notifyDataSetChanged();
     }
 
     @Override

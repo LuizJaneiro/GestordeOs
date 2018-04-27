@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +62,8 @@ public class SearchActivity extends AppCompatActivity {
     private MenuItem item;
     private Location myLocation;
 
+    private HashMap<String, Boolean> orderFilters;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +80,16 @@ public class SearchActivity extends AppCompatActivity {
 
         filtredList = new ArrayList<>();
         osList = new ArrayList<>();
+        orderFilters = new HashMap<>();
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
 
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
@@ -204,7 +218,12 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setAdapter(ArrayList<Os> list) {
-        adapter = new OsItemAdapter(list, this, this, myLocation);
+        if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+        else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+        else
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -233,15 +252,9 @@ public class SearchActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             if (submit)
                 Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_SHORT, true).show();
-            adapter = new OsItemAdapter(osListArray, this, this, myLocation);
-            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-            this.recyclerViewSearch.setAdapter(adapter);
+            setAdapter(osListArray);
         } else {
-            adapter = new OsItemAdapter(filteredList, this, this, myLocation);
-            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-            this.recyclerViewSearch.setAdapter(adapter);
+            setAdapter(filteredList);
         }
     }
 

@@ -1,47 +1,42 @@
-package valenet.com.br.gestordeos.os_list;
+package valenet.com.br.gestordeos.os_filter;
 
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 
-public interface OsList {
+public class OsFilter {
+    interface OsFilteriew {
+        void hideFilterView();
 
-    interface OsListView {
-        void navigateToSearch();
+        void showFilterView();
 
-        void navigateToFilter();
+        void hideErrorConectionView();
 
-        void hideOsListView();
+        void showErrorConectionView();
 
-        void showOsListView();
+        void hideErrorServerView();
+
+        void showErrorServerView();
+
+        void hideEmptyListView();
+
+        void showEmptyListView();
 
         void hideLoading();
 
         void showLoading();
 
-        void showErrorConectionView();
-
-        void hideErrorConectionView();
-
-        void showErrorServerView();
-
-        void hideErrorServerView();
-
-        void showEmptyListView();
-
-        void hideEmptyListView();
-
-        void showListOs(List<Os> osListAdapter);
+        void loadListOs(List<Os> list);
     }
 
-    interface OsListPresenter {
+    interface OsFilterPresenter {
         void loadOsList(Double latitude, Double longitude, Integer codUser,
                         Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
     }
 
-    interface OsListInteractor {
+    interface OsFilterInteractor {
         void loadOsList(Double latitude, Double longitude, Integer codUser,
-                               Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
+                        Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
         interface onFinishedListener {
             void successLoadingOsList(List<Os> osList);
 
