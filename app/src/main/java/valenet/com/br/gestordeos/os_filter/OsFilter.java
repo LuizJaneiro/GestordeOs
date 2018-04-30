@@ -1,11 +1,13 @@
 package valenet.com.br.gestordeos.os_filter;
 
+import java.util.HashMap;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class OsFilter {
-    interface OsFilteriew {
+    interface OsFilterView {
         void hideFilterView();
 
         void showFilterView();
@@ -27,18 +29,25 @@ public class OsFilter {
         void showLoading();
 
         void loadListOs(List<Os> list);
+
+        void loadOsTypesList(List<OsTypeModel> osTypes);
+
+        interface selectedFiltersListener {
+            List<Os> filterList();
+        }
     }
 
     interface OsFilterPresenter {
-        void loadOsList(Double latitude, Double longitude, Integer codUser,
-                        Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
+        void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
+                                  Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, boolean isSwipeRefresh);
     }
 
     interface OsFilterInteractor {
-        void loadOsList(Double latitude, Double longitude, Integer codUser,
-                        Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
+        void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
+                                  Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, final onFinishedListener listener);
+
         interface onFinishedListener {
-            void successLoadingOsList(List<Os> osList);
+            void successLoading(List<Os> osList, List<OsTypeModel> osTypes, boolean loadOsList);
 
             void errorService(String error);
 

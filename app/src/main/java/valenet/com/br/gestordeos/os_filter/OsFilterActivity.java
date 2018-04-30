@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +53,11 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
-import valenet.com.br.gestordeos.os_list.OsListActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
-public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFilteriew {
+public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFilterView {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
@@ -68,7 +70,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     @BindView(R.id.btn_date)
     AppCompatButton btnDate;
     @BindView(R.id.layout_os_filter)
-    ScrollView layoutOsFilter;
+    ViewGroup layoutOsFilter;
     @BindView(R.id.btn_reload)
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)
@@ -83,9 +85,12 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     RelativeLayout layoutErrorServer;
     @BindView(R.id.loading_view)
     RelativeLayout loadingView;
+    @BindView(R.id.recycler_btn_filters)
+    RecyclerView recyclerBtnFilters;
 
     private final static int REQUEST_CHECK_SETTINGS = 0;
     ReactiveLocationProvider locationProvider;
+
     private Subscription locationSubscription;
 
     private HashMap<String, Boolean> selectedButtons;
@@ -97,8 +102,15 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
     private ArrayList<Os> filtredList;
     private ArrayList<Os> osList;
+    private ArrayList<OsTypeModel> osTypeModelList;
     private Location myLocation;
     private OsFilter.OsFilterPresenter presenter;
+
+    private OsFilter.OsFilterView.selectedFiltersListener selectedFiltersListener;
+
+    private boolean loadOsList = false;
+
+    private OsTypeAdapter osTypeAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +125,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
         this.selectedButtons = new HashMap<>();
         this.myButtons = new HashMap<>();
-
-        this.hideFilterView();
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
@@ -136,7 +146,22 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
 
-        if(myLocation == null){
+        this.osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerBtnFilters.setLayoutManager(gridLayoutManager);
+        if(osTypeModelList != null && osTypeModelList.size() > 0){
+            osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.osList, osType);
+            recyclerBtnFilters.setAdapter(osTypeAdapter);
+            this.selectedFiltersListener = osTypeAdapter;
+        }
+
+        if (osList == null || osList.size() == 0 || osTypeModelList == null || osTypeModelList.size() == 0)
+            loadOsList = true;
+
+        this.hideFilterView();
+        this.showLoading();
+
+        if(myLocation == null) {
             RxPermissions.getInstance(OsFilterActivity.this)
                     .request(Manifest.permission.ACCESS_FINE_LOCATION)
                     .map(new Func1<Boolean, Object>() {
@@ -183,16 +208,16 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                                             public Boolean call(Location location) {
                                                 if (location != null) {
                                                     myLocation = location;
-                                                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                                                    presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
                                                             LoginLocal.getInstance().getCurrentUser().getCoduser(),
                                                             true,
-                                                            osType, false);
+                                                            osType, loadOsList, false);
                                                     return true;
                                                 } else {
-                                                    presenter.loadOsList(1.1, 1.1,
+                                                    presenter.loadOsListAndOsTypes(1.1, 1.1,
                                                             LoginLocal.getInstance().getCurrentUser().getCoduser(),
                                                             false,
-                                                            osType, false);
+                                                            osType, loadOsList, false);
                                                     return false;
                                                 }
                                             }
@@ -221,22 +246,20 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                     }).subscribe();
         }
 
-        if(this.osList == null || osList.size() == 0){
+        if (loadOsList) {
             if (myLocation != null) {
-                presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         true,
-                        osType, false);
+                        osType, loadOsList, false);
             } else {
-                presenter.loadOsList(1.1, 1.1,
+                presenter.loadOsListAndOsTypes(1.1, 1.1,
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         false,
-                        osType, false);
+                        osType, loadOsList, false);
             }
-        } else{
-            if(myLocation != null)
-                this.showFilterView();
         }
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -284,6 +307,16 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
+        Set<String> keys = selectedButtons.keySet();
+        for (String key : keys) {
+            if (key != null) {
+                Boolean isSelected = selectedButtons.get(key);
+                final int sdk = Build.VERSION.SDK_INT;
+                if (isSelected) {
+                    orderBySelectedFilter(key);
+                }
+            }
+        }
         resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         setResult(REQ_CODE_BACK_FILTER, resultIntent);
         finish();
@@ -391,27 +424,35 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         this.osList = (ArrayList) list;
     }
 
+    @Override
+    public void loadOsTypesList(List<OsTypeModel> osTypes) {
+        this.osTypeModelList = (ArrayList) osTypes;
+        osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.osList, osType);
+        recyclerBtnFilters.setAdapter(osTypeAdapter);
+        this.selectedFiltersListener = osTypeAdapter;
+    }
+
     private void orderBySelectedFilter(String selectedFilter) {
-        if(filtredList == null || filtredList.size() == 0)
+        if (filtredList == null || filtredList.size() == 0)
             filtredList = new ArrayList<>();
 
-        if(selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)){
-            Collections.sort(osList, new Comparator<Os>() {
+        this.filtredList = (ArrayList) this.selectedFiltersListener.filterList();
+
+        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)) {
+            Collections.sort(filtredList, new Comparator<Os>() {
                 @Override
                 public int compare(Os o1, Os o2) {
                     return o1.getCliente().compareTo(o2.getCliente());
                 }
             });
-
-            filtredList = osList;
         }
 
-        if(selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)){
-            Collections.sort(osList, new Comparator<Os>() {
+        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)) {
+            Collections.sort(filtredList, new Comparator<Os>() {
                 @Override
                 public int compare(Os o1, Os o2) {
                     Double distance1, distance2;
-                    if(o1.getLongitude() == null || o1.getLatitude() == null)
+                    if (o1.getLongitude() == null || o1.getLatitude() == null)
                         distance1 = Double.MAX_VALUE;
                     else {
                         Location location1 = new Location("");
@@ -420,7 +461,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                         distance1 = (double) myLocation.distanceTo(location1);
                     }
 
-                    if(o2.getLongitude() == null || o2.getLatitude() == null)
+                    if (o2.getLongitude() == null || o2.getLatitude() == null)
                         distance2 = Double.MAX_VALUE;
                     else {
                         Location location2 = new Location("");
@@ -432,23 +473,21 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                     return distance1.compareTo(distance2);
                 }
             });
-
-            filtredList = osList;
         }
 
-        if(selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)){
-            Collections.sort(osList, new Comparator<Os>() {
+        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)) {
+            Collections.sort(filtredList, new Comparator<Os>() {
                 @Override
                 public int compare(Os o1, Os o2) {
                     Date date1, date2;
-                    if(o1.getDataAgendamento() == null)
+                    if (o1.getDataAgendamento() == null)
                         date1 = new Date(Long.MAX_VALUE);
                     else {
                         String dateString = ValenetUtils.convertJsonToStringDate(o1.getDataAgendamento());
                         date1 = ValenetUtils.convertStringToDate(dateString);
                     }
 
-                    if(o2.getDataAgendamento() == null)
+                    if (o2.getDataAgendamento() == null)
                         date2 = new Date(Long.MAX_VALUE);
                     else {
                         String dateString = ValenetUtils.convertJsonToStringDate(o2.getDataAgendamento());
@@ -458,8 +497,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                     return date1.compareTo(date2);
                 }
             });
-
-            filtredList = osList;
         }
     }
 
@@ -467,6 +504,4 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
-
 }

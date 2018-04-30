@@ -3,6 +3,7 @@ package valenet.com.br.gestordeos.os_list;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsListInteractor.onFinishedListener {
     // region Members
@@ -31,19 +32,20 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
             view.hideEmptyListView();
             view.showLoading();
         }
-        interactor.loadOsList(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
+        interactor.loadOsListAndOsTypes(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
     }
 
     @Override
-    public void successLoadingOsList(List<Os> osList) {
+    public void successLoading(List<Os> osList, List<OsTypeModel> osTypes) {
         view.hideErrorConectionView();
         view.hideEmptyListView();
         view.hideLoading();
-        if(osList != null) {
+        if(osList != null && osTypes != null) {
             if(osList.size() == 0)
                 view.showEmptyListView();
             else{
                 view.showListOs(osList);
+                view.showListOsType(osTypes);
                 view.showOsListView();
             }
         }

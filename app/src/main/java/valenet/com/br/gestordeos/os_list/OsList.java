@@ -3,6 +3,7 @@ package valenet.com.br.gestordeos.os_list;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public interface OsList {
 
@@ -32,6 +33,8 @@ public interface OsList {
         void hideEmptyListView();
 
         void showListOs(List<Os> osListAdapter);
+
+        void showListOsType(List<OsTypeModel> osTypes);
     }
 
     interface OsListPresenter {
@@ -40,10 +43,12 @@ public interface OsList {
     }
 
     interface OsListInteractor {
-        void loadOsList(Double latitude, Double longitude, Integer codUser,
-                               Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
+        void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
+                                  Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
+
+
         interface onFinishedListener {
-            void successLoadingOsList(List<Os> osList);
+            void successLoading(List<Os> osList, List<OsTypeModel> osTypes);
 
             void errorService(String error);
 

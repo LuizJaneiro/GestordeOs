@@ -37,6 +37,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,8 +54,11 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.os_filter.OsFilter;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
+import valenet.com.br.gestordeos.os_filter.OsTypeAdapter;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
@@ -105,6 +109,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     private Integer osType;
     private boolean proximidade = true;
     private HashMap<String, Boolean> orderFilters;
+    private HashMap<String, Boolean> filters;
+    private ArrayList<OsTypeModel> osTypeModelList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -295,7 +301,8 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     public void navigateToFilter() {
         Intent intent = new Intent(this, OsFilterActivity.class);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, osList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelList);
         intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         startActivityForResult(intent, REQ_CODE_FILTER);
@@ -329,9 +336,15 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         if(requestCode == REQ_CODE_FILTER){
             if(resultCode == REQ_CODE_BACK_FILTER){
                 this.filtredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
-                if (filtredList != null && filtredList.size() > 0)
+                if (filtredList != null && filtredList.size() > 0) {
                     adapter = new OsItemAdapter(filtredList, this, this, myLocation, null);
-                this.recyclerViewOs.setAdapter(adapter);
+                    this.recyclerViewOs.setAdapter(adapter);
+                    this.hideEmptyListView();
+                    this.showOsListView();
+                } else {
+                    this.hideOsListView();
+                    this.showEmptyListView();
+                }
             }
         }
 
@@ -393,16 +406,60 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
-        if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
-        else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
-        else
-            adapter = new OsItemAdapter(osListAdapter, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+    }
 
-        recyclerViewOs.setAdapter(adapter);
-        recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
+    @Override
+    public void showListOsType(List<OsTypeModel> osTypes) {
+        this.filters = new HashMap<>();
+        List<Os> newOsList = new ArrayList<>();
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        this.osTypeModelList = new ArrayList<>();
+        if(osTypes != null && osTypes.size() > 0){
+            for(OsTypeModel model : osTypes){
+                if(osType == ValenetUtils.GROUP_OS_MERCANTIL && model.getTipoMercantil()){
+                    this.filters.put(model.getDescricao(),
+                            sharedPref.getBoolean(model.getDescricao(), true));
+                }else if(osType == ValenetUtils.GROUP_OS_CORRETIVA && !model.getTipoMercantil()){
+                    this.filters.put(model.getDescricao(),
+                            sharedPref.getBoolean(model.getDescricao(), true));
+                }
+            }
+        }
+
+
+
+        Set<String> keys = filters.keySet();
+
+        for(String key : keys){
+            boolean isSelected = this.filters.get(key);
+            if(isSelected){
+                for(Os os : osList){
+                    if(os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())){
+                        newOsList.add(os);
+                    }
+                }
+            }
+        }
+
+        this.filtredList = (ArrayList) newOsList;
+
+        if(this.filtredList.size() == 0){
+            this.hideOsListView();
+            this.showEmptyListView();
+        } else {
+            if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+            else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+            else
+                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+
+            recyclerViewOs.setAdapter(adapter);
+            recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
+            recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
+        }
     }
 
     @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})

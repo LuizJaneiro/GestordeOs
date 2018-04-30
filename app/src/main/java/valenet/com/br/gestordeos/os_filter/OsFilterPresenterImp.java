@@ -3,16 +3,17 @@ package valenet.com.br.gestordeos.os_filter;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilter.OsFilterInteractor.onFinishedListener {
     // region Members
-    private OsFilter.OsFilteriew view;
+    private OsFilter.OsFilterView view;
     private OsFilter.OsFilterInteractor interactor;
 
     // endregion Members
 
     // region constructors
-    public OsFilterPresenterImp(OsFilter.OsFilteriew view) {
+    public OsFilterPresenterImp(OsFilter.OsFilterView view) {
         this.view = view;
         interactor = new OsFilterInteractorImp(this);
     }
@@ -23,7 +24,7 @@ public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilte
 
 
     @Override
-    public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
+    public void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, boolean isSwipeRefresh) {
         if(!isSwipeRefresh) {
             view.hideFilterView();
             view.hideErrorConectionView();
@@ -31,21 +32,22 @@ public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilte
             view.hideEmptyListView();
             view.showLoading();
         }
-        interactor.loadOsList(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
+        interactor.loadOsListAndOsTypes(latitude, longitude, codUser, isSearchingByCloseOs, group, loadOsList, this);
     }
 
     @Override
-    public void successLoadingOsList(List<Os> osList) {
+    public void successLoading(List<Os> osList, List<OsTypeModel> osTypes, boolean loadOsList) {
         view.hideErrorConectionView();
+        view.hideErrorServerView();
         view.hideEmptyListView();
         view.hideLoading();
-        if(osList != null) {
-            if(osList.size() == 0)
-                view.showEmptyListView();
-            else{
+        if((loadOsList && (osList == null || osList.size() == 0)) || (osTypes == null || osTypes.size() == 0))
+            view.showEmptyListView();
+        else {
+            if(loadOsList)
                 view.loadListOs(osList);
-                view.showFilterView();
-            }
+            view.loadOsTypesList(osTypes);
+            view.showFilterView();
         }
     }
 
@@ -66,6 +68,8 @@ public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilte
         view.hideErrorServerView();
         view.showErrorConectionView();
     }
+
+
 
 
     // endregion Methods
