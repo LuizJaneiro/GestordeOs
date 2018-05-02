@@ -155,6 +155,8 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
             this.selectedFiltersListener = osTypeAdapter;
         }
 
+        //dff
+
         if (osList == null || osList.size() == 0 || osTypeModelList == null || osTypeModelList.size() == 0)
             loadOsList = true;
 
