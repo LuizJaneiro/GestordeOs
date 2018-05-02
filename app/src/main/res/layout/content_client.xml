@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".client.ClientActivity"
+    tools:ignore="MissingPrefix"
+    tools:showIn="@layout/activity_client">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/footer_layout" />
+
+    <RelativeLayout
+        android:id="@+id/footer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="0.7dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/line_os_item" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:paddingTop="4dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_call"
+                style="@style/ButtonClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:backgroundTint="#7DD61D"
+                android:drawableLeft="@drawable/call_icon"
+                android:drawablePadding="28dp"
+                android:paddingRight="32dp"
+                android:text="Ligar" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_nav"
+                style="@style/ButtonClient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:backgroundTint="#2E3191"
+                android:drawableLeft="@drawable/nav_icon"
+                android:drawablePadding="28dp"
+                android:paddingRight="32dp"
+                android:text="Ir Para" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

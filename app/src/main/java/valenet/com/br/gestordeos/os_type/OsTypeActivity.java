@@ -19,6 +19,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.os_list.OsListActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeView {
 
@@ -28,8 +29,8 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     Toolbar toolbar;
     @BindView(R.id.btn_mercantil)
     AppCompatButton btnMercantil;
-    @BindView(R.id.btn_assistencia_tecnica)
-    AppCompatButton btnAssistenciaTecnica;
+    @BindView(R.id.btn_corretiva)
+    AppCompatButton btnCorretiva;
     @BindView(R.id.btn_sair)
     AppCompatButton btnSair;
     @BindView(R.id.os_type_view)
@@ -45,22 +46,26 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
         setContentView(R.layout.activity_os_type);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         textViewToolbarTitle.setText(getString(R.string.title_activity_os_type));
 
         this.presenter = new OsTypePresenterImp(this);
 
-        ClickGuard.guard(btnAssistenciaTecnica);
+        ClickGuard.guard(btnCorretiva);
         ClickGuard.guard(btnMercantil);
         ClickGuard.guard(btnSair);
     }
 
-    @OnClick({R.id.btn_mercantil, R.id.btn_assistencia_tecnica, R.id.btn_sair})
+    @OnClick({R.id.btn_mercantil, R.id.btn_corretiva, R.id.btn_sair})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_mercantil:
-                navigateToOsList();
+                navigateToOsList(ValenetUtils.GROUP_OS_MERCANTIL);
                 break;
-            case R.id.btn_assistencia_tecnica:
+            case R.id.btn_corretiva:
+                navigateToOsList(ValenetUtils.GROUP_OS_CORRETIVA);
                 break;
             case R.id.btn_sair:
                 presenter.logout();
@@ -69,8 +74,9 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     }
 
     @Override
-    public void navigateToOsList() {
+    public void navigateToOsList(int osType) {
         Intent intent = new Intent(this, OsListActivity.class);
+        intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
         startActivity(intent);
     }
 

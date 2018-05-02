@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".client.Fragments.ObservationFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingPrefix">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:paddingLeft="28dp"
+            android:paddingRight="28dp"
+            android:paddingTop="8dp">
+
+            <RelativeLayout
+                android:id="@+id/os_layout_observacao"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_view_os_observacao"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/os_nome"
+                    android:text="VALENET 10 MBPS (FIBRA): Mensalidade por apenas99,90 por 12 meses, Instalação por apenas 190,00.Instalação com GPON.Pagamento por boleto eletrônico por e-mail. Pagamento à vista.Cabo UTP por R$ 1,50 o metro. Cobrança de cabo Drop(Fibra) exedente por R$ 1,50 o metro. Casa sem Tubulação. Serviço com troca de Equipamento. Favor verificar roteador cliente disse que equipamento esta muito velho, informei que sera dado manutenção e através disso que sera analisado se tem necessidade de troca. Agendado com a titular, ciente da taxa de visita improdutiva.CDA-170507-OPR - CLIENTE VAI ASSINAR CONTRATO NO ATO DO SERVIÇO. "
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

@@ -2,6 +2,8 @@ package valenet.com.br.gestordeos.search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -25,13 +27,14 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.Os;
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -57,6 +60,9 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<Os> osList;
     private OsItemAdapter adapter;
     private MenuItem item;
+    private Location myLocation;
+
+    private HashMap<String, Boolean> orderFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,28 +74,35 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar po nome");
+        searchView.setHint("Buscar por Cliente");
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
         filtredList = new ArrayList<>();
         osList = new ArrayList<>();
-        Date date = new Date();
-        date.setDate(16);
-        date.setMonth(10);
-        date.setYear(2018);
-        for (int i = 0; i < 30; i++)
-            osList.add(new Os(2.5, date, "Corretiva Física", "Maria Lurdes"));
-        osList.add(new Os(2.5, date, "Corretiva Física", "Luiz Janeiro"));
+        orderFilters = new HashMap<>();
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
+
+        filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
+        osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
 
 /*        if(filtredList == null || filtredList.size() == 0)
             //busca do banco a lista de os
             else*/
 
-        adapter = new OsItemAdapter(osList, this);
-        recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-        recyclerViewSearch.setAdapter(adapter);
+        if(filtredList == null || filtredList.size() == 0){
+            setAdapter(osList);
+        }else
+            setAdapter(filtredList);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,8 +128,8 @@ public class SearchActivity extends AppCompatActivity {
                     try {
                         InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        filter(searchEditText.getText().toString(), true);
                     } catch (Exception e) {
-                        // TODO: handle exception
                     }
                     return true;
                 }
@@ -181,7 +194,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     filter(query, true);
                 } else {
-                    setAdapter();
+                    if(filtredList == null || filtredList.size() == 0)
+                        setAdapter(osList);
+                    else
+                        setAdapter(filtredList);
                 }
                 return true;
             }
@@ -191,15 +207,23 @@ public class SearchActivity extends AppCompatActivity {
                 if (!newText.isEmpty()) {
                     filter(newText, false);
                 } else {
-                    setAdapter();
+                    if(filtredList == null || filtredList.size() == 0)
+                        setAdapter(osList);
+                    else
+                        setAdapter(filtredList);
                 }
                 return true;
             }
         });
     }
 
-    public void setAdapter() {
-        adapter = new OsItemAdapter(this.osList, this);
+    public void setAdapter(ArrayList<Os> list) {
+        if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+        else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+        else
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -216,7 +240,7 @@ public class SearchActivity extends AppCompatActivity {
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {
                 Os os = osListArray.get(i);
-                String name = os.getClient().toUpperCase();
+                String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
 
                 name = ValenetUtils.removeAccent(name).toUpperCase();
                 s = ValenetUtils.removeAccent(s).toUpperCase();
@@ -228,15 +252,9 @@ public class SearchActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             if (submit)
                 Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_SHORT, true).show();
-            adapter = new OsItemAdapter(osListArray, this);
-            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-            this.recyclerViewSearch.setAdapter(adapter);
+            setAdapter(osListArray);
         } else {
-            adapter = new OsItemAdapter(filteredList, this);
-            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-            this.recyclerViewSearch.setAdapter(adapter);
+            setAdapter(filteredList);
         }
     }
 

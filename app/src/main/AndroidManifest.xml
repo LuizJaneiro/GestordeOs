@@ -3,6 +3,10 @@
     package="valenet.com.br.gestordeos">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".application.GestorDeOsApplication"
@@ -35,11 +39,36 @@
         <activity
             android:name=".os_list.OsListActivity"
             android:label="@string/title_activity_os_list"
+            android:parentActivityName=".os_type.OsTypeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".os_type.OsTypeActivity" />
+        </activity>
         <activity
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
+            android:parentActivityName=".os_list.OsListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".os_list.OsListActivity" />
+        </activity>
+        <activity
+            android:name=".client.ClientActivity"
+            android:label="@string/title_activity_client"
+            android:parentActivityName=".os_list.OsListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".os_list.OsListActivity" />
+        </activity>
+        <activity
+            android:name=".os_filter.OsFilterActivity"
+            android:label="@string/title_activity_os_filter"
             android:parentActivityName=".os_list.OsListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">

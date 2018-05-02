@@ -2,7 +2,7 @@ package valenet.com.br.gestordeos.os_type;
 
 public interface OsType {
     interface OsTypeView {
-        void navigateToOsList();
+        void navigateToOsList(int osType);
 
         void navigateToLogin();
 

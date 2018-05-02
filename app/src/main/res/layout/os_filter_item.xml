@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatButton android:id="@+id/btn_filter_item"
+    style="@style/ButtonOsBorderless"
+    android:text="Data"
+    xmlns:android="http://schemas.android.com/apk/res/android" />
