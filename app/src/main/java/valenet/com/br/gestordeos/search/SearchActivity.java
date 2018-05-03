@@ -35,6 +35,7 @@ import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -57,12 +58,14 @@ public class SearchActivity extends AppCompatActivity {
     private ImageButton searchBackBtn;
     private EditText searchEditText;
     private ArrayList<Os> filtredList;
-    private ArrayList<Os> osList;
+    private ArrayList<Os> searchList;
+    private ArrayList<OsTypeModel> osTypeModelArrayList;
     private OsItemAdapter adapter;
     private MenuItem item;
     private Location myLocation;
 
     private HashMap<String, Boolean> orderFilters;
+    private HashMap<String, Boolean> selectedFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,9 @@ public class SearchActivity extends AppCompatActivity {
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
         filtredList = new ArrayList<>();
-        osList = new ArrayList<>();
+        searchList = new ArrayList<>();
         orderFilters = new HashMap<>();
+        selectedFilters = new HashMap<>();
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
@@ -92,17 +96,19 @@ public class SearchActivity extends AppCompatActivity {
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
 
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
-        osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
 
-/*        if(filtredList == null || filtredList.size() == 0)
-            //busca do banco a lista de os
-            else*/
-
-        if(filtredList == null || filtredList.size() == 0){
-            setAdapter(osList);
-        }else
-            setAdapter(filtredList);
+        if(filtredList == null || osTypeModelArrayList == null) {
+            //TODO carrega do banco de dados a lista de os
+        } else {
+            if (osTypeModelArrayList != null && osTypeModelArrayList.size() > 0) {
+                for (OsTypeModel model : osTypeModelArrayList) {
+                    this.selectedFilters.put(model.getDescricao(),
+                            sharedPref.getBoolean(model.getDescricao(), true));
+                }
+            }
+        }
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,10 +200,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     filter(query, true);
                 } else {
-                    if(filtredList == null || filtredList.size() == 0)
-                        setAdapter(osList);
-                    else
+                    if(searchList == null || searchList.size() == 0)
                         setAdapter(filtredList);
+                    else
+                        setAdapter(searchList);
                 }
                 return true;
             }
@@ -207,10 +213,10 @@ public class SearchActivity extends AppCompatActivity {
                 if (!newText.isEmpty()) {
                     filter(newText, false);
                 } else {
-                    if(filtredList == null || filtredList.size() == 0)
-                        setAdapter(osList);
-                    else
+                    if(searchList == null || searchList.size() == 0)
                         setAdapter(filtredList);
+                    else
+                        setAdapter(searchList);
                 }
                 return true;
             }
@@ -232,10 +238,10 @@ public class SearchActivity extends AppCompatActivity {
     public void filter(String s, boolean submit) {
         ArrayList<Os> filteredList = new ArrayList<>();
         ArrayList<Os> osListArray = new ArrayList<>();
-        if(filtredList != null && filtredList.size() > 0)
-            osListArray = filtredList;
+        if(searchList != null && searchList.size() > 0)
+            osListArray = searchList;
         else
-            osListArray = osList;
+            osListArray = filtredList;
 
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {

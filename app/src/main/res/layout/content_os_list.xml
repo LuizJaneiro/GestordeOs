@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/refresh_layout"
+    android:id="@+id/os_list_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:visibility="gone"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".os_list.OsListActivity"
+    tools:context=".client.ClientActivity"
+    tools:ignore="MissingPrefix"
     tools:showIn="@layout/activity_os_list">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_os"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layoutAnimation="@anim/layout_anim_slide_bottom"
-        android:scrollbars="vertical">
+        android:layout_height="fill_parent" />
 
-    </android.support.v7.widget.RecyclerView>
-
-
-</android.support.v4.widget.SwipeRefreshLayout>
+</RelativeLayout>

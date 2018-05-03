@@ -141,10 +141,11 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
         renderButtons(this.selectedButtons, this.myButtons);
 
-        filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
+        filtredList = new ArrayList<>();
         osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
+        osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
 
         this.osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -154,8 +155,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
             recyclerBtnFilters.setAdapter(osTypeAdapter);
             this.selectedFiltersListener = osTypeAdapter;
         }
-
-        //dfff
 
         if (osList == null || osList.size() == 0 || osTypeModelList == null || osTypeModelList.size() == 0)
             loadOsList = true;
@@ -260,6 +259,10 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                         false,
                         osType, loadOsList, false);
             }
+        } else {
+            this.hideLoading();
+            this.loadOsTypesList(osTypeModelList);
+            this.showFilterView();
         }
 
         if (getSupportActionBar() != null) {
@@ -313,7 +316,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         for (String key : keys) {
             if (key != null) {
                 Boolean isSelected = selectedButtons.get(key);
-                final int sdk = Build.VERSION.SDK_INT;
                 if (isSelected) {
                     orderBySelectedFilter(key);
                 }

@@ -4,8 +4,9 @@ import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.os_type.OsType;
 
-public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsListInteractor.onFinishedListener {
+public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsListInteractor.onFinishedListenerOsList, OsList.OsListInteractor.onFinishedListenerOsTypes {
     // region Members
     private OsList.OsListView view;
     private OsList.OsListInteractor interactor;
@@ -24,6 +25,16 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
 
 
     @Override
+    public void loadOsTypes(Integer group) {
+        view.hideOsListView();
+        view.hideErrorConectionView();
+        view.hideErrorServerView();
+        view.hideEmptyListView();
+        view.showLoading();
+        interactor.loadOsTypes(group, this);
+    }
+
+    @Override
     public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
         if(!isSwipeRefresh) {
             view.hideOsListView();
@@ -36,23 +47,22 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
     }
 
     @Override
-    public void successLoading(List<Os> osList, List<OsTypeModel> osTypes) {
+    public void successLoadingOsList(List<Os> osList) {
         view.hideErrorConectionView();
+        view.hideErrorServerView();
         view.hideEmptyListView();
         view.hideLoading();
-        if(osList != null && osTypes != null) {
+        if(osList != null) {
             if(osList.size() == 0)
                 view.showEmptyListView();
             else{
                 view.showListOs(osList);
-                view.showListOsType(osTypes);
-                view.showOsListView();
             }
         }
     }
 
     @Override
-    public void errorService(String error) {
+    public void errorServiceOsList(String error) {
         view.hideLoading();
         view.hideOsListView();
         view.hideEmptyListView();
@@ -61,7 +71,7 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
     }
 
     @Override
-    public void errorNetwork() {
+    public void errorNetworkOsList() {
         view.hideLoading();
         view.hideOsListView();
         view.hideEmptyListView();
@@ -69,6 +79,38 @@ public class OsListPresenterImp implements OsList.OsListPresenter, OsList.OsList
         view.showErrorConectionView();
     }
 
+    @Override
+    public void successLoadingOsTypes(List<OsTypeModel> osList) {
+        view.hideErrorConectionView();
+        view.hideEmptyListView();
+        view.hideLoading();
+        if(osList != null) {
+            if(osList.size() == 0)
+                view.showErrorServerView();
+            else{
+                view.showListOsType(osList);
+                view.showOsListView();
+            }
+        }
+    }
+
+    @Override
+    public void errorServiceOsTypes(String error) {
+        view.hideLoading();
+        view.hideOsListView();
+        view.hideEmptyListView();
+        view.hideErrorConectionView();
+        view.showErrorServerView();
+    }
+
+    @Override
+    public void errorNetworkOsTypes() {
+        view.hideLoading();
+        view.hideOsListView();
+        view.hideEmptyListView();
+        view.hideErrorServerView();
+        view.showErrorConectionView();
+    }
 
     // endregion Methods
 }

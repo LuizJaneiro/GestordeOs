@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.os_list;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -9,13 +10,11 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -34,10 +33,10 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,10 +54,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.model.realm.LoginLocal;
-import valenet.com.br.gestordeos.os_filter.OsFilter;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
-import valenet.com.br.gestordeos.os_filter.OsTypeAdapter;
+import valenet.com.br.gestordeos.os_list.OsFragments.NextOsFragment;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
@@ -69,10 +66,6 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     TextView textViewToolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.recycler_view_os)
-    RecyclerView recyclerViewOs;
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout refreshLayout;
     @BindView(R.id.search_view_container)
     SearchViewLayout searchViewContainer;
     @BindView(R.id.loading_view)
@@ -89,27 +82,34 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)
     ViewGroup layoutEmptyList;
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+    @BindView(R.id.pager)
+    ViewPager pager;
+    @BindView(R.id.os_list_view)
+    ViewGroup osListView;
 
     private OsList.OsListPresenter presenter;
+
+    private OsListPagerAdapter pagerAdapter;
 
     ReactiveLocationProvider locationProvider;
     private Subscription locationSubscription;
     private final static int REQUEST_CHECK_SETTINGS = 0;
     private Location myLocation;
 
-    private ArrayList<Os> filtredList;
-    private ArrayList<Os> osList;
-
-    private OsItemAdapter adapter;
-
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private final int REQ_CODE_FILTER = 202;
     private final int REQ_CODE_BACK_FILTER = 203;
     private Integer osType;
-    private boolean proximidade = true;
+    private navigateInterface navigateInterface;
+
+    private ArrayList<Os> filtredList;
+
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
+
     private ArrayList<OsTypeModel> osTypeModelList;
 
     @Override
@@ -127,7 +127,12 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         this.presenter = new OsListPresenterImp(this);
 
+        tabLayout.addTab(tabLayout.newTab().setText("Próximas"));
+        tabLayout.addTab(tabLayout.newTab().setText("Agendadas"));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
         this.orderFilters = new HashMap<>();
+        this.filtredList = new ArrayList<>();
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
@@ -164,27 +169,6 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             public void onFinish(boolean expanded) {
             }
         });
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if(myLocation != null)
-                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                            proximidade,
-                            osType, true);
-                else {
-                    presenter.loadOsList(1.1, 1.1,
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                            proximidade,
-                            osType, true);
-                }
-            }
-        });
-
-        filtredList = new ArrayList<>();
-
-        osList = new ArrayList<>();
 
         this.showLoading();
         RxPermissions.getInstance(OsListActivity.this)
@@ -231,18 +215,11 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
                                     .map(new Func1<Location, Boolean>() {
                                         @Override
                                         public Boolean call(Location location) {
+                                            presenter.loadOsTypes(osType);
                                             if (location != null) {
                                                 myLocation = location;
-                                                presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                        proximidade,
-                                                        osType, false);
                                                 return true;
-                                            } else {
-                                                presenter.loadOsList(1.1, 1.1,
-                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                        false,
-                                                        osType, false);
+                                            }else {
                                                 return false;
                                             }
                                         }
@@ -285,12 +262,12 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             finish();
             return true;
         }
-        if (item.getItemId() == R.id.menu_map){
+        if (item.getItemId() == R.id.menu_map) {
             //TODO navigateToMap()
             return true;
         }
 
-        if (item.getItemId() == R.id.menu_filter){
+        if (item.getItemId() == R.id.menu_filter) {
             navigateToFilter();
         }
 
@@ -299,22 +276,15 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void navigateToFilter() {
-        Intent intent = new Intent(this, OsFilterActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelList);
-        intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        startActivityForResult(intent, REQ_CODE_FILTER);
+        if(navigateInterface != null)
+            navigateInterface.navigateToOsFilter();
     }
 
     @Override
     public void navigateToSearch() {
-        Intent intent = new Intent(this, SearchActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, osList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        startActivityForResult(intent, REQ_CODE_SEARCH);
+        if(navigateInterface != null){
+            navigateInterface.navigateToOsSearch();
+        }
     }
 
 
@@ -323,27 +293,15 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
-                if (filtredList == null || filtredList.size() == 0)
-                    adapter = new OsItemAdapter(osList, this, this, myLocation, null);
-                else
-                    adapter = new OsItemAdapter(filtredList, this, this, myLocation, null);
-                this.recyclerViewOs.setAdapter(adapter);
-
                 searchViewContainer.collapse();
             }
         }
 
-        if(requestCode == REQ_CODE_FILTER){
-            if(resultCode == REQ_CODE_BACK_FILTER){
+        if (requestCode == REQ_CODE_FILTER) {
+            if (resultCode == REQ_CODE_BACK_FILTER) {
                 this.filtredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
-                if (filtredList != null && filtredList.size() > 0) {
-                    adapter = new OsItemAdapter(filtredList, this, this, myLocation, null);
-                    this.recyclerViewOs.setAdapter(adapter);
-                    this.hideEmptyListView();
-                    this.showOsListView();
-                } else {
-                    this.hideOsListView();
-                    this.showEmptyListView();
+                if (filtredList != null) {
+                    navigateInterface.onActivityResultFilter(this.filtredList);
                 }
             }
         }
@@ -352,20 +310,17 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void hideOsListView() {
-        this.refreshLayout.setVisibility(View.GONE);
+        this.osListView.setVisibility(View.GONE);
     }
 
     @Override
     public void showOsListView() {
-        this.refreshLayout.setVisibility(View.VISIBLE);
+        this.osListView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if (refreshLayout.isRefreshing())
-            refreshLayout.setRefreshing(false);
-        else
-            this.loadingView.setVisibility(View.GONE);
+        this.loadingView.setVisibility(View.GONE);
     }
 
     @Override
@@ -405,61 +360,24 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void showListOs(List<Os> osListAdapter) {
-        this.osList = (ArrayList) osListAdapter;
+
     }
 
     @Override
     public void showListOsType(List<OsTypeModel> osTypes) {
         this.filters = new HashMap<>();
-        List<Os> newOsList = new ArrayList<>();
+        this.osTypeModelList = (ArrayList) osTypes;
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
-        this.osTypeModelList = new ArrayList<>();
-        if(osTypes != null && osTypes.size() > 0){
-            for(OsTypeModel model : osTypes){
-                if(osType == ValenetUtils.GROUP_OS_MERCANTIL && model.getTipoMercantil()){
-                    this.filters.put(model.getDescricao(),
-                            sharedPref.getBoolean(model.getDescricao(), true));
-                }else if(osType == ValenetUtils.GROUP_OS_CORRETIVA && !model.getTipoMercantil()){
-                    this.filters.put(model.getDescricao(),
-                            sharedPref.getBoolean(model.getDescricao(), true));
-                }
+        if (osTypes != null && osTypes.size() > 0) {
+            for (OsTypeModel model : osTypes) {
+                this.filters.put(model.getDescricao(),
+                        sharedPref.getBoolean(model.getDescricao(), true));
             }
         }
 
-
-
-        Set<String> keys = filters.keySet();
-
-        for(String key : keys){
-            boolean isSelected = this.filters.get(key);
-            if(isSelected){
-                for(Os os : osList){
-                    if(os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())){
-                        newOsList.add(os);
-                    }
-                }
-            }
-        }
-
-        this.filtredList = (ArrayList) newOsList;
-
-        if(this.filtredList.size() == 0){
-            this.hideOsListView();
-            this.showEmptyListView();
-        } else {
-            if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
-            else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
-            else
-                adapter = new OsItemAdapter(filtredList, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
-
-            recyclerViewOs.setAdapter(adapter);
-            recyclerViewOs.setLayoutManager(new LinearLayoutManager(this));
-            recyclerViewOs.setItemAnimator(new DefaultItemAnimator());
-        }
+        setOsListPagerAdapter();
     }
 
     @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
@@ -468,16 +386,59 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
             case R.id.btn_reload:
-                presenter.loadOsList(1.1, 1.1,
-                        LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        proximidade,
-                        osType, false);
+                presenter.loadOsTypes(osType);
                 break;
         }
+    }
+
+    public void setNavigateInterface(navigateInterface navigateInterface){
+        this.navigateInterface = navigateInterface;
+    }
+
+    private void setOsListPagerAdapter() {
+        pagerAdapter = new OsListPagerAdapter(getSupportFragmentManager(), myLocation, this.orderFilters, this.filters,
+                                                this.osTypeModelList, this.osType, tabLayout.getTabCount());
+        pager.setAdapter(pagerAdapter);
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position){
+                    case 0:
+                        NextOsFragment fragment = (NextOsFragment) pagerAdapter.getRegisteredFragment(position);
+                        fragment.setOsListNavigation();
+                        break;
+                }
+            }
+        });
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public interface navigateInterface {
+        void navigateToOsFilter();
+
+        void onActivityResultFilter(ArrayList<Os> filtredList);
+
+        void navigateToOsSearch();
     }
 }

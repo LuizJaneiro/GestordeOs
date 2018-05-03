@@ -130,7 +130,9 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             boolean isSelected = isSelectedFilterList.get(key);
             if(isSelected){
                 for(Os os : osList){
-                    if(os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())){
+                    String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
+                    String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
+                    if(osTipoAtividade.equals(keyTratada)){
                         newOsList.add(os);
                     }
                 }
