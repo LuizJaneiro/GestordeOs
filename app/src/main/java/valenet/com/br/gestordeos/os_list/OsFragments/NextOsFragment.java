@@ -141,7 +141,7 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
             public void onRefresh() {
                 if (myLocation != null)
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, true);
                 else {
                     loadOsListWithouLocation();
                 }
