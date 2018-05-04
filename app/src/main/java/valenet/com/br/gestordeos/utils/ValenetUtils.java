@@ -21,6 +21,7 @@ public class ValenetUtils {
     public static final String KEY_OS_TYPE = "KEY_OS_TYPE";
     public static final String KEY_OS_TYPE_LIST = "KEY_OS_TYPE_LIST";
     public static final String KEY_OS = "KEY_OS";
+    public static final String KEY_OS_ID = "KEY_OS_ID";
     public static final String KEY_USER_LOCATION = "KEY_USER_LOCATION";
     public static final String KEY_ORDER_FILTERS = "KEY_ORDER_FILTERS";
     public static final String KEY_FILTERS = "KEY_FILTERS";

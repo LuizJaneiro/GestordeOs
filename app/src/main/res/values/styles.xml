@@ -11,6 +11,11 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/MenuOptionsOs</item>
+    </style>
+
+    <style name="MenuOptionsOs" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">#99707070</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

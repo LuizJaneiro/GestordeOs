@@ -16,6 +16,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -26,6 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.end_os.EndOsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -145,15 +148,32 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_os_options, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem os) {
         switch (os.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-
+            case R.id.menu_os_end:
+                navigateToEndOsActivity();
+                return true;
+            case R.id.menu_os_refuse:
+                return true;
             default:
                 return super.onOptionsItemSelected(os);
         }
+    }
+
+    public void navigateToEndOsActivity(){
+        Intent intent = new Intent(this, EndOsActivity.class);
+        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
+        startActivity(intent);
     }
 
     public void callPhone(final String phone) {
