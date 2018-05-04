@@ -69,7 +69,7 @@ public class OsListInteractorImp implements OsList.OsListInteractor {
                             if (group == ValenetUtils.GROUP_OS_MERCANTIL && model.getTipoMercantil()) {
                                 osTypeModelListReturn.add(model);
                             } else if (group == ValenetUtils.GROUP_OS_CORRETIVA && !model.getTipoMercantil()) {
-                                osTypeModelList.add(model);
+                                osTypeModelListReturn.add(model);
                             }
                         }
                     }
