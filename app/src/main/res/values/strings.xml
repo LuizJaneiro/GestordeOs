@@ -2,7 +2,7 @@
     <string name="app_name">Gestor de OS</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="nome_app">Organizador de OS</string>
-    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_splash">Gestor de OS</string>
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
     <string name="forgot_password_text">Digite seu usuário e enviaremos\num e-mail com as instruções\npara recuperação da senha</string>
     <string name="title_activity_os_type">Tipos de OS</string>
@@ -11,5 +11,8 @@
     <string name="error_field_required">Este campo é obrigatório!</string>
     <string name="title_activity_client">OS</string>
     <string name="title_activity_os_filter">Filtros</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.os_type.OsType;
 
 public interface OsList {
 
@@ -38,21 +39,33 @@ public interface OsList {
     }
 
     interface OsListPresenter {
+        void loadOsTypes(Integer group);
+        
         void loadOsList(Double latitude, Double longitude, Integer codUser,
                         Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
     }
 
     interface OsListInteractor {
         void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
-                                  Boolean isSearchingByCloseOs, Integer group, final onFinishedListener listener);
+                                  Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener);
+
+        void loadOsTypes(Integer group, final onFinishedListenerOsTypes listener);
 
 
-        interface onFinishedListener {
-            void successLoading(List<Os> osList, List<OsTypeModel> osTypes);
+        interface onFinishedListenerOsList {
+            void successLoadingOsList(List<Os> osList);
 
-            void errorService(String error);
+            void errorServiceOsList(String error);
 
-            void errorNetwork();
+            void errorNetworkOsList();
+        }
+
+        interface onFinishedListenerOsTypes {
+            void successLoadingOsTypes(List<OsTypeModel> osList);
+
+            void errorServiceOsTypes(String error);
+
+            void errorNetworkOsTypes();
         }
     }
 }

@@ -28,26 +28,30 @@ public class OsFilter {
 
         void showLoading();
 
-        void loadListOs(List<Os> list);
+        void loadNextOsList(List<Os> list);
+
+        void loadScheduleOsList(List<Os> list);
 
         void loadOsTypesList(List<OsTypeModel> osTypes);
 
         interface selectedFiltersListener {
-            List<Os> filterList();
+            List<Os> filterNextOsList();
+            List<Os> filterScheduleOsList();
         }
     }
 
     interface OsFilterPresenter {
         void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
-                                  Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, boolean isSwipeRefresh);
+                                  Integer group, boolean loadNextOsList,
+                                  boolean loadScheduleOsList, boolean loadOsTypes);
     }
 
     interface OsFilterInteractor {
-        void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser,
-                                  Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, final onFinishedListener listener);
+        void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Integer group, boolean loadNextOsList,
+                                  boolean loadScheduleOsList, boolean loadOsTypes, final onFinishedListener listener);
 
         interface onFinishedListener {
-            void successLoading(List<Os> osList, List<OsTypeModel> osTypes, boolean loadOsList);
+            void successLoading(List<Os> nextOsList, List<Os> scheduleOsList, List<OsTypeModel> osTypes, boolean loadNextOsList, boolean loadScheduleOsList, boolean loadOsTypes);
 
             void errorService(String error);
 

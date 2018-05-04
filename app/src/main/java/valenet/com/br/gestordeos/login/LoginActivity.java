@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     TextInputLayout textInputEmail;
     @BindView(R.id.text_input_password)
     TextInputLayout textInputPassword;
+    @BindView(R.id.check_box_remember_me)
+    AppCompatCheckBox checkBoxRememberMe;
 
     private Login.LoginPresenter presenter;
 
@@ -95,10 +97,10 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
         savedEmail = sharedPref.getString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, null);
         savedPassword = sharedPref.getString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, null);
 
-        if(savedEmail != null)
+        if (savedEmail != null)
             editTextEmail.setText(savedEmail);
 
-        if(savedPassword != null)
+        if (savedPassword != null)
             editTextPassword.setText(savedPassword);
 
         ClickGuard.guard(btnEntrar);
@@ -165,9 +167,13 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     public void saveLoginData(String userName, String password) {
         SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_EMAIL_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-
-        editor.putString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, userName);
-        editor.putString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, password);
+        if(checkBoxRememberMe.isChecked()) {
+            editor.putString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, userName);
+            editor.putString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, password);
+        } else {
+            editor.putString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, null);
+            editor.putString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, null);
+        }
 
         editor.commit();
     }

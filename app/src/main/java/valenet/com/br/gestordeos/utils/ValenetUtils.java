@@ -16,10 +16,14 @@ public class ValenetUtils {
     public static final String BASE_URL = "https://api.valenet.com.br/api/";
     public static final String KEY_FILTERED_LIST = "KEY_FILTERED_LIST";
     public static final String KEY_OS_LIST = "KEY_OS_LIST";
+    public static final String KEY_NEXT_OS_LIST = "KEY_NEXT_OS_LIST";
+    public static final String KEY_SCHEDULE_OS_LIST = "KEY_SCHEDULE_OS_LIST";
     public static final String KEY_OS_TYPE = "KEY_OS_TYPE";
     public static final String KEY_OS_TYPE_LIST = "KEY_OS_TYPE_LIST";
     public static final String KEY_OS = "KEY_OS";
     public static final String KEY_USER_LOCATION = "KEY_USER_LOCATION";
+    public static final String KEY_ORDER_FILTERS = "KEY_ORDER_FILTERS";
+    public static final String KEY_FILTERS = "KEY_FILTERS";
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
     public static final String SHARED_PREF_KEY_EMAIL_CLIENT = "SHARED_PREF_KEY_EMAIL_CLIENT";
     public static final String SHARED_PREF_KEY_PASSWORD_CLIENT = "SHARED_PREF_KEY_PASSWORD_CLIENT";
