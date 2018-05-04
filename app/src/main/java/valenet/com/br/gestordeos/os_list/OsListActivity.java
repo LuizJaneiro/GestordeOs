@@ -316,9 +316,9 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             if (resultCode == REQ_CODE_BACK_FILTER) {
                 ArrayList<Os> scheduleOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST);
                 ArrayList<Os> nextOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST);
-                if(scheduleOsFiltredList != null)
+                if(scheduleOsFiltredList != null && onActivityResultScheduleOs != null)
                     onActivityResultScheduleOs.onActivityResultFilter(scheduleOsFiltredList);
-                if(nextOsFiltredList != null)
+                if(nextOsFiltredList != null && onActivityResultNextOs != null)
                     onActivityResultNextOs.onActivityResultFilter(nextOsFiltredList);
             }
         }

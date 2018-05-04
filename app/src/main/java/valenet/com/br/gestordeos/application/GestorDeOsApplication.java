@@ -12,6 +12,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiUtils;
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 
 public class GestorDeOsApplication extends android.app.Application {
 
@@ -44,8 +46,9 @@ public class GestorDeOsApplication extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics());
         appContext = getApplicationContext();
+
 
         Realm.init(this);
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();

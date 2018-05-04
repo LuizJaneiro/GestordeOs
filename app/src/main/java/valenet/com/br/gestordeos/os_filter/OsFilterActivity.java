@@ -345,7 +345,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         finish();
     }
 
-    @OnClick({R.id.btn_distance, R.id.btn_name, R.id.btn_date})
+    @OnClick({R.id.btn_distance, R.id.btn_name, R.id.btn_date, R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
     public void onViewClicked(View view) {
         SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -385,6 +385,19 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                 this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false);
 
                 renderButtons(this.selectedButtons, this.myButtons);
+                break;
+            case R.id.btn_try_again:
+            case R.id.btn_try_again_server_error:
+            case R.id.btn_reload:
+                if (myLocation != null) {
+                    presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                            osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
+                } else {
+                    presenter.loadOsListAndOsTypes(1.1, 1.1,
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                            osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
+                }
                 break;
         }
     }
