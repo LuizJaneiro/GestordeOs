@@ -56,6 +56,7 @@ import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_list.OsFragments.NextOsFragment;
+import valenet.com.br.gestordeos.os_list.OsFragments.ScheduleOsFragment;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
@@ -104,8 +105,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     private final int REQ_CODE_BACK_FILTER = 203;
     private Integer osType;
     private navigateInterface navigateInterface;
-
-    private ArrayList<Os> filtredList;
+    private onActivityResultNextOs onActivityResultNextOs;
+    private onActivityResultScheduleOs onActivityResultScheduleOs;
+    private ArrayList<Os> scheduleOsList;
+    private ArrayList<Os> nextOsList;
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
@@ -132,7 +135,6 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.orderFilters = new HashMap<>();
-        this.filtredList = new ArrayList<>();
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
@@ -276,8 +278,13 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
     @Override
     public void navigateToFilter() {
-        if(navigateInterface != null)
-            navigateInterface.navigateToOsFilter();
+        Intent intent = new Intent(this, OsFilterActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, this.scheduleOsList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST, this.nextOsList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
+        intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        startActivityForResult(intent, REQ_CODE_FILTER);
     }
 
     @Override
@@ -285,6 +292,14 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         if(navigateInterface != null){
             navigateInterface.navigateToOsSearch();
         }
+    }
+
+    public void setScheduleOsList(ArrayList<Os> scheduleOsList){
+        this.scheduleOsList = scheduleOsList;
+    }
+
+    public void setNextOsList(ArrayList<Os> nextOsList){
+        this.nextOsList = nextOsList;
     }
 
 
@@ -299,10 +314,12 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
 
         if (requestCode == REQ_CODE_FILTER) {
             if (resultCode == REQ_CODE_BACK_FILTER) {
-                this.filtredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
-                if (filtredList != null) {
-                    navigateInterface.onActivityResultFilter(this.filtredList);
-                }
+                ArrayList<Os> scheduleOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST);
+                ArrayList<Os> nextOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST);
+                if(scheduleOsFiltredList != null)
+                    onActivityResultScheduleOs.onActivityResultFilter(scheduleOsFiltredList);
+                if(nextOsFiltredList != null)
+                    onActivityResultNextOs.onActivityResultFilter(nextOsFiltredList);
             }
         }
 
@@ -395,6 +412,13 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         this.navigateInterface = navigateInterface;
     }
 
+    public void setOnActivityResultNextOs(onActivityResultNextOs navigateInterface){
+        this.onActivityResultNextOs = navigateInterface;
+    }
+
+    public void setOnActivityResultScheduleOs(onActivityResultScheduleOs navigateInterface){
+        this.onActivityResultScheduleOs = navigateInterface;
+    }
     private void setOsListPagerAdapter() {
         pagerAdapter = new OsListPagerAdapter(getSupportFragmentManager(), myLocation, this.orderFilters, this.filters,
                                                 this.osTypeModelList, this.osType, tabLayout.getTabCount());
@@ -407,6 +431,10 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
                     case 0:
                         NextOsFragment fragment = (NextOsFragment) pagerAdapter.getRegisteredFragment(position);
                         fragment.setOsListNavigation();
+                        break;
+                    case 1:
+                        ScheduleOsFragment fragmentSchedule = (ScheduleOsFragment) pagerAdapter.getRegisteredFragment(position);
+                        fragmentSchedule.setOsListNavigation();
                         break;
                 }
             }
@@ -435,10 +463,14 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     }
 
     public interface navigateInterface {
-        void navigateToOsFilter();
-
-        void onActivityResultFilter(ArrayList<Os> filtredList);
-
         void navigateToOsSearch();
+    }
+
+    public interface onActivityResultNextOs{
+        void onActivityResultFilter(ArrayList<Os> filtredList);
+    }
+
+    public interface onActivityResultScheduleOs{
+        void onActivityResultFilter(ArrayList<Os> filtredList);
     }
 }

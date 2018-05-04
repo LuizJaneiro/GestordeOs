@@ -100,15 +100,19 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     private final int REQ_CODE_FILTER = 202;
     private final int REQ_CODE_BACK_FILTER = 203;
 
-    private ArrayList<Os> filtredList;
-    private ArrayList<Os> osList;
+    private ArrayList<Os> filtredScheduleOsList;
+    private ArrayList<Os> scheduleOsList;
+    private ArrayList<Os> filtredNextOsList;
+    private ArrayList<Os> nextOsList;
     private ArrayList<OsTypeModel> osTypeModelList;
     private Location myLocation;
     private OsFilter.OsFilterPresenter presenter;
 
     private OsFilter.OsFilterView.selectedFiltersListener selectedFiltersListener;
 
-    private boolean loadOsList = false;
+    private boolean loadNextOsList = false;
+    private boolean loadScheduleOsList = false;
+    private boolean loadOsModelList = false;
 
     private OsTypeAdapter osTypeAdapter;
 
@@ -141,8 +145,10 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
         renderButtons(this.selectedButtons, this.myButtons);
 
-        filtredList = new ArrayList<>();
-        osList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        filtredNextOsList = new ArrayList<>();
+        filtredScheduleOsList = new ArrayList<>();
+        nextOsList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST);
+        scheduleOsList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
         osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
@@ -150,19 +156,26 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         this.osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerBtnFilters.setLayoutManager(gridLayoutManager);
-        if(osTypeModelList != null && osTypeModelList.size() > 0){
-            osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.osList, osType);
+
+        if (osTypeModelList != null && osTypeModelList.size() > 0) {
+            osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.nextOsList, this.scheduleOsList, osType);
             recyclerBtnFilters.setAdapter(osTypeAdapter);
             this.selectedFiltersListener = osTypeAdapter;
         }
 
-        if (osList == null || osList.size() == 0 || osTypeModelList == null || osTypeModelList.size() == 0)
-            loadOsList = true;
+        if (nextOsList == null || nextOsList.size() == 0)
+            loadNextOsList = true;
+
+        if(scheduleOsList == null || scheduleOsList.size() == 0)
+            loadScheduleOsList = true;
+
+        if(osTypeModelList == null || osTypeModelList.size() == 0)
+            loadOsModelList = true;
 
         this.hideFilterView();
         this.showLoading();
 
-        if(myLocation == null) {
+        if (myLocation == null) {
             RxPermissions.getInstance(OsFilterActivity.this)
                     .request(Manifest.permission.ACCESS_FINE_LOCATION)
                     .map(new Func1<Boolean, Object>() {
@@ -211,14 +224,12 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                                                     myLocation = location;
                                                     presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
                                                             LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                            true,
-                                                            osType, loadOsList, false);
+                                                            osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
                                                     return true;
                                                 } else {
                                                     presenter.loadOsListAndOsTypes(1.1, 1.1,
                                                             LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                            false,
-                                                            osType, loadOsList, false);
+                                                            osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
                                                     return false;
                                                 }
                                             }
@@ -247,17 +258,15 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                     }).subscribe();
         }
 
-        if (loadOsList) {
+        if (loadNextOsList || loadScheduleOsList || loadOsModelList) {
             if (myLocation != null) {
                 presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        true,
-                        osType, loadOsList, false);
+                        osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
             } else {
                 presenter.loadOsListAndOsTypes(1.1, 1.1,
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        false,
-                        osType, loadOsList, false);
+                        osType, loadNextOsList, loadScheduleOsList, loadOsModelList);
             }
         } else {
             this.hideLoading();
@@ -312,16 +321,26 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
+        if(this.selectedFiltersListener != null) {
+            filtredNextOsList = (ArrayList) this.selectedFiltersListener.filterNextOsList();
+            filtredScheduleOsList = (ArrayList) this.selectedFiltersListener.filterScheduleOsList();
+        }
+        ArrayList<Os> ordenedScheduleOsList = null;
+        ArrayList<Os> ordenedNextOsList = null;
         Set<String> keys = selectedButtons.keySet();
-        for (String key : keys) {
-            if (key != null) {
-                Boolean isSelected = selectedButtons.get(key);
-                if (isSelected) {
-                    orderBySelectedFilter(key);
+        if(filtredScheduleOsList != null && filtredScheduleOsList != null) {
+            for (String key : keys) {
+                if (key != null) {
+                    Boolean isSelected = selectedButtons.get(key);
+                    if (isSelected) {
+                        ordenedNextOsList = orderBySelectedFilter(filtredNextOsList, key);
+                        ordenedScheduleOsList = orderBySelectedFilter(filtredScheduleOsList, key);
+                    }
                 }
             }
         }
-        resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+        resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, ordenedScheduleOsList);
+        resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST, ordenedNextOsList);
         setResult(REQ_CODE_BACK_FILTER, resultIntent);
         finish();
     }
@@ -342,7 +361,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                 this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false);
 
                 renderButtons(this.selectedButtons, this.myButtons);
-                this.orderBySelectedFilter(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
                 break;
             case R.id.btn_name:
                 editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false);
@@ -355,7 +373,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                 this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, true);
 
                 renderButtons(this.selectedButtons, this.myButtons);
-                orderBySelectedFilter(ValenetUtils.SHARED_PREF_KEY_OS_NAME);
                 break;
             case R.id.btn_date:
                 editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false);
@@ -368,7 +385,6 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                 this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false);
 
                 renderButtons(this.selectedButtons, this.myButtons);
-                orderBySelectedFilter(ValenetUtils.SHARED_PREF_KEY_OS_DATE);
                 break;
         }
     }
@@ -424,84 +440,98 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     }
 
     @Override
-    public void loadListOs(List<Os> list) {
-        this.osList = (ArrayList) list;
+    public void loadNextOsList(List<Os> list) {
+        this.nextOsList = (ArrayList) list;
+        osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.nextOsList, this.scheduleOsList, osType);
+        recyclerBtnFilters.setAdapter(osTypeAdapter);
+        this.selectedFiltersListener = osTypeAdapter;
+    }
+
+    @Override
+    public void loadScheduleOsList(List<Os> list) {
+        this.scheduleOsList = (ArrayList) list;
+        osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.nextOsList, this.scheduleOsList, osType);
+        recyclerBtnFilters.setAdapter(osTypeAdapter);
+        this.selectedFiltersListener = osTypeAdapter;
     }
 
     @Override
     public void loadOsTypesList(List<OsTypeModel> osTypes) {
         this.osTypeModelList = (ArrayList) osTypes;
-        osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.osList, osType);
+        osTypeAdapter = new OsTypeAdapter(this, osTypeModelList, this.nextOsList, this.scheduleOsList, osType);
         recyclerBtnFilters.setAdapter(osTypeAdapter);
         this.selectedFiltersListener = osTypeAdapter;
     }
 
-    private void orderBySelectedFilter(String selectedFilter) {
-        if (filtredList == null || filtredList.size() == 0)
-            filtredList = new ArrayList<>();
+    private ArrayList<Os> orderBySelectedFilter(ArrayList<Os> osList, String selectedFilter) {
 
-        this.filtredList = (ArrayList) this.selectedFiltersListener.filterList();
+        if(osList != null) {
+            ArrayList<Os> filtredList = new ArrayList<>();
+            filtredList = osList;
 
-        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)) {
-            Collections.sort(filtredList, new Comparator<Os>() {
-                @Override
-                public int compare(Os o1, Os o2) {
-                    return o1.getCliente().compareTo(o2.getCliente());
-                }
-            });
+            if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)) {
+                Collections.sort(filtredList, new Comparator<Os>() {
+                    @Override
+                    public int compare(Os o1, Os o2) {
+                        return o1.getCliente().compareTo(o2.getCliente());
+                    }
+                });
+            }
+
+            if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)) {
+                Collections.sort(filtredList, new Comparator<Os>() {
+                    @Override
+                    public int compare(Os o1, Os o2) {
+                        Double distance1, distance2;
+                        if (o1.getLongitude() == null || o1.getLatitude() == null)
+                            distance1 = Double.MAX_VALUE;
+                        else {
+                            Location location1 = new Location("");
+                            location1.setLatitude(o1.getLatitude());
+                            location1.setLongitude(o1.getLongitude());
+                            distance1 = (double) myLocation.distanceTo(location1);
+                        }
+
+                        if (o2.getLongitude() == null || o2.getLatitude() == null)
+                            distance2 = Double.MAX_VALUE;
+                        else {
+                            Location location2 = new Location("");
+                            location2.setLatitude(o2.getLatitude());
+                            location2.setLongitude(o2.getLongitude());
+                            distance2 = (double) myLocation.distanceTo(location2);
+                        }
+
+                        return distance1.compareTo(distance2);
+                    }
+                });
+            }
+
+            if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)) {
+                Collections.sort(filtredList, new Comparator<Os>() {
+                    @Override
+                    public int compare(Os o1, Os o2) {
+                        Date date1, date2;
+                        if (o1.getDataAgendamento() == null)
+                            date1 = new Date(Long.MAX_VALUE);
+                        else {
+                            String dateString = ValenetUtils.convertJsonToStringDate(o1.getDataAgendamento());
+                            date1 = ValenetUtils.convertStringToDate(dateString);
+                        }
+
+                        if (o2.getDataAgendamento() == null)
+                            date2 = new Date(Long.MAX_VALUE);
+                        else {
+                            String dateString = ValenetUtils.convertJsonToStringDate(o2.getDataAgendamento());
+                            date2 = ValenetUtils.convertStringToDate(dateString);
+                        }
+
+                        return date1.compareTo(date2);
+                    }
+                });
+            }
+            return filtredList;
         }
-
-        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)) {
-            Collections.sort(filtredList, new Comparator<Os>() {
-                @Override
-                public int compare(Os o1, Os o2) {
-                    Double distance1, distance2;
-                    if (o1.getLongitude() == null || o1.getLatitude() == null)
-                        distance1 = Double.MAX_VALUE;
-                    else {
-                        Location location1 = new Location("");
-                        location1.setLatitude(o1.getLatitude());
-                        location1.setLongitude(o1.getLongitude());
-                        distance1 = (double) myLocation.distanceTo(location1);
-                    }
-
-                    if (o2.getLongitude() == null || o2.getLatitude() == null)
-                        distance2 = Double.MAX_VALUE;
-                    else {
-                        Location location2 = new Location("");
-                        location2.setLatitude(o2.getLatitude());
-                        location2.setLongitude(o2.getLongitude());
-                        distance2 = (double) myLocation.distanceTo(location2);
-                    }
-
-                    return distance1.compareTo(distance2);
-                }
-            });
-        }
-
-        if (selectedFilter.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)) {
-            Collections.sort(filtredList, new Comparator<Os>() {
-                @Override
-                public int compare(Os o1, Os o2) {
-                    Date date1, date2;
-                    if (o1.getDataAgendamento() == null)
-                        date1 = new Date(Long.MAX_VALUE);
-                    else {
-                        String dateString = ValenetUtils.convertJsonToStringDate(o1.getDataAgendamento());
-                        date1 = ValenetUtils.convertStringToDate(dateString);
-                    }
-
-                    if (o2.getDataAgendamento() == null)
-                        date2 = new Date(Long.MAX_VALUE);
-                    else {
-                        String dateString = ValenetUtils.convertJsonToStringDate(o2.getDataAgendamento());
-                        date2 = ValenetUtils.convertStringToDate(dateString);
-                    }
-
-                    return date1.compareTo(date2);
-                }
-            });
-        }
+        return null;
     }
 
     @Override

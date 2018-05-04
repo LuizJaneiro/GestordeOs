@@ -65,7 +65,7 @@ import valenet.com.br.gestordeos.utils.ValenetUtils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NextOsFragment extends Fragment implements OsList.OsListView, OsListActivity.navigateInterface {
+public class NextOsFragment extends Fragment implements OsList.OsListView, OsListActivity.navigateInterface, OsListActivity.onActivityResultNextOs {
 
 
     @BindView(R.id.recycler_view_next_os)
@@ -119,6 +119,7 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
     public void onAttach(Context context) {
         super.onAttach(context);
         ((OsListActivity)this.getActivity()).setNavigateInterface(this);
+        ((OsListActivity)this.getActivity()).setOnActivityResultNextOs(this);
     }
 
     @Override
@@ -149,7 +150,7 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
         });
 
         if(myLocation == null)
-            this.showErrorServerView();
+            loadOsListWithouLocation();
         else
             presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                     LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
@@ -232,6 +233,7 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
+        ((OsListActivity)this.getActivity()).setNextOsList(this.osList);
         Set<String> keys = selectedFilters.keySet();
         this.filtredList = new ArrayList<>();
         for (String key : keys) {
@@ -377,11 +379,6 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
                         return null;
                     }
                 }).subscribe();
-    }
-
-    @Override
-    public void navigateToOsFilter() {
-        this.navigateToFilter();
     }
 
     public void setOsListNavigation(){

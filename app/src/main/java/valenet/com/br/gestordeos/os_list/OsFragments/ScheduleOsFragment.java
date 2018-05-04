@@ -64,7 +64,7 @@ import valenet.com.br.gestordeos.utils.ValenetUtils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ScheduleOsFragment extends Fragment implements OsList.OsListView, OsListActivity.navigateInterface {
+public class ScheduleOsFragment extends Fragment implements OsList.OsListView, OsListActivity.navigateInterface, OsListActivity.onActivityResultScheduleOs {
 
     @BindView(R.id.recycler_view_schedule_os)
     RecyclerView recyclerViewNextOs;
@@ -116,7 +116,7 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        //((OsListActivity)this.getActivity()).setNavigateInterface(this);
+        ((OsListActivity)this.getActivity()).setOnActivityResultScheduleOs(this);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
         });
 
         if(myLocation == null)
-            this.showErrorServerView();
+            loadOsListWithouLocation();
         else
             presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                     LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
@@ -230,6 +230,7 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
     @Override
     public void showListOs(List<Os> osListAdapter) {
         this.osList = (ArrayList) osListAdapter;
+        ((OsListActivity)this.getActivity()).setScheduleOsList(this.osList);
         Set<String> keys = selectedFilters.keySet();
         this.filtredList = new ArrayList<>();
         for (String key : keys) {
@@ -375,11 +376,6 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
                         return null;
                     }
                 }).subscribe();
-    }
-
-    @Override
-    public void navigateToOsFilter() {
-        this.navigateToFilter();
     }
 
     public void setOsListNavigation(){

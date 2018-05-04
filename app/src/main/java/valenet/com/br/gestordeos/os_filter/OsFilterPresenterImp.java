@@ -24,31 +24,57 @@ public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilte
 
 
     @Override
-    public void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean loadOsList, boolean isSwipeRefresh) {
-        if(!isSwipeRefresh) {
-            view.hideFilterView();
-            view.hideErrorConectionView();
-            view.hideErrorServerView();
-            view.hideEmptyListView();
-            view.showLoading();
-        }
-        interactor.loadOsListAndOsTypes(latitude, longitude, codUser, isSearchingByCloseOs, group, loadOsList, this);
-    }
-
-    @Override
-    public void successLoading(List<Os> osList, List<OsTypeModel> osTypes, boolean loadOsList) {
+    public void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Integer group, boolean loadNextOsList,
+                                     boolean loadScheduleOsList, boolean loadOsTypes) {
+        view.hideFilterView();
         view.hideErrorConectionView();
         view.hideErrorServerView();
         view.hideEmptyListView();
+        view.showLoading();
+        interactor.loadOsListAndOsTypes(latitude, longitude, codUser,
+                group, loadNextOsList, loadScheduleOsList, loadOsTypes, this);
+    }
+
+    @Override
+    public void successLoading(List<Os> nextOsList, List<Os> scheduleOsList, List<OsTypeModel> osTypes, boolean loadNextOsList, boolean loadScheduleOsList, boolean loadOsTypes) {
+        view.hideErrorConectionView();
+        view.hideErrorServerView();
+        view.hideEmptyListView();
+        view.hideFilterView();
         view.hideLoading();
-        if((loadOsList && (osList == null || osList.size() == 0)) || (osTypes == null || osTypes.size() == 0))
-            view.showEmptyListView();
-        else {
-            if(loadOsList)
-                view.loadListOs(osList);
-            view.loadOsTypesList(osTypes);
-            view.showFilterView();
+
+        boolean showEmptyList = false;
+        if(loadNextOsList){
+            if(nextOsList != null){
+                if(nextOsList.size() == 0) {
+                    showEmptyList = true;
+                    view.showEmptyListView();
+                } else {
+                    view.loadNextOsList(nextOsList);
+                }
+            }
         }
+        if(loadScheduleOsList){
+            if(scheduleOsList != null){
+                if(scheduleOsList.size() == 0){
+                    showEmptyList = true;
+                    view.showEmptyListView();
+                }else {
+                    view.loadScheduleOsList(scheduleOsList);
+                }
+            }
+        }
+        if(loadOsTypes){
+            if(osTypes != null){
+                if(osTypes.size() == 0) {
+                    showEmptyList = true;
+                    view.showEmptyListView();
+                } else
+                    view.loadOsTypesList(osTypes);
+            }
+        }
+        if(!showEmptyList)
+            view.showFilterView();
     }
 
     @Override
