@@ -30,6 +30,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.refuse_os.RefuseOs;
+import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class ClientActivity extends AppCompatActivity {
@@ -164,10 +166,17 @@ public class ClientActivity extends AppCompatActivity {
                 navigateToEndOsActivity();
                 return true;
             case R.id.menu_os_refuse:
+                navigateToRefuseOsActivity();
                 return true;
             default:
                 return super.onOptionsItemSelected(os);
         }
+    }
+
+    public void navigateToRefuseOsActivity(){
+        Intent intent = new Intent(this, RefuseOsActivity.class);
+        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
+        startActivity(intent);
     }
 
     public void navigateToEndOsActivity(){

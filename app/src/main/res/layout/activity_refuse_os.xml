@@ -16,5 +16,8 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_refuse_os" />
+    <include layout="@layout/layout_progress" />
+    <include layout="@layout/layout_error_internet_connection" />
+    <include layout="@layout/layout_error_from_server" />
 
 </android.support.design.widget.CoordinatorLayout>

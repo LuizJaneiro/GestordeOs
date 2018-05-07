@@ -81,8 +81,6 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
     AppCompatButton btnTryAgainServerError;
     @BindView(R.id.layout_error_server)
     RelativeLayout layoutErrorServer;
-    @BindView(R.id.text_view_error)
-    TextView textViewError;
     @BindView(R.id.btn_reload)
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)

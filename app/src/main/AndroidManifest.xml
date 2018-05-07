@@ -84,8 +84,13 @@
         <activity
             android:name=".refuse_os.RefuseOsActivity"
             android:label="@string/title_activity_refuse_os"
+            android:parentActivityName=".client.ClientActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".client.ClientActivity" />
+        </activity>
         <activity
             android:name=".end_os.EndOsActivity"
             android:label="@string/title_activity_end_os"

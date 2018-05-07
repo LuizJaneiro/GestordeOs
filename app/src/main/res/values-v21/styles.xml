@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/MenuOptionsOs</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearancePopupMenuLarge</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearancePopupMenuSmall</item>
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="android:colorControlHighlight">@color/transparentColorPrimary</item>
+    </style>
+</resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#1B1C6B</color>
+    <color name="transparentColorPrimary">#501B1C6B</color>
     <color name="colorPrimaryDark">#1B1C6B</color>
     <color name="colorAccent">#1B1C6B</color>
     <color name="text_color_light">#343695</color>
@@ -16,4 +17,5 @@
     <color name="btn_positive_dialog">#7DD61D</color>
     <color name="btn_filter_selected_background">#2E3191</color>
     <color name="btn_filter_text_color_selected">#FFFFFF</color>
+    <color name="white">#FFFFFF</color>
 </resources>

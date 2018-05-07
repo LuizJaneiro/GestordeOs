@@ -58,7 +58,6 @@ import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.os_list.OsList;
 import valenet.com.br.gestordeos.os_list.OsListActivity;
 import valenet.com.br.gestordeos.os_list.OsListPresenterImp;
-import valenet.com.br.gestordeos.os_type.OsType;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -83,8 +82,6 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
     AppCompatButton btnTryAgainServerError;
     @BindView(R.id.layout_error_server)
     RelativeLayout layoutErrorServer;
-    @BindView(R.id.text_view_error)
-    TextView textViewError;
     @BindView(R.id.btn_reload)
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)

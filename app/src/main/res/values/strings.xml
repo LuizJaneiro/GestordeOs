@@ -11,7 +11,7 @@
     <string name="error_field_required">Este campo é obrigatório!</string>
     <string name="title_activity_client">OS</string>
     <string name="title_activity_os_filter">Filtros</string>
-    <string name="title_activity_refuse_os">RefuseOsActivity</string>
+    <string name="title_activity_refuse_os">Recusa de OS</string>
     <string name="title_activity_end_os">Encerramento de OS</string>
 
 </resources>
