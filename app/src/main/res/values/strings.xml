@@ -14,4 +14,7 @@
     <string name="title_activity_refuse_os">Recusa de OS</string>
     <string name="title_activity_end_os">Encerramento de OS</string>
 
+    <string name="meta_position">meta_position</string>
+    <string name="meta_title">meta_title</string>
+
 </resources>

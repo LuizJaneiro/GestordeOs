@@ -78,18 +78,14 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
                 "Assunto",
                 "Assunto 1",
                 "Assunto 2",
-                "Assunto 3"
+                "Assunto 3",
 
         };
 
         adapterOsReasons = new SpinnerAdapterOsReasons(RefuseOsActivity.this, R.layout.refuse_os_spinner_layout,
                                                             new ArrayList<String>(Arrays.asList(spinnerItems)));
         adapterOsReasons.setDropDownViewResource(R.layout.refuse_os_spinner_layout);
-        adapterOsReasons.add("Motivo");
-
-
         editTextRefuseOsReasonSpinner.setAdapter(adapterOsReasons);
-        editTextRefuseOsReasonSpinner.setSelection(adapterOsReasons.getCount());
 
         editTextRefuseOsReasonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
