@@ -176,55 +176,73 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
 
     @Override
     public void hideOsListView() {
-        this.refreshLayoutNextOs.setVisibility(View.GONE);
+        if(refreshLayoutNextOs != null)
+            this.refreshLayoutNextOs.setVisibility(View.GONE);
     }
 
     @Override
     public void showOsListView() {
-        this.refreshLayoutNextOs.setVisibility(View.VISIBLE);
+        if(refreshLayoutNextOs != null)
+            this.refreshLayoutNextOs.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if (refreshLayoutNextOs.isRefreshing())
-            refreshLayoutNextOs.setRefreshing(false);
-        else
-            this.loadingView.setVisibility(View.GONE);
+        if(refreshLayoutNextOs != null && loadingView != null) {
+            if (refreshLayoutNextOs.isRefreshing())
+                refreshLayoutNextOs.setRefreshing(false);
+            else
+                this.loadingView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showLoading() {
-        this.loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null) {
+            this.loadingView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void showErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.VISIBLE);
+        if(layoutErrorConection != null) {
+            this.layoutErrorConection.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.GONE);
+        if(layoutErrorConection != null) {
+            this.layoutErrorConection.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.VISIBLE);
+        if(layoutErrorServer != null) {
+            this.layoutErrorServer.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.GONE);
+        if(layoutErrorServer != null) {
+            this.layoutErrorServer.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.VISIBLE);
+        if(layoutEmptyList != null) {
+            this.layoutEmptyList.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.GONE);
+        if(layoutEmptyList != null) {
+            this.layoutEmptyList.setVisibility(View.GONE);
+        }
     }
 
     @Override

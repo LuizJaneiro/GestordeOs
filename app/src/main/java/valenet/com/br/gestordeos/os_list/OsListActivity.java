@@ -2,7 +2,7 @@ package valenet.com.br.gestordeos.os_list;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Fragment;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -33,7 +33,6 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +56,6 @@ import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_list.OsFragments.NextOsFragment;
 import valenet.com.br.gestordeos.os_list.OsFragments.ScheduleOsFragment;
-import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
 
@@ -261,11 +259,11 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         if (item.getItemId() == R.id.menu_map) {
-            //TODO navigateToMap()
+            finish();
             return true;
         }
 
@@ -274,6 +272,14 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result", true);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 
     @Override
