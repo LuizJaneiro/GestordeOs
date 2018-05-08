@@ -3,12 +3,14 @@ package valenet.com.br.gestordeos.map;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,10 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
@@ -33,14 +37,19 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
 import rx.Observable;
@@ -48,13 +57,16 @@ import rx.Observer;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func1;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_list.OsListActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
-public class MapsActivity extends AppCompatActivity {
+public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     private final int CODE_MAP = 1000;
 
@@ -66,6 +78,20 @@ public class MapsActivity extends AppCompatActivity {
     ViewGroup search;
     @BindView(R.id.text_view_search)
     TextView textViewSearch;
+    @BindView(R.id.layout_maps)
+    FrameLayout layoutMaps;
+    @BindView(R.id.loading_view)
+    RelativeLayout loadingView;
+    @BindView(R.id.lottie_animation_loading)
+    LottieAnimationView lottieAnimationLoading;
+    @BindView(R.id.btn_try_again_server_error)
+    AppCompatButton btnTryAgainServerError;
+    @BindView(R.id.layout_error_server)
+    RelativeLayout layoutErrorServer;
+    @BindView(R.id.btn_try_again)
+    AppCompatButton btnTryAgain;
+    @BindView(R.id.layout_error_conection)
+    RelativeLayout layoutErrorConection;
 
     private GoogleMap mMap;
     private float zoom = 13.5649395f;
@@ -76,6 +102,12 @@ public class MapsActivity extends AppCompatActivity {
     int osType;
 
     private final static int REQUEST_CHECK_SETTINGS = 0;
+    private boolean alreadyLoadedOsList = false;
+
+    private Maps.MapsPresenter presenter;
+
+    private ArrayList<Os> osArrayList;
+    private ArrayList<OsTypeModel> osTypeModelArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +118,8 @@ public class MapsActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+
+        this.presenter = new MapsPresenterImp(this);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -114,6 +148,9 @@ public class MapsActivity extends AppCompatActivity {
             params.addRule(RelativeLayout.BELOW, 0x2);
             params.setMargins(0, 180, 180, 0);
         }
+
+        hideMapsView();
+        showProgress();
 
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -154,7 +191,6 @@ public class MapsActivity extends AppCompatActivity {
                             public Object call(Boolean granted) {
                                 if (granted) {
                                     //noinspection MissingPermission
-                                    //presenter.listProviders(workFieldId);
                                     mMap.setMyLocationEnabled(true);
                                     final LocationRequest locationRequest = LocationRequest.create()
                                             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -197,6 +233,9 @@ public class MapsActivity extends AppCompatActivity {
                                                         mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation));
                                                         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                                                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
+                                                        if (!alreadyLoadedOsList)
+                                                            presenter.loadOsList(location.getLatitude(), location.getLongitude(),
+                                                                    LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                                                         return true;
                                                     } else {
                                                         return false;
@@ -280,5 +319,105 @@ public class MapsActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void showProgress() {
+        if (loadingView != null)
+            loadingView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        if (loadingView != null)
+            loadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showMapsView() {
+        if (layoutMaps != null) {
+            layoutMaps.setVisibility(View.VISIBLE);
+            if (mMap != null && myLocation != null) {
+                LatLng point = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
+            }
+        }
+    }
+
+    @Override
+    public void hideMapsView() {
+        if (layoutMaps != null)
+            layoutMaps.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorConnectionView() {
+        if (layoutErrorConection != null)
+            layoutErrorConection.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorConnectionView() {
+        if (layoutErrorConection != null)
+            layoutErrorConection.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorServerView() {
+        if (layoutErrorServer != null)
+            layoutErrorServer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorServerView() {
+        if (layoutErrorServer != null)
+            layoutErrorServer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void loadOsList(ArrayList<Os> osArrayList) {
+        this.osArrayList = new ArrayList<>();
+        this.osArrayList = osArrayList;
+    }
+
+    @Override
+    public void loadOsTypesList(ArrayList<OsTypeModel> osTypeModels) {
+        this.osTypeModelArrayList = new ArrayList<>();
+        this.osTypeModelArrayList = osTypeModels;
+    }
+
+    @Override
+    public void addedOsMarkers(ArrayList<Os> osArrayList) {
+        alreadyLoadedOsList = true;
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
+        for (int i = 0; i < osArrayList.size(); i++) {
+            Os os = osArrayList.get(i);
+            Location location = new Location("");
+            if (os.getLongitude() != null && os.getLatitude() != null) {
+                location.setLatitude(os.getLatitude());
+                location.setLongitude(os.getLongitude());
+                MarkerOptions markerOptions = new MarkerOptions();
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                markerOptions.position(latLng);
+                markerOptions.icon(icon);
+                Marker marker = mMap.addMarker(markerOptions);
+                marker.setTag(os);
+            }
+        }
+    }
+
+    @OnClick({R.id.btn_try_again_server_error, R.id.layout_error_conection})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_try_again_server_error:
+                break;
+            case R.id.layout_error_conection:
+                break;
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
