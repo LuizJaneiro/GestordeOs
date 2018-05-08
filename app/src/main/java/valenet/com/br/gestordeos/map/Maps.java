@@ -31,6 +31,8 @@ public interface Maps {
         void loadOsTypesList(ArrayList<OsTypeModel> osTypeModels);
 
         void addedOsMarkers(ArrayList<Os> osArrayList);
+
+        void navigateToFilter();
     }
 
     interface MapsPresenter {

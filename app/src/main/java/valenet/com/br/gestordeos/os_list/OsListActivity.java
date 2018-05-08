@@ -290,6 +290,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
         intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
         startActivityForResult(intent, REQ_CODE_FILTER);
     }
 

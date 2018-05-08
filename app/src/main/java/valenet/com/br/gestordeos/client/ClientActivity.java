@@ -173,6 +173,11 @@ public class ClientActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
     public void navigateToRefuseOsActivity(){
         Intent intent = new Intent(this, RefuseOsActivity.class);
         intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
