@@ -32,6 +32,8 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_OS_DISTANCE = "SHARED_PREF_KEY_OS_DISTANCE";
     public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
     public static final String SHARED_PREF_KEY_OS_DATE = "SHARED_PREF_KEY_OS_DATE";
+    public static final String SHARED_PREF_KEY_OS_NEXT = "SHARED_PREF_KEY_OS_NEXT";
+    public static final String SHARED_PREF_KEY_OS_SCHEDULE = "SHARED_PREF_KEY_OS_SCHEDULE";
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
 

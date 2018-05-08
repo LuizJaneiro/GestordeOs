@@ -33,12 +33,27 @@ public class MapsPresenterImp implements Maps.MapsPresenter, Maps.MapsInteractor
     }
 
     @Override
+    public void loadScheduleOsList(Double latitude, Double longitude, Integer codUser, Integer group) {
+        view.hideMapsView();
+        view.hideErrorConnectionView();
+        view.hideErrorServerView();
+        view.showProgress();
+        interactor.loadScheduleOsListAndOsTypes(latitude, longitude, codUser, group, this);
+    }
+
+    @Override
     public void successLoading(List<Os> osList, List<OsTypeModel> osTypes) {
         if(osList != null && osTypes != null) {
-            view.loadOsList((ArrayList) osList);
             view.loadOsTypesList((ArrayList) osTypes);
-            view.addedOsMarkers((ArrayList) osList);
-            view.showMapsView();
+            view.loadOsList((ArrayList) osList);
+        }
+    }
+
+    @Override
+    public void successLoadingScheduleOsList(List<Os> osList, List<OsTypeModel> osTypes) {
+        if(osList != null && osTypes != null) {
+            view.loadOsTypesList((ArrayList) osTypes);
+            view.loadScheduleOsList((ArrayList) osList);
         }
     }
 
