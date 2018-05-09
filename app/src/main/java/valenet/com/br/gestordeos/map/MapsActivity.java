@@ -78,12 +78,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     TextView textViewToolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.my_adress_search)
-    ViewGroup search;
-    @BindView(R.id.text_view_search)
-    TextView textViewSearch;
     @BindView(R.id.layout_maps)
-    FrameLayout layoutMaps;
+    ViewGroup layoutMaps;
     @BindView(R.id.loading_view)
     RelativeLayout loadingView;
     @BindView(R.id.lottie_animation_loading)
@@ -195,23 +191,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                         startActivity(i);
                     }
                 });
-                search.setClickable(true);
-                search.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        try {
-                            Intent intent =
-                                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                            .build(MapsActivity.this);
-                            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-                        } catch (GooglePlayServicesRepairableException e) {
-                            e.printStackTrace();
 
-                        } catch (GooglePlayServicesNotAvailableException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
                 mMap.getUiSettings().setZoomControlsEnabled(true);
 
                 RxPermissions.getInstance(MapsActivity.this)
@@ -334,17 +314,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlaceAutocomplete.getPlace(MapsActivity.this, data);
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), zoom));
-                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
-            }
-        } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-            Status status = PlaceAutocomplete.getStatus(MapsActivity.this, data);
-
-        }
-
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
 
@@ -543,12 +512,18 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         showMapsView();
     }
 
-    @OnClick({R.id.btn_try_again_server_error, R.id.layout_error_conection})
+    @OnClick({R.id.btn_try_again_server_error, R.id.btn_try_again})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_try_again_server_error:
-                break;
-            case R.id.layout_error_conection:
+            case R.id.btn_try_again:
+                if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)){
+                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
+                }else{
+                    presenter.loadScheduleOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
+                }
                 break;
         }
     }

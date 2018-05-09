@@ -40,8 +40,10 @@
             android:layout_marginStart="16dp"
             android:maxEms="2"
             android:minEms="2"
+            android:maxLines="2"
             android:paddingLeft="16dp"
             android:text="Corretiva Física 03/07/2018"
+            android:ellipsize="end"
             android:textColor="@color/text_color_os_item" />
 
         <TextView
@@ -50,17 +52,14 @@
             android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/info_marker_name"
             android:layout_centerVertical="true"
             android:layout_marginEnd="16dp"
             android:paddingRight="16dp"
             android:gravity="center"
-            android:maxLines="1"
-            android:minEms="3"
-            android:text="2 Km"
+            android:text="2.1 KM"
             android:textColor="@color/text_color_os_item"
-            android:textSize="20sp"
+            android:textSize="16sp"
             tools:ignore="MissingPrefix" />
 
     </RelativeLayout>
