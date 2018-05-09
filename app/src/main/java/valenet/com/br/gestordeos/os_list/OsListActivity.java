@@ -323,6 +323,7 @@ public class OsListActivity extends AppCompatActivity implements OsList.OsListVi
             if (resultCode == REQ_CODE_BACK_FILTER) {
                 ArrayList<Os> scheduleOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST);
                 ArrayList<Os> nextOsFiltredList = data.getParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST);
+                Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso.", Toast.LENGTH_SHORT).show();
                 if(scheduleOsFiltredList != null && onActivityResultScheduleOs != null)
                     onActivityResultScheduleOs.onActivityResultFilter(scheduleOsFiltredList);
                 if(nextOsFiltredList != null && onActivityResultNextOs != null)
