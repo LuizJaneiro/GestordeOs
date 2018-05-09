@@ -88,12 +88,14 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
 
     @Override
     public void showLoading() {
-        loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideOsListView() {
-        osTypeView.setVisibility(View.GONE);
+        if(osTypeView != null)
+            osTypeView.setVisibility(View.GONE);
     }
 
     @Override

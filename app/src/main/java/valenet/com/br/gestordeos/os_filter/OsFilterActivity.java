@@ -452,52 +452,62 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
     @Override
     public void hideFilterView() {
-        this.layoutOsFilter.setVisibility(View.GONE);
+        if(layoutOsFilter != null)
+            this.layoutOsFilter.setVisibility(View.GONE);
     }
 
     @Override
     public void hideErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.GONE);
+        if(layoutErrorConection != null)
+            this.layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void hideErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.GONE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void hideEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.GONE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoading() {
-        this.loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            this.loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showFilterView() {
-        this.layoutOsFilter.setVisibility(View.VISIBLE);
+        if(layoutOsFilter != null)
+            this.layoutOsFilter.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.VISIBLE);
+        if(layoutErrorConection != null)
+            this.layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.VISIBLE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.VISIBLE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        this.loadingView.setVisibility(View.GONE);
+        if(loadingView != null)
+            this.loadingView.setVisibility(View.GONE);
     }
 
     @Override

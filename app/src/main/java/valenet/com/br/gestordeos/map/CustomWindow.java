@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class CustomWindow implements GoogleMap.InfoWindowAdapter {
@@ -83,6 +84,8 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
 
             }
         });
+
+        ClickGuard.guard(layout);
         return myContentsView;
     }
 

@@ -128,24 +128,30 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void hideProgress() {
-        loadingView.setVisibility(View.GONE);
+        if(loadingView != null)
+            loadingView.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorEmptyUser() {
-        textInputEmail.requestFocus();
-        textInputEmail.setError(getResources().getString(R.string.error_field_required));
+        if(textInputEmail != null) {
+            textInputEmail.requestFocus();
+            textInputEmail.setError(getResources().getString(R.string.error_field_required));
+        }
     }
 
     @Override
     public void showErrorEmptyPassword() {
-        textInputPassword.requestFocus();
-        textInputPassword.setError(getResources().getString(R.string.error_field_required));
+        if(textInputPassword != null) {
+            textInputPassword.requestFocus();
+            textInputPassword.setError(getResources().getString(R.string.error_field_required));
+        }
     }
 
     @Override
     public void showProgress() {
-        loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -155,12 +161,14 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void showLoginView() {
-        loginView.setVisibility(View.VISIBLE);
+        if(loginView!= null)
+            loginView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoginView() {
-        loginView.setVisibility(View.GONE);
+        if(loginView != null)
+            loginView.setVisibility(View.GONE);
     }
 
     @Override
