@@ -7,9 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.location.Geocoder;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -19,21 +20,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -47,7 +43,6 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -68,16 +63,14 @@ import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_list.OsListActivity;
+import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
+import xyz.sahildave.widget.SearchViewLayout;
 
 public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
-    private final int CODE_MAP = 1000;
-
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.layout_maps)
     ViewGroup layoutMaps;
     @BindView(R.id.loading_view)
@@ -92,8 +85,12 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     AppCompatButton btnTryAgain;
     @BindView(R.id.layout_error_conection)
     RelativeLayout layoutErrorConection;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.search_view_container)
+    SearchViewLayout searchViewContainer;
 
-
+    private final int CODE_MAP = 1000;
     private final int REQ_CODE_SEARCH = 200;
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private final int REQ_CODE_FILTER = 202;
@@ -147,6 +144,32 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         this.nextOrScheduleFilters = new HashMap<>();
         this.filters = new HashMap<>();
 
+        searchViewContainer.handleToolbarAnimation(toolbar);
+        searchViewContainer.setHint("Buscar por Cliente");
+        ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
+        ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
+        searchViewContainer.setTransitionDrawables(collapsed, expanded);
+        searchViewContainer.setSearchListener(new SearchViewLayout.SearchListener() {
+            @Override
+            public void onFinished(String searchKeyword) {
+                searchViewContainer.collapse();
+            }
+        });
+
+        searchViewContainer.setOnToggleAnimationListener(new SearchViewLayout.OnToggleAnimationListener() {
+            @Override
+            public void onStart(boolean expanded) {
+                if (expanded) {
+                    navigateToSearch();
+                } else {
+                    //fab.show();
+                }
+            }
+
+            @Override
+            public void onFinish(boolean expanded) {
+            }
+        });
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
         this.nextOrScheduleFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NEXT,
@@ -154,7 +177,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         this.nextOrScheduleFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, false));
 
-        if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT))
+        if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT))
             Toasty.success(getApplicationContext(), "Mostrando apenas OSs próximas.", Toast.LENGTH_SHORT).show();
         else
             Toasty.success(getApplicationContext(), "Mostrando apenas OSs agendadas.", Toast.LENGTH_SHORT).show();
@@ -316,7 +339,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
-
+                searchViewContainer.collapse();
             }
         }
 
@@ -329,22 +352,22 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                 this.nextOrScheduleFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE,
                         sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, false));
 
-                if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT) &&
-                        (this.osArrayList == null || this.osArrayList.size() == 0) && myLocation != null){
+                if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT) &&
+                        (this.osArrayList == null || this.osArrayList.size() == 0) && myLocation != null) {
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                     Toasty.success(getApplicationContext(), "Filtros aplicados, mostrando apenas OSs próximas.", Toast.LENGTH_SHORT).show();
-                }else if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)){
+                } else if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)) {
                     filterList(this.osArrayList);
                     Toasty.success(getApplicationContext(), "Filtros aplicados, mostrando apenas OSs próximas.", Toast.LENGTH_SHORT).show();
                 }
 
-                if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE) &&
-                        (this.scheduleOsArrayList == null || this.scheduleOsArrayList.size() == 0) && myLocation != null){
+                if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE) &&
+                        (this.scheduleOsArrayList == null || this.scheduleOsArrayList.size() == 0) && myLocation != null) {
                     presenter.loadScheduleOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                     Toasty.success(getApplicationContext(), "Filtros aplicados, mostrando apenas OSs agendadas.", Toast.LENGTH_SHORT).show();
-                } else if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE)){
+                } else if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE)) {
                     filterList(this.scheduleOsArrayList);
                     Toasty.success(getApplicationContext(), "Filtros aplicados, mostrando apenas OSs agendadas.", Toast.LENGTH_SHORT).show();
                 }
@@ -361,6 +384,15 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                 }
             }
         }
+    }
+
+    @Override
+    public void navigateToSearch() {
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredOsArrayList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 
     @Override
@@ -459,11 +491,11 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     @Override
     public void addedOsMarkers(ArrayList<Os> osArrayList) {
-        if(mMap != null)
+        if (mMap != null)
             mMap.clear();
         alreadyLoadedOsList = true;
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
-        if(osArrayList != null && osArrayList.size() > 0) {
+        if (osArrayList != null && osArrayList.size() > 0) {
             for (int i = 0; i < osArrayList.size(); i++) {
                 Os os = osArrayList.get(i);
                 Location location = new Location("");
@@ -517,10 +549,10 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         switch (view.getId()) {
             case R.id.btn_try_again_server_error:
             case R.id.btn_try_again:
-                if(this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)){
+                if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)) {
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
-                }else{
+                } else {
                     presenter.loadScheduleOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                 }

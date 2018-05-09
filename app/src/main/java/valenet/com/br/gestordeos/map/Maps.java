@@ -33,6 +33,8 @@ public interface Maps {
         void addedOsMarkers(ArrayList<Os> osArrayList);
 
         void navigateToFilter();
+
+        void navigateToSearch();
     }
 
     interface MapsPresenter {
