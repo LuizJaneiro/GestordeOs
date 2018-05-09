@@ -186,10 +186,12 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
 
     @Override
     public void hideLoading() {
-        if (refreshLayoutScheduleOs.isRefreshing())
-            refreshLayoutScheduleOs.setRefreshing(false);
-        else
-            this.loadingView.setVisibility(View.GONE);
+        if(refreshLayoutScheduleOs != null && loadingView != null) {
+            if (refreshLayoutScheduleOs.isRefreshing())
+                refreshLayoutScheduleOs.setRefreshing(false);
+            else
+                this.loadingView.setVisibility(View.GONE);
+        }
     }
 
     @Override
