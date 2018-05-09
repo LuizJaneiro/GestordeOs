@@ -247,37 +247,39 @@ public class NextOsFragment extends Fragment implements OsList.OsListView, OsLis
 
     @Override
     public void showListOs(List<Os> osListAdapter) {
-        this.osList = (ArrayList) osListAdapter;
-        ((OsListActivity)this.getActivity()).setNextOsList(this.osList);
-        Set<String> keys = selectedFilters.keySet();
-        this.filtredList = new ArrayList<>();
-        for (String key : keys) {
-            boolean isSelected = this.selectedFilters.get(key);
-            if (isSelected) {
-                for (Os os : osList) {
-                    if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
-                        filtredList.add(os);
+        if(this.getActivity() != null) {
+            this.osList = (ArrayList) osListAdapter;
+            ((OsListActivity) this.getActivity()).setNextOsList(this.osList);
+            Set<String> keys = selectedFilters.keySet();
+            this.filtredList = new ArrayList<>();
+            for (String key : keys) {
+                boolean isSelected = this.selectedFilters.get(key);
+                if (isSelected) {
+                    for (Os os : osList) {
+                        if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
+                            filtredList.add(os);
+                        }
                     }
                 }
             }
-        }
 
-        if (this.filtredList.size() == 0) {
-            this.hideOsListView();
-            this.showEmptyListView();
-        } else {
-            if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
-            else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
-            else
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+            if (this.filtredList.size() == 0) {
+                this.hideOsListView();
+                this.showEmptyListView();
+            } else {
+                if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+                else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+                else
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
 
-            recyclerViewNextOs.setAdapter(adapter);
-            recyclerViewNextOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
-            recyclerViewNextOs.setItemAnimator(new DefaultItemAnimator());
-            this.hideEmptyListView();
-            this.showOsListView();
+                recyclerViewNextOs.setAdapter(adapter);
+                recyclerViewNextOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                recyclerViewNextOs.setItemAnimator(new DefaultItemAnimator());
+                this.hideEmptyListView();
+                this.showOsListView();
+            }
         }
     }
 
