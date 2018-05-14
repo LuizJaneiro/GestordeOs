@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/info_marker_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00000000"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/box_google">
+
+        <TextView
+
+            android:id="@+id/info_marker_name"
+            fontPath="fonts/Lato-Bold.ttf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:text="Maria Tereza"
+            android:textColor="@color/text_color_os_item"
+            android:textSize="20sp"
+            tools:ignore="MissingPrefix" />
+
+        <TextView
+            android:id="@+id/info_marker_os_type_and_date"
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/info_marker_name"
+            android:layout_marginStart="16dp"
+            android:maxEms="2"
+            android:minEms="2"
+            android:maxLines="2"
+            android:paddingLeft="16dp"
+            android:text="Corretiva Física 03/07/2018"
+            android:ellipsize="end"
+            android:textColor="@color/text_color_os_item" />
+
+        <TextView
+            android:id="@+id/info_marker_distance"
+            fontPath="fonts/Lato-Bold.ttf"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/info_marker_name"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="16dp"
+            android:paddingRight="16dp"
+            android:gravity="center"
+            android:text="2.1 KM"
+            android:textColor="@color/text_color_os_item"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix" />
+
+    </RelativeLayout>
+</RelativeLayout>

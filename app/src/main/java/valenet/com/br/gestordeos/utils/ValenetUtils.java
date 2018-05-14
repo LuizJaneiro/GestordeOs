@@ -21,9 +21,11 @@ public class ValenetUtils {
     public static final String KEY_OS_TYPE = "KEY_OS_TYPE";
     public static final String KEY_OS_TYPE_LIST = "KEY_OS_TYPE_LIST";
     public static final String KEY_OS = "KEY_OS";
+    public static final String KEY_OS_ID = "KEY_OS_ID";
     public static final String KEY_USER_LOCATION = "KEY_USER_LOCATION";
     public static final String KEY_ORDER_FILTERS = "KEY_ORDER_FILTERS";
     public static final String KEY_FILTERS = "KEY_FILTERS";
+    public static final String KEY_CAME_FROM_MAPS = "KEY_CAME_FROM_MAPS";
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
     public static final String SHARED_PREF_KEY_EMAIL_CLIENT = "SHARED_PREF_KEY_EMAIL_CLIENT";
     public static final String SHARED_PREF_KEY_PASSWORD_CLIENT = "SHARED_PREF_KEY_PASSWORD_CLIENT";
@@ -31,6 +33,8 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_OS_DISTANCE = "SHARED_PREF_KEY_OS_DISTANCE";
     public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
     public static final String SHARED_PREF_KEY_OS_DATE = "SHARED_PREF_KEY_OS_DATE";
+    public static final String SHARED_PREF_KEY_OS_NEXT = "SHARED_PREF_KEY_OS_NEXT";
+    public static final String SHARED_PREF_KEY_OS_SCHEDULE = "SHARED_PREF_KEY_OS_SCHEDULE";
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
 

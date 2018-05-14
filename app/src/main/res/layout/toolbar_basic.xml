@@ -6,13 +6,13 @@
     android:layout_height="?android:attr/actionBarSize"
     android:background="?android:attr/colorPrimary">
 
-        <TextView
-            android:id="@+id/text_view_toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Título activity"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/text_view_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Título activity"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
 </android.support.v7.widget.Toolbar>

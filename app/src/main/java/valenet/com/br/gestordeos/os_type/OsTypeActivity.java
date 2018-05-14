@@ -8,7 +8,6 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -17,7 +16,7 @@ import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
-import valenet.com.br.gestordeos.os_list.OsListActivity;
+import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -75,7 +74,7 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
 
     @Override
     public void navigateToOsList(int osType) {
-        Intent intent = new Intent(this, OsListActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         intent.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
         startActivity(intent);
     }
@@ -89,12 +88,14 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
 
     @Override
     public void showLoading() {
-        loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideOsListView() {
-        osTypeView.setVisibility(View.GONE);
+        if(osTypeView != null)
+            osTypeView.setVisibility(View.GONE);
     }
 
     @Override

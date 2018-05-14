@@ -81,8 +81,6 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
     AppCompatButton btnTryAgainServerError;
     @BindView(R.id.layout_error_server)
     RelativeLayout layoutErrorServer;
-    @BindView(R.id.text_view_error)
-    TextView textViewError;
     @BindView(R.id.btn_reload)
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)
@@ -176,90 +174,103 @@ public class ScheduleOsFragment extends Fragment implements OsList.OsListView, O
 
     @Override
     public void hideOsListView() {
-        this.refreshLayoutScheduleOs.setVisibility(View.GONE);
+        if(refreshLayoutScheduleOs != null)
+            this.refreshLayoutScheduleOs.setVisibility(View.GONE);
     }
 
     @Override
     public void showOsListView() {
-        this.refreshLayoutScheduleOs.setVisibility(View.VISIBLE);
+        if(refreshLayoutScheduleOs != null)
+            this.refreshLayoutScheduleOs.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if (refreshLayoutScheduleOs.isRefreshing())
-            refreshLayoutScheduleOs.setRefreshing(false);
-        else
-            this.loadingView.setVisibility(View.GONE);
+        if(refreshLayoutScheduleOs != null && loadingView != null) {
+            if (refreshLayoutScheduleOs.isRefreshing())
+                refreshLayoutScheduleOs.setRefreshing(false);
+            else
+                this.loadingView.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void showLoading() {
-        this.loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            this.loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showErrorConectionView() {
+        if(layoutErrorConection != null)
         this.layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.GONE);
+        if(layoutErrorConection != null)
+            this.layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.VISIBLE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.GONE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.VISIBLE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.GONE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.GONE);
     }
 
     @Override
     public void showListOs(List<Os> osListAdapter) {
-        this.osList = (ArrayList) osListAdapter;
-        ((OsListActivity)this.getActivity()).setScheduleOsList(this.osList);
-        Set<String> keys = selectedFilters.keySet();
-        this.filtredList = new ArrayList<>();
-        for (String key : keys) {
-            boolean isSelected = this.selectedFilters.get(key);
-            if (isSelected) {
-                for (Os os : osList) {
-                    if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
-                        filtredList.add(os);
+        if(this.getActivity() != null) {
+            this.osList = (ArrayList) osListAdapter;
+            ((OsListActivity) this.getActivity()).setScheduleOsList(this.osList);
+            Set<String> keys = selectedFilters.keySet();
+            this.filtredList = new ArrayList<>();
+            for (String key : keys) {
+                boolean isSelected = this.selectedFilters.get(key);
+                if (isSelected) {
+                    for (Os os : osList) {
+                        if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
+                            filtredList.add(os);
+                        }
                     }
                 }
             }
-        }
 
-        if (this.filtredList.size() == 0) {
-            this.hideOsListView();
-            this.showEmptyListView();
-        } else {
-            if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
-            else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
-            else
-                adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+            if (this.filtredList.size() == 0) {
+                this.hideOsListView();
+                this.showEmptyListView();
+            } else {
+                if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+                else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+                else
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
 
-            recyclerViewNextOs.setAdapter(adapter);
-            recyclerViewNextOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
-            recyclerViewNextOs.setItemAnimator(new DefaultItemAnimator());
-            this.hideEmptyListView();
-            this.showOsListView();
+                recyclerViewNextOs.setAdapter(adapter);
+                recyclerViewNextOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                recyclerViewNextOs.setItemAnimator(new DefaultItemAnimator());
+                this.hideEmptyListView();
+                this.showOsListView();
+            }
         }
     }
 

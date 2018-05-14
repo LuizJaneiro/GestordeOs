@@ -11,6 +11,21 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionOverflowMenuStyle">@style/MenuOptionsOs</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextAppearancePopupMenuLarge</item>
+        <item name="textAppearanceSmallPopupMenu">@style/TextAppearancePopupMenuSmall</item>
+    </style>
+
+    <style name="MenuOptionsOs" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:popupBackground">#FFFFFF</item>
+    </style>
+
+    <style name="TextAppearancePopupMenuLarge" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="TextAppearancePopupMenuSmall" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

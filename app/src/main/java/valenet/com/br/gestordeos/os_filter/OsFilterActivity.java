@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +88,16 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     RelativeLayout loadingView;
     @BindView(R.id.recycler_btn_filters)
     RecyclerView recyclerBtnFilters;
+    @BindView(R.id.layout_os_filter_list)
+    LinearLayout layoutOsFilterList;
+    @BindView(R.id.btn_next)
+    AppCompatButton btnNext;
+    @BindView(R.id.btn_schedule)
+    AppCompatButton btnSchedule;
+    @BindView(R.id.layout_os_filter_maps)
+    LinearLayout layoutOsFilterMaps;
+
+    private boolean cameFromMaps;
 
     private final static int REQUEST_CHECK_SETTINGS = 0;
     ReactiveLocationProvider locationProvider;
@@ -132,16 +143,31 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
-        this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
-        this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
-        this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
+        cameFromMaps = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
+        if(cameFromMaps)
+            layoutOsFilterList.setVisibility(View.GONE);
+        else
+            layoutOsFilterMaps.setVisibility(View.GONE);
 
-        this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, btnDistance);
-        this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, btnName);
-        this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE, btnDate);
+        if(cameFromMaps) {
+            this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NEXT,
+                    sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, true));
+            this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE,
+                    sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, false));
+            this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, btnNext);
+            this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, btnSchedule);
+        } else {
+            this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                    sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+            this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                    sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+            this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
+                    sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
+
+            this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, btnDistance);
+            this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME, btnName);
+            this.myButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE, btnDate);
+        }
 
         renderButtons(this.selectedButtons, this.myButtons);
 
@@ -166,16 +192,16 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         if (nextOsList == null || nextOsList.size() == 0)
             loadNextOsList = true;
 
-        if(scheduleOsList == null || scheduleOsList.size() == 0)
+        if (scheduleOsList == null || scheduleOsList.size() == 0)
             loadScheduleOsList = true;
 
-        if(osTypeModelList == null || osTypeModelList.size() == 0)
+        if (osTypeModelList == null || osTypeModelList.size() == 0)
             loadOsModelList = true;
 
         this.hideFilterView();
         this.showLoading();
 
-        if (myLocation == null) {
+        if (myLocation == null && !cameFromMaps) {
             RxPermissions.getInstance(OsFilterActivity.this)
                     .request(Manifest.permission.ACCESS_FINE_LOCATION)
                     .map(new Func1<Boolean, Object>() {
@@ -257,8 +283,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                         }
                     }).subscribe();
         }
-
-        if (loadNextOsList || loadScheduleOsList || loadOsModelList) {
+        if (!cameFromMaps && (loadNextOsList || loadScheduleOsList || loadOsModelList)) {
             if (myLocation != null) {
                 presenter.loadOsListAndOsTypes(myLocation.getLatitude(), myLocation.getLongitude(),
                         LoginLocal.getInstance().getCurrentUser().getCoduser(),
@@ -321,31 +346,34 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
-        if(this.selectedFiltersListener != null) {
-            filtredNextOsList = (ArrayList) this.selectedFiltersListener.filterNextOsList();
-            filtredScheduleOsList = (ArrayList) this.selectedFiltersListener.filterScheduleOsList();
-        }
-        ArrayList<Os> ordenedScheduleOsList = null;
-        ArrayList<Os> ordenedNextOsList = null;
-        Set<String> keys = selectedButtons.keySet();
-        if(filtredScheduleOsList != null && filtredScheduleOsList != null) {
-            for (String key : keys) {
-                if (key != null) {
-                    Boolean isSelected = selectedButtons.get(key);
-                    if (isSelected) {
-                        ordenedNextOsList = orderBySelectedFilter(filtredNextOsList, key);
-                        ordenedScheduleOsList = orderBySelectedFilter(filtredScheduleOsList, key);
+        if(!cameFromMaps) {
+            if (this.selectedFiltersListener != null) {
+                filtredNextOsList = (ArrayList) this.selectedFiltersListener.filterNextOsList();
+                filtredScheduleOsList = (ArrayList) this.selectedFiltersListener.filterScheduleOsList();
+            }
+            ArrayList<Os> ordenedScheduleOsList = null;
+            ArrayList<Os> ordenedNextOsList = null;
+            Set<String> keys = selectedButtons.keySet();
+            if (filtredScheduleOsList != null && filtredScheduleOsList != null) {
+                for (String key : keys) {
+                    if (key != null) {
+                        Boolean isSelected = selectedButtons.get(key);
+                        if (isSelected) {
+                            ordenedNextOsList = orderBySelectedFilter(filtredNextOsList, key);
+                            ordenedScheduleOsList = orderBySelectedFilter(filtredScheduleOsList, key);
+                        }
                     }
                 }
             }
+            resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, ordenedScheduleOsList);
+            resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST, ordenedNextOsList);
         }
-        resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, ordenedScheduleOsList);
-        resultIntent.putParcelableArrayListExtra(ValenetUtils.KEY_NEXT_OS_LIST, ordenedNextOsList);
         setResult(REQ_CODE_BACK_FILTER, resultIntent);
         finish();
     }
 
-    @OnClick({R.id.btn_distance, R.id.btn_name, R.id.btn_date, R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
+    @OnClick({R.id.btn_distance, R.id.btn_name, R.id.btn_date, R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload,
+                R.id.btn_next, R.id.btn_schedule})
     public void onViewClicked(View view) {
         SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -386,6 +414,26 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
                 renderButtons(this.selectedButtons, this.myButtons);
                 break;
+            case R.id.btn_next:
+                editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, true);
+                editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, false);
+                editor.apply();
+
+                this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, true);
+                this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, false);
+
+                renderButtons(this.selectedButtons, this.myButtons);
+                break;
+            case R.id.btn_schedule:
+                editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, false);
+                editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, true);
+                editor.apply();
+
+                this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_NEXT, false);
+                this.selectedButtons.put(ValenetUtils.SHARED_PREF_KEY_OS_SCHEDULE, true);
+
+                renderButtons(this.selectedButtons, this.myButtons);
+                break;
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
             case R.id.btn_reload:
@@ -404,52 +452,62 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
     @Override
     public void hideFilterView() {
-        this.layoutOsFilter.setVisibility(View.GONE);
+        if(layoutOsFilter != null)
+            this.layoutOsFilter.setVisibility(View.GONE);
     }
 
     @Override
     public void hideErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.GONE);
+        if(layoutErrorConection != null)
+            this.layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void hideErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.GONE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void hideEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.GONE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoading() {
-        this.loadingView.setVisibility(View.VISIBLE);
+        if(loadingView != null)
+            this.loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showFilterView() {
-        this.layoutOsFilter.setVisibility(View.VISIBLE);
+        if(layoutOsFilter != null)
+            this.layoutOsFilter.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showErrorConectionView() {
-        this.layoutErrorConection.setVisibility(View.VISIBLE);
+        if(layoutErrorConection != null)
+            this.layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showErrorServerView() {
-        this.layoutErrorServer.setVisibility(View.VISIBLE);
+        if(layoutErrorServer != null)
+            this.layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showEmptyListView() {
-        this.layoutEmptyList.setVisibility(View.VISIBLE);
+        if(layoutEmptyList != null)
+            this.layoutEmptyList.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        this.loadingView.setVisibility(View.GONE);
+        if(loadingView != null)
+            this.loadingView.setVisibility(View.GONE);
     }
 
     @Override
@@ -478,7 +536,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
     private ArrayList<Os> orderBySelectedFilter(ArrayList<Os> osList, String selectedFilter) {
 
-        if(osList != null) {
+        if (osList != null) {
             ArrayList<Os> filtredList = new ArrayList<>();
             filtredList = osList;
 
