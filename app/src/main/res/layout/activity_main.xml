@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:theme="@style/AppTheme.AppBarOverlay">
 
-            <include layout="@layout/toolbar_basic" />
+            <include layout="@layout/toolbar_searchable"/>
 
             <!--<include layout="@layout/toolbar_searchable_without_tabs"></include>-->
 
@@ -30,6 +30,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <include layout="@layout/layout_progress"/>
+        <include layout="@layout/layout_error_internet_connection"/>
+        <include layout="@layout/layout_error_from_server"/>
 
     </LinearLayout>
     <!-- The drawer is given a fixed width in dp and extends the full height of

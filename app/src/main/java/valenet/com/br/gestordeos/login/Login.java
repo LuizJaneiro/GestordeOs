@@ -3,7 +3,7 @@ package valenet.com.br.gestordeos.login;
 public interface Login {
 
     public interface LoginView {
-        void navigateToOsType();
+        void navigateToMain();
 
         void hideProgress();
 

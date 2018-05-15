@@ -1,6 +1,10 @@
 package valenet.com.br.gestordeos.main;
 
-public class MainPresenterImp implements Main.MainPresenter {
+import java.util.List;
+
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+
+public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor.onFinishedListenerOsTypes {
     // region Members
     private Main.MainView view;
     private Main.MainInteractor interactor;
@@ -17,6 +21,56 @@ public class MainPresenterImp implements Main.MainPresenter {
 
     // region Methods
 
+    @Override
+    public void logout() {
+        hideViews();
+        view.showLoading();
 
+        interactor.logout();
+    }
+
+    @Override
+    public void loadOsTypes() {
+        hideViews();
+        view.showLoading();
+        interactor.loadOsTypes(this);
+    }
+
+    @Override
+    public void successLogout() {
+        view.navigateToLogin();
+    }
+
+    @Override
+    public void successLoadingOsTypes(List<OsTypeModel> osList) {
+        hideViews();
+        if(osList != null) {
+            if(osList.size() == 0)
+                view.showErrorServerView();
+            else{
+                view.loadOsTypes(osList);
+                view.showContainer();
+            }
+        }
+    }
+
+    @Override
+    public void errorServiceOsTypes(String error) {
+        hideViews();
+        view.showErrorServerView();
+    }
+
+    @Override
+    public void errorNetworkOsTypes() {
+        hideViews();
+        view.showErrorConnectionView();
+    }
+
+    private void hideViews(){
+        view.hideContainer();
+        view.hideErrorConnectionView();
+        view.hideLoading();
+        view.hideErrorServerView();
+    }
     // endregion Methods
 }

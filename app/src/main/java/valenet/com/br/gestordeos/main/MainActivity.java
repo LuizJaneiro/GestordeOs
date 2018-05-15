@@ -1,43 +1,114 @@
 package valenet.com.br.gestordeos.main;
 
-import android.app.Activity;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.tbruyelle.rxpermissions.RxPermissions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import es.dmoral.toasty.Toasty;
+import pl.charmas.android.reactivelocation.ReactiveLocationProvider;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.os_schedule.OsScheduleFragment;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
+import xyz.sahildave.widget.SearchViewLayout;
 
 public class MainActivity extends AppCompatActivity implements Main.MainView {
 
-    @BindView(R.id.text_view_toolbar_title)
-    TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar_basic)
-    Toolbar toolbarBasic;
+
     @BindView(R.id.container)
     FrameLayout container;
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.loading_view)
+    RelativeLayout loadingView;
+    @BindView(R.id.btn_try_again)
+    AppCompatButton btnTryAgain;
+    @BindView(R.id.layout_error_conection)
+    RelativeLayout layoutErrorConection;
+    @BindView(R.id.btn_try_again_server_error)
+    AppCompatButton btnTryAgainServerError;
+    @BindView(R.id.layout_error_server)
+    RelativeLayout layoutErrorServer;
 
-    android.support.v7.app.ActionBarDrawerToggle drawerToggle;
+    //Toolbar Searchable
+    @BindView(R.id.text_view_toolbar_searchable_title)
+    TextView textViewToolbarSearchableTitle;
+    @BindView(R.id.toolbar_searchable)
+    Toolbar toolbarSearchable;
+    @BindView(R.id.search_view_container)
+    SearchViewLayout searchViewContainer;
+    @BindView(R.id.tab_layout_toolbar_searchable)
+    TabLayout tabLayoutToolbarSearchable;
+
+    ActionBarDrawerToggle drawerToggle;
 
     private Main.MainPresenter presenter;
+
+    private navigateInterface navigateInterface;
+
+    private pagerInterface pagerInterface;
+    private HashMap<String, Boolean> orderFilters;
+    private HashMap<String, Boolean> filters;
+
+    private ArrayList<OsTypeModel> osTypeModelList;
+
+
+    //Location
+    ReactiveLocationProvider locationProvider;
+    private Subscription locationSubscription;
+    private final static int REQUEST_CHECK_SETTINGS = 0;
+    private Location myLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +116,86 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        setupScheduleToolbar();
+
         this.presenter = new MainPresenterImp(this);
 
-        setSupportActionBar(toolbarBasic);
+        this.showLoading();
+        RxPermissions.getInstance(MainActivity.this)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .map(new Func1<Boolean, Object>() {
+                    @Override
+                    public Object call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
+                            final LocationRequest locationRequest = LocationRequest.create()
+                                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                    .setNumUpdates(1)
+                                    .setInterval(10000);
+                            locationSubscription = locationProvider
+                                    .checkLocationSettings(
+                                            new LocationSettingsRequest.Builder()
+                                                    .addLocationRequest(locationRequest)
+                                                    .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+                                                    .build()
+                                    )
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnNext(new Action1<LocationSettingsResult>() {
+                                        @Override
+                                        public void call(LocationSettingsResult locationSettingsResult) {
+                                            Status status = locationSettingsResult.getStatus();
+                                            if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                                                try {
+                                                    status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                                } catch (IntentSender.SendIntentException th) {
+                                                    Log.e("MainActivity", "Error opening settings activity.", th);
+                                                }
+                                            }
+                                        }
+                                    })
+                                    .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
+                                        @SuppressLint("MissingPermission")
+                                        @Override
+                                        public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
+                                            //noinspection MissingPermission
+                                            return locationProvider.getUpdatedLocation(locationRequest);
+                                        }
+                                    })
+                                    .map(new Func1<Location, Boolean>() {
+                                        @Override
+                                        public Boolean call(Location location) {
+                                            presenter.loadOsTypes();
+                                            if (location != null) {
+                                                myLocation = location;
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                    })
+                                    .subscribe(new Observer<Boolean>() {
+                                        @Override
+                                        public void onCompleted() {
 
-        textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_client));
+                                        }
 
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                                        @Override
+                                        public void onError(Throwable e) {
 
-        drawerToggle = setupDrawerToggle();
-        setupDrawerContent();
+                                        }
 
-        drawerLayout.addDrawerListener(drawerToggle);
+                                        @Override
+                                        public void onNext(Boolean aBoolean) {
+
+                                        }
+                                    });
+                        } else {
+                            Toasty.error(MainActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
+                        }
+                        return null;
+                    }
+                }).subscribe();
     }
 
     @Override
@@ -76,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupDrawerContent(){
+    private void setupDrawerContent() {
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -86,39 +224,48 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         });
     }
 
-    private void selectDrawerItem(MenuItem item){
+    private void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
         Class fragmentClass;
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_item_schedule:
+                setupScheduleToolbar();
+                fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_map:
+                fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_history:
+                fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_exit:
+                fragmentClass = OsScheduleFragment.class;
+                presenter.logout();
                 break;
             default:
-
+                setupScheduleToolbar();
+                fragmentClass = OsScheduleFragment.class;
         }
 
-/*        try {
+        try {
             fragment = (Fragment) fragmentClass.newInstance();
+            if(fragment instanceof OsScheduleFragment)
+                ((OsScheduleFragment) fragment).setMainPagerAdapter();
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        //fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
 
         item.setChecked(true);
         drawerLayout.closeDrawers();
     }
 
-    private ActionBarDrawerToggle setupDrawerToggle(){
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbarBasic, R.string.drawer_open,  R.string.drawer_close);
+    private ActionBarDrawerToggle setupDrawerToggle(Toolbar toolbar) {
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
     }
 
     @Override
@@ -136,8 +283,176 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
+    public void navigateToSearch() {
+        if (navigateInterface != null) {
+            navigateInterface.navigateToOsSearch();
+        }
+    }
+
+    @Override
+    public void navigateToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void showLoading() {
+        if (loadingView != null)
+            loadingView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoading() {
+        if (loadingView != null)
+            loadingView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorServerView() {
+        if(layoutErrorServer != null)
+            layoutErrorServer.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorServerView() {
+        if(layoutErrorServer != null)
+            layoutErrorServer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorConnectionView() {
+        if(layoutErrorConection != null)
+            layoutErrorConection.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideErrorConnectionView() {
+        if(layoutErrorConection != null)
+            layoutErrorConection.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showContainer() {
+        if (container != null)
+            container.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideContainer() {
+        if (container != null)
+            container.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void loadOsTypes(List<OsTypeModel> osList) {
+        this.filters = new HashMap<>();
+        this.osTypeModelList = (ArrayList) osList;
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        if (osList != null && osList.size() > 0) {
+            for (OsTypeModel model : osList) {
+                this.filters.put(model.getDescricao(),
+                        sharedPref.getBoolean(model.getDescricao(), true));
+            }
+        }
+    }
+
+    private void setupScheduleToolbar() {
+        setSupportActionBar(toolbarSearchable);
+
+        textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_schedule));
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerToggle = setupDrawerToggle(toolbarSearchable);
+        setupDrawerContent();
+
+        drawerLayout.addDrawerListener(drawerToggle);
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Hoje"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Amanhã"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Próximos Dias"));
+        tabLayoutToolbarSearchable.setTabGravity(TabLayout.GRAVITY_FILL);
+
+
+        searchViewContainer.handleToolbarAnimation(toolbarSearchable);
+        searchViewContainer.setHint("Buscar por Cliente");
+        ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
+        ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
+        searchViewContainer.setTransitionDrawables(collapsed, expanded);
+        searchViewContainer.setSearchListener(new SearchViewLayout.SearchListener() {
+            @Override
+            public void onFinished(String searchKeyword) {
+                searchViewContainer.collapse();
+            }
+        });
+
+        searchViewContainer.setOnToggleAnimationListener(new SearchViewLayout.OnToggleAnimationListener() {
+            @Override
+            public void onStart(boolean expanded) {
+                if (expanded) {
+                    navigateToSearch();
+                } else {
+                    //fab.show();
+                }
+            }
+
+            @Override
+            public void onFinish(boolean expanded) {
+            }
+        });
+    }
+
+    @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_try_again:
+            case R.id.btn_try_again_server_error:
+                presenter.loadOsTypes();
+                break;
+        }
+    }
+
+    public void setPagerInterface(MainActivity.pagerInterface pagerInterface) {
+        this.pagerInterface = pagerInterface;
+    }
+
+    public void setNavigateInterface(MainActivity.navigateInterface navigateInterface) {
+        this.navigateInterface = navigateInterface;
+    }
+
+    public TabLayout getTabLayoutToolbarSearchable() {
+        return tabLayoutToolbarSearchable;
+    }
+
+    public HashMap<String, Boolean> getOrderFilters() {
+        return orderFilters;
+    }
+
+    public HashMap<String, Boolean> getFilters() {
+        return filters;
+    }
+
+    public ArrayList<OsTypeModel> getOsTypeModelList() {
+        return osTypeModelList;
+    }
+
+    public Location getMyLocation() {
+        return myLocation;
+    }
+
+    @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    public interface navigateInterface {
+        void navigateToOsSearch();
+    }
+
+    public interface pagerInterface {
+        void setOsListPagerAdapter();
+    }
 }
