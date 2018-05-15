@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
@@ -35,24 +35,17 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
-/*    @BindView(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
-    @BindView(R.id.left_drawer)
-    ListView leftDrawer;*/
-/*
-    private CharSequence mTitle;
-    private CharSequence mDrawerTitle;
-*/
-
-    /*    private String[] navigationDrawerTitles;*/
-
     android.support.v7.app.ActionBarDrawerToggle drawerToggle;
+
+    private Main.MainPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        this.presenter = new MainPresenterImp(this);
 
         setSupportActionBar(toolbarBasic);
 
