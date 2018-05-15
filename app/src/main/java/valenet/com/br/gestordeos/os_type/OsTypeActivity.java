@@ -16,6 +16,7 @@ import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -24,7 +25,7 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.btn_mercantil)
     AppCompatButton btnMercantil;
@@ -61,7 +62,9 @@ public class OsTypeActivity extends AppCompatActivity implements OsType.OsTypeVi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_mercantil:
-                navigateToOsList(ValenetUtils.GROUP_OS_MERCANTIL);
+                //navigateToOsList(ValenetUtils.GROUP_OS_MERCANTIL);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_corretiva:
                 navigateToOsList(ValenetUtils.GROUP_OS_CORRETIVA);
