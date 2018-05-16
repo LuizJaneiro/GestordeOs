@@ -235,7 +235,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             for (String key : keys) {
                 boolean isSelected = this.selectedFilters.get(key);
                 if (isSelected) {
-                    for (Os os : osList) {
+                    for (Os os : this.osList) {
                         if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
                             filtredList.add(os);
                         }
@@ -401,7 +401,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             for(int i = 0; i < osArrayList.size(); i++){
                 Os os = osArrayList.get(i);
                 if(os.getDataAgendamento() != null){
-                    Date osDate = ValenetUtils.convertStringToDate(os.getDataAgendamento());
+                    Date osDate = DateUtils.parseDate(os.getDataAgendamento());
                     if(DateUtils.areDatesSameDay(currentDate, osDate))
                         todayOsList.add(os);
                 }
