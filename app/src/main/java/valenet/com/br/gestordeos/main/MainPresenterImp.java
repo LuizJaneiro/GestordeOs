@@ -49,7 +49,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
                 view.showErrorServerView();
             else{
                 view.loadOsTypes(osList);
-                view.showContainer();
+                view.showPager();
             }
         }
     }
@@ -71,6 +71,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
         view.hideErrorConnectionView();
         view.hideLoading();
         view.hideErrorServerView();
+        view.hidePager();
     }
     // endregion Methods
 }

@@ -59,7 +59,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
                 tab1.setArguments(bundle);
                 return tab1;
             case 1:
-                OsScheduleTodayFragment tab2 = new OsScheduleTodayFragment();
+                OsScheduleTomorrowFragment tab2 = new OsScheduleTomorrowFragment();
                 tab2.setArguments(bundle);
                 return tab2;
             case 2:

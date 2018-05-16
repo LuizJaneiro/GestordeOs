@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +58,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.os_schedule.OsScheduleFragment;
+import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
+import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
+import valenet.com.br.gestordeos.os_schedule.OsScheduleTodayFragment;
+import valenet.com.br.gestordeos.os_schedule.OsScheduleTomorrowFragment;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
 
@@ -80,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     AppCompatButton btnTryAgainServerError;
     @BindView(R.id.layout_error_server)
     RelativeLayout layoutErrorServer;
+    @BindView(R.id.pager)
+    ViewPager pager;
 
     //Toolbar Searchable
     @BindView(R.id.text_view_toolbar_searchable_title)
@@ -93,11 +99,12 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     ActionBarDrawerToggle drawerToggle;
 
+
     private Main.MainPresenter presenter;
 
     private navigateInterface navigateInterface;
 
-    private pagerInterface pagerInterface;
+    private OsSchedulePagerAdapter osSchedulePagerAdapter;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
 
@@ -117,6 +124,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         ButterKnife.bind(this);
 
         setupScheduleToolbar();
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Hoje"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Amanhã"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Próximos Dias"));
+        tabLayoutToolbarSearchable.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.presenter = new MainPresenterImp(this);
 
@@ -231,34 +242,35 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         switch (item.getItemId()) {
             case R.id.nav_item_schedule:
                 setupScheduleToolbar();
-                fragmentClass = OsScheduleFragment.class;
+                hideContainer();
+                showPager();
                 break;
             case R.id.nav_item_map:
-                fragmentClass = OsScheduleFragment.class;
+                //fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_history:
-                fragmentClass = OsScheduleFragment.class;
+                //fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_exit:
-                fragmentClass = OsScheduleFragment.class;
+                //fragmentClass = OsScheduleFragment.class;
                 presenter.logout();
                 break;
             default:
                 setupScheduleToolbar();
-                fragmentClass = OsScheduleFragment.class;
+                hideContainer();
+                showPager();
+                break;
         }
 
-        try {
+/*        try {
             fragment = (Fragment) fragmentClass.newInstance();
-            if(fragment instanceof OsScheduleFragment)
-                ((OsScheduleFragment) fragment).setMainPagerAdapter();
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+/*        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();*/
 
         item.setChecked(true);
         drawerLayout.closeDrawers();
@@ -310,25 +322,25 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void showErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.GONE);
     }
 
@@ -342,6 +354,20 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void hideContainer() {
         if (container != null)
             container.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showPager() {
+        if (pager != null) {
+            setOsSchedulePagerAdapter();
+            pager.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void hidePager() {
+        if (pager != null)
+            pager.setVisibility(View.GONE);
     }
 
     @Override
@@ -371,14 +397,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         setupDrawerContent();
 
         drawerLayout.addDrawerListener(drawerToggle);
-        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Hoje"));
-        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Amanhã"));
-        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Próximos Dias"));
-        tabLayoutToolbarSearchable.setTabGravity(TabLayout.GRAVITY_FILL);
-
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Cliente");
+        searchViewContainer.setHint("Buscar por OS");
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -415,8 +436,46 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         }
     }
 
-    public void setPagerInterface(MainActivity.pagerInterface pagerInterface) {
-        this.pagerInterface = pagerInterface;
+    private void setOsSchedulePagerAdapter() {
+        osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
+                orderFilters, filters, osTypeModelList, tabLayoutToolbarSearchable.getTabCount());
+        pager.setAdapter(osSchedulePagerAdapter);
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        OsScheduleTodayFragment fragmentToday = (OsScheduleTodayFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
+                        //fragment.setOsListNavigation();
+                        break;
+                    case 1:
+                        OsScheduleTomorrowFragment fragmentTomorrow = (OsScheduleTomorrowFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
+                        //fragmentSchedule.setOsListNavigation();
+                        break;
+                    case 2:
+                        OsScheduleNextDaysFragment fragmentNextDays = (OsScheduleNextDaysFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
+                        //fragmentSchedule.setOsListNavigation();
+                        break;
+                }
+            }
+        });
+        tabLayoutToolbarSearchable.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     public void setNavigateInterface(MainActivity.navigateInterface navigateInterface) {
@@ -450,9 +509,5 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public interface navigateInterface {
         void navigateToOsSearch();
-    }
-
-    public interface pagerInterface {
-        void setOsListPagerAdapter();
     }
 }

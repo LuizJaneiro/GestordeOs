@@ -26,6 +26,10 @@ public interface Main {
 
         void hideContainer();
 
+        void showPager();
+
+        void hidePager();
+
         void loadOsTypes(List<OsTypeModel> osList);
     }
 
