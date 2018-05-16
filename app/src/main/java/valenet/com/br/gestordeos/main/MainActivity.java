@@ -24,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -57,7 +59,9 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTodayFragment;
@@ -100,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     ActionBarDrawerToggle drawerToggle;
 
 
+    private final int REQ_CODE_SEARCH = 200;
+    private final int RESULT_CODE_BACK_SEARCH = 201;
+    private final int REQ_CODE_FILTER = 202;
+    private final int REQ_CODE_BACK_FILTER = 203;
+
     private Main.MainPresenter presenter;
 
     private navigateInterface navigateInterface;
@@ -107,8 +116,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private OsSchedulePagerAdapter osSchedulePagerAdapter;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
-
     private ArrayList<OsTypeModel> osTypeModelList;
+    private ArrayList<Os> scheduleOsArrayList;
 
 
     //Location
@@ -130,6 +139,17 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         tabLayoutToolbarSearchable.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.presenter = new MainPresenterImp(this);
+
+        this.orderFilters = new HashMap<>();
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, true));
 
         this.showLoading();
         RxPermissions.getInstance(MainActivity.this)
@@ -210,6 +230,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_os_list, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -220,9 +247,23 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
+            case R.id.menu_map:
+                return true;
+            case R.id.menu_filter:
+                navigateToFilter();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void navigateToFilter(){
+        Intent intent = new Intent(this, OsFilterActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, this.scheduleOsArrayList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
+        startActivityForResult(intent, REQ_CODE_FILTER);
     }
 
     private void setupDrawerContent() {
@@ -370,6 +411,25 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             pager.setVisibility(View.GONE);
     }
 
+    //region useless function interface
+
+    @Override
+    public void showEmptyListView() {
+
+    }
+
+    @Override
+    public void hideEmptyListView() {
+
+    }
+
+    @Override
+    public void loadListOs(List<Os> osList) {
+
+    }
+
+    //end region useless function interface
+
     @Override
     public void loadOsTypes(List<OsTypeModel> osList) {
         this.filters = new HashMap<>();
@@ -447,7 +507,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 switch (position) {
                     case 0:
                         OsScheduleTodayFragment fragmentToday = (OsScheduleTodayFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        //fragment.setOsListNavigation();
+                        fragmentToday.setOsListNavigation();
                         break;
                     case 1:
                         OsScheduleTomorrowFragment fragmentTomorrow = (OsScheduleTomorrowFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
@@ -480,6 +540,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setNavigateInterface(MainActivity.navigateInterface navigateInterface) {
         this.navigateInterface = navigateInterface;
+    }
+
+    public void setScheduleOsArrayList(ArrayList<Os> scheduleOsArrayList) {
+        this.scheduleOsArrayList = scheduleOsArrayList;
     }
 
     public TabLayout getTabLayoutToolbarSearchable() {

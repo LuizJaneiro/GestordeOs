@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -32,6 +33,29 @@ public class MainInteractorImp implements Main.MainInteractor {
     public void logout() {
         LoginLocal.getInstance().deleteAllUsers();
         presenter.successLogout();
+    }
+
+    @Override
+    public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
+        application.API_INTERFACE.getOsList(latitude, longitude, codUser, isSearchingByCloseOs,
+                1).enqueue(new Callback<List<Os>>() {
+            @Override
+            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Os> osList = response.body();
+                    final List<Os> finalOsList = osList;
+                    listener.successLoadingOsList(finalOsList);
+                } else {
+                    listener.errorServiceOsList("Ocorreu um problema no carregamento da lista de OS!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Os>> call, Throwable t) {
+                listener.errorNetworkOsList();
+                Log.d("OsListInteractor", "error loading from API");
+            }
+        });
     }
 
     @Override

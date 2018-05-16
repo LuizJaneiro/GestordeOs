@@ -96,6 +96,19 @@ public class ValenetUtils {
         return fmt.print(dateTime);
     }
 
+    public static String convertJsonToStringHour(String json){
+        Date date = DateUtils.parseDate(json);
+        DateTime dateTime = new DateTime(date);
+
+        DateTimeFormatter fmt = new DateTimeFormatterBuilder().
+                appendHourOfDay(2). // 2 Digito (Valor mínimo) - Preenche com 0 se for menor que 10
+                appendLiteral(':'). // Separador
+                appendMinuteOfHour(2). // Mes como Texto
+                toFormatter();
+
+        return fmt.print(dateTime);
+    }
+
     public static Date convertStringToDate(String dateString){
         if(dateString == null)
             return null;

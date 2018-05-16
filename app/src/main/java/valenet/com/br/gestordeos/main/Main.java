@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.main;
 
 import java.util.List;
 
+import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public interface Main {
@@ -30,7 +31,13 @@ public interface Main {
 
         void hidePager();
 
+        void showEmptyListView();
+
+        void hideEmptyListView();
+
         void loadOsTypes(List<OsTypeModel> osList);
+
+        void loadListOs(List<Os> osList);
     }
 
     interface MainPresenter {
@@ -39,6 +46,8 @@ public interface Main {
         void successLogout();
 
         void loadOsTypes();
+
+        void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
     }
 
     interface MainInteractor {
@@ -46,12 +55,22 @@ public interface Main {
 
         void loadOsTypes(onFinishedListenerOsTypes listenerOsTypes);
 
+        void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
+
         interface onFinishedListenerOsTypes {
             void successLoadingOsTypes(List<OsTypeModel> osList);
 
             void errorServiceOsTypes(String error);
 
             void errorNetworkOsTypes();
+        }
+
+        interface onFinishedListenerOsList{
+            void successLoadingOsList(List<Os> osList);
+
+            void errorServiceOsList(String error);
+
+            void errorNetworkOsList();
         }
     }
 }
