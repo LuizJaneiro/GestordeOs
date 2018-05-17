@@ -30,7 +30,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.edit_text_refuse_os_reason)
     AppCompatSpinner editTextRefuseOsReasonSpinner;

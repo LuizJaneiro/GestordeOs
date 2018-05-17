@@ -45,49 +45,34 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".os_type.OsTypeActivity"
-            android:label="@string/title_activity_os_type"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".os_list.OsListActivity"
-            android:label="@string/title_activity_os_list"
-            android:parentActivityName=".os_type.OsTypeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".os_type.OsTypeActivity" />
-        </activity>
-        <activity
             android:name=".search.SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".os_list.OsListActivity"
+            android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".os_list.OsListActivity" />
+                android:value=".main.MainActivity" />
         </activity>
         <activity
             android:name=".client.ClientActivity"
             android:label="@string/title_activity_client"
-            android:parentActivityName=".os_list.OsListActivity"
+            android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".os_list.OsListActivity" />
+                android:value=".main.MainActivity" />
         </activity>
         <activity
             android:name=".os_filter.OsFilterActivity"
             android:label="@string/title_activity_os_filter"
-            android:parentActivityName=".os_list.OsListActivity"
+            android:parentActivityName=".main.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".os_list.OsListActivity" />
+                android:value=".main.MainActivity" />
         </activity>
         <activity
             android:name=".refuse_os.RefuseOsActivity"

@@ -38,58 +38,22 @@
                 android:layout_marginTop="20dp">
 
                 <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_distance"
+                    android:id="@+id/btn_time"
                     style="@style/ButtonOsBorderless"
                     android:layout_alignParentLeft="true"
-                    android:text="Distância" />
+                    android:text="Hora" />
 
                 <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_name"
+                    android:id="@+id/btn_distance"
                     style="@style/ButtonOsBorderless"
                     android:layout_alignParentRight="true"
-                    android:text="Nome" />
+                    android:text="Distância" />
             </RelativeLayout>
 
             <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_date"
+                android:id="@+id/btn_name"
                 style="@style/ButtonOsBorderless"
-                android:text="Data" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_os_filter_maps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingLeft="28dp"
-            android:paddingRight="28dp"
-            android:paddingTop="24dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mostrar OS:"
-                android:textColor="@color/colorAccent"
-                android:textSize="24dp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="75dp"
-                android:layout_marginTop="20dp">
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_next"
-                    style="@style/ButtonOsBorderless"
-                    android:layout_alignParentLeft="true"
-                    android:text="Próximas" />
-
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_schedule"
-                    style="@style/ButtonOsBorderless"
-                    android:layout_alignParentRight="true"
-                    android:text="Agendadas" />
-            </RelativeLayout>
+                android:text="Nome" />
         </LinearLayout>
 
         <LinearLayout

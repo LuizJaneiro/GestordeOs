@@ -21,33 +21,24 @@ import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
-public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OsFilter.OsFilterView.selectedFiltersListener {
+public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<OsTypeModel> typesList;
     private HashMap<String, Boolean> isSelectedFilterList;
-    private List<Os> nextOsList;
-    private List<Os> scheduleOsList;
     private final Context context;
 
-    public OsTypeAdapter(Context context, List<OsTypeModel> typesList, List<Os> nextOsList, List<Os> scheduleOsList, int osType) {
+    public OsTypeAdapter(Context context, List<OsTypeModel> typesList) {
         this.context = context;
         SharedPreferences sharedPref = this.context.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
         this.typesList = new ArrayList<>();
         this.isSelectedFilterList = new HashMap<>();
-        this.nextOsList = nextOsList;
-        this.scheduleOsList = scheduleOsList;
         if (typesList != null && typesList.size() > 0) {
             for (OsTypeModel model : typesList) {
-                if (osType == ValenetUtils.GROUP_OS_MERCANTIL && model.getTipoMercantil()) {
-                    this.typesList.add(model);
-                    this.isSelectedFilterList.put(model.getDescricao(),
-                            sharedPref.getBoolean(model.getDescricao(), true));
-                } else if (osType == ValenetUtils.GROUP_OS_CORRETIVA && !model.getTipoMercantil()) {
-                    this.typesList.add(model);
-                    this.isSelectedFilterList.put(model.getDescricao(),
-                            sharedPref.getBoolean(model.getDescricao(), true));
-                }
+                this.typesList.add(model);
+                this.isSelectedFilterList.put(model.getDescricao(),
+                        sharedPref.getBoolean(model.getDescricao(), true));
+
             }
         }
     }
@@ -123,11 +114,11 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    @Override
+/*    @Override
     public List<Os> filterNextOsList() {
         List<Os> newOsList = null;
 
-        if(isSelectedFilterList != null && nextOsList != null) {
+        if (isSelectedFilterList != null && nextOsList != null) {
             newOsList = new ArrayList<>();
 
             Set<String> keys = isSelectedFilterList.keySet();
@@ -151,7 +142,7 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public List<Os> filterScheduleOsList() {
         List<Os> newOsList = null;
 
-        if(isSelectedFilterList != null && scheduleOsList != null) {
+        if (isSelectedFilterList != null && scheduleOsList != null) {
             newOsList = new ArrayList<>();
             Set<String> keys = isSelectedFilterList.keySet();
 
@@ -169,5 +160,5 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
         }
         return newOsList;
-    }
+    }*/
 }

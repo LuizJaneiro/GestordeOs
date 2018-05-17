@@ -144,12 +144,12 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_TIME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, true));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
-        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, true));
 
         this.showLoading();
         RxPermissions.getInstance(MainActivity.this)
@@ -259,9 +259,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private void navigateToFilter(){
         Intent intent = new Intent(this, OsFilterActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_SCHEDULE_OS_LIST, this.scheduleOsArrayList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         intent.putExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
         startActivityForResult(intent, REQ_CODE_FILTER);
     }

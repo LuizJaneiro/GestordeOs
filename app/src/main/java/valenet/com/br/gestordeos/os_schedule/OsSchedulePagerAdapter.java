@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.os_list.OsFragments.NextOsFragment;
-import valenet.com.br.gestordeos.os_list.OsFragments.ScheduleOsFragment;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {

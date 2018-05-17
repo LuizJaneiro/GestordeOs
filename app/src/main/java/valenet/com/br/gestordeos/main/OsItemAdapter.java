@@ -79,7 +79,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 });
             }
 
-            if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_DATE)) {
+            if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_TIME)) {
                 Collections.sort(osList, new Comparator<Os>() {
                     @Override
                     public int compare(Os o1, Os o2) {

@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class SearchActivity extends AppCompatActivity {
@@ -88,12 +88,12 @@ public class SearchActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_TIME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, true));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
-        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
 
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
@@ -229,7 +229,7 @@ public class SearchActivity extends AppCompatActivity {
         else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
             adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
         else
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);

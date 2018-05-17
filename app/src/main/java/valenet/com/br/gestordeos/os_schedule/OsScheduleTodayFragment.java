@@ -252,7 +252,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
                 else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
                     adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
                 else
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME);
 
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
