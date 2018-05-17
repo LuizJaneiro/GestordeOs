@@ -3,6 +3,8 @@ package valenet.com.br.gestordeos.os_schedule;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -56,6 +58,7 @@ import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.DateUtils;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -112,6 +115,11 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
         // Required empty public constructor
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity)this.getActivity()).setNavigateInterface(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -299,7 +307,11 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
     //navigate interface
     @Override
     public void navigateToOsSearch() {
-
+        Intent intent = new Intent(this.getActivity(), SearchActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 
     private void loadOsListWithoutLocation(){

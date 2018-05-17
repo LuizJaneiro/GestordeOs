@@ -46,11 +46,11 @@ public class SearchActivity extends AppCompatActivity {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.search_view)
     MaterialSearchView searchView;
-    @BindView(R.id.toolbar_container)
+    @BindView(R.id.toolbar_search_container)
     FrameLayout toolbarContainer;
     @BindView(R.id.recycler_view_search)
     RecyclerView recyclerViewSearch;
@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar por Cliente");
+        searchView.setHint("Buscar por Os (Id, Tipo ou Cliente)");
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
@@ -246,12 +246,20 @@ public class SearchActivity extends AppCompatActivity {
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {
                 Os os = osListArray.get(i);
-                String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
+                if(s.matches("[0-9]+")){
+                    Integer id = os.getOsid();
+                    String idString = id.toString();
+                    if(idString.contains(s))
+                        filteredList.add(os);
+                } else {
+                    String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
+                    String type = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
 
-                name = ValenetUtils.removeAccent(name).toUpperCase();
-                s = ValenetUtils.removeAccent(s).toUpperCase();
-                if (name.contains(s.toUpperCase()))
-                    filteredList.add(os);
+                    name = ValenetUtils.removeAccent(name).toUpperCase();
+                    s = ValenetUtils.removeAccent(s).toUpperCase();
+                    if (name.contains(s.toUpperCase()) || type.contains(s.toUpperCase()))
+                        filteredList.add(os);
+                }
             }
         }
 
