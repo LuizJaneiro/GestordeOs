@@ -172,7 +172,8 @@ public class DateUtils{
         Calendar cal2 = Calendar.getInstance();
         cal1.setTime(currentDate);
         cal2.setTime(nextDate);
-        boolean sameDay = (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) || (cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1));
+        boolean sameDay = (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) || (cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1)
+                           || (cal1.get(Calendar.DAY_OF_YEAR) > cal2.get(Calendar.DAY_OF_YEAR)));
 
         if(!sameDay)
             return true;

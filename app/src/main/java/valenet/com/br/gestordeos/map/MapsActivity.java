@@ -84,7 +84,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     AppCompatButton btnTryAgain;
     @BindView(R.id.layout_error_conection)
     RelativeLayout layoutErrorConection;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.search_view_container)
     SearchViewLayout searchViewContainer;
@@ -101,20 +101,19 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     private Subscription locationSubscription;
     private Location myLocation;
 
-    int osType;
+    Integer osType = 1;
 
     private final static int REQUEST_CHECK_SETTINGS = 0;
-    private boolean alreadyLoadedOsList = false;
 
     private Maps.MapsPresenter presenter;
 
     private ArrayList<Os> osArrayList;
-    private ArrayList<OsTypeModel> osTypeModelArrayList;
-    private ArrayList<Os> scheduleOsArrayList;
-
     private ArrayList<Os> filtredOsArrayList;
+    private ArrayList<OsTypeModel> osTypeModelArrayList;
+    private boolean loadUserLocation = false;
+    private boolean loadOsArrayList = false;
+    private boolean loadOsTypeModel = false;
 
-    private HashMap<String, Boolean> nextOrScheduleFilters;
     private HashMap<String, Boolean> filters;
 
     @Override
@@ -131,20 +130,33 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
-
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         }
-
-        osType = getIntent().getIntExtra(ValenetUtils.KEY_OS_TYPE, 0);
-
         textViewToolbarTitle.setText(getString(R.string.title_activity_map));
 
-        this.nextOrScheduleFilters = new HashMap<>();
+        osArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
+        myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
+        if (osArrayList == null || osArrayList.size() == 0)
+            loadOsArrayList = true;
+
+        if (osTypeModelArrayList == null || osTypeModelArrayList.size() == 0)
+            loadOsTypeModel = true;
+
+        if (myLocation == null)
+            loadUserLocation = true;
+
+        SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
         this.filters = new HashMap<>();
+        if (!loadOsTypeModel) {
+            for (OsTypeModel model : osTypeModelArrayList) {
+                this.filters.put(model.getDescricao(),
+                        sharedPref.getBoolean(model.getDescricao(), true));
+            }
+        }
 
         searchViewContainer.handleToolbarAnimation(toolbar);
-        searchViewContainer.setHint("Buscar por Cliente");
+        searchViewContainer.setHint("Buscar por Os (Id, Tipo ou Cliente)");
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -186,6 +198,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
             params.addRule(RelativeLayout.BELOW, 0x2);
             params.setMargins(0, 180, 180, 0);
         }
+
 
         hideMapsView();
         showProgress();
@@ -255,13 +268,11 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                         mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation));
                                                         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                                                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
-                                                        if (!alreadyLoadedOsList) {
-                                                            if (nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT))
-                                                                presenter.loadOsList(location.getLatitude(), location.getLongitude(),
-                                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
-                                                            else
-                                                                presenter.loadScheduleOsList(location.getLatitude(), location.getLongitude(),
-                                                                        LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
+                                                        if (loadOsArrayList) {
+                                                            presenter.loadScheduleOsList(location.getLatitude(), location.getLongitude(),
+                                                                    LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
+                                                        } else {
+                                                            filterList(osArrayList);
                                                         }
                                                         return true;
                                                     } else {
@@ -334,18 +345,11 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         if (requestCode == REQ_CODE_FILTER) {
             if (resultCode == REQ_CODE_BACK_FILTER) {
                 SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
-
-                if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT) &&
-                        (this.osArrayList == null || this.osArrayList.size() == 0) && myLocation != null) {
-                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
-                    Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso.", Toast.LENGTH_SHORT).show();
-                } else if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)) {
-                    filterList(this.osArrayList);
-                    Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso", Toast.LENGTH_SHORT).show();
-                }
+                filterList(this.osArrayList);
+                Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso", Toast.LENGTH_SHORT).show();
             }
         }
+
 
         if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
@@ -438,8 +442,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     @Override
     public void loadScheduleOsList(ArrayList<Os> osArrayList) {
-        this.scheduleOsArrayList = new ArrayList<>();
-        this.scheduleOsArrayList = osArrayList;
+        this.osArrayList = new ArrayList<>();
+        this.osArrayList = osArrayList;
         filterList(osArrayList);
     }
 
@@ -462,7 +466,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     public void addedOsMarkers(ArrayList<Os> osArrayList) {
         if (mMap != null)
             mMap.clear();
-        alreadyLoadedOsList = true;
+        loadOsArrayList = false;
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
         if (osArrayList != null && osArrayList.size() > 0) {
             for (int i = 0; i < osArrayList.size(); i++) {
@@ -518,13 +522,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         switch (view.getId()) {
             case R.id.btn_try_again_server_error:
             case R.id.btn_try_again:
-                if (this.nextOrScheduleFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NEXT)) {
-                    presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
-                } else {
-                    presenter.loadScheduleOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
-                }
+                presenter.loadScheduleOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                        LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                 break;
         }
     }

@@ -60,6 +60,7 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private final int REQ_CODE_FILTER = 202;
     private final int REQ_CODE_BACK_FILTER = 203;
+    private final int CODE_MAP = 1000;
 
     private Main.MainPresenter presenter;
 
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
     private ArrayList<OsTypeModel> osTypeModelList;
+    private ArrayList<Os> osArrayList;
 
 
     //Location
@@ -292,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
             case R.id.menu_map:
+                navigateToMap();
                 return true;
             case R.id.menu_filter:
                 navigateToFilter();
@@ -306,6 +310,14 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
         intent.putExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
         startActivityForResult(intent, REQ_CODE_FILTER);
+    }
+
+    private void navigateToMap() {
+        Intent intent = new Intent(this, MapsActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osArrayList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        startActivityForResult(intent, CODE_MAP);
     }
 
     private void setupDrawerContent() {
@@ -583,6 +595,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setNavigateInterface(MainActivity.navigateInterface navigateInterface) {
         this.navigateInterface = navigateInterface;
+    }
+
+
+    public void setOsArrayList(ArrayList<Os> osArrayList) {
+        this.osArrayList = osArrayList;
     }
 
     @Override

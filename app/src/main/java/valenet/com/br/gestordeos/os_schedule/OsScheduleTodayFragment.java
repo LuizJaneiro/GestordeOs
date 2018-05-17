@@ -239,6 +239,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
     public void loadListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
+            ((MainActivity) this.getActivity()).setOsArrayList((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {
