@@ -171,6 +171,8 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     @Override
     public void hideLoading() {
+        if(refreshLayoutScheduleOs != null && refreshLayoutScheduleOs.isRefreshing())
+            refreshLayoutScheduleOs.setRefreshing(false);
         if(loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
@@ -229,21 +231,9 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
     public void loadListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
-            ((MainActivity) this.getActivity()).setScheduleOsArrayList((ArrayList) osList);
-            Set<String> keys = selectedFilters.keySet();
-            this.filtredList = new ArrayList<>();
-            for (String key : keys) {
-                boolean isSelected = this.selectedFilters.get(key);
-                if (isSelected) {
-                    for (Os os : this.osList) {
-                        if (os.getTipoAtividade().toUpperCase().equals(key.toUpperCase())) {
-                            filtredList.add(os);
-                        }
-                    }
-                }
-            }
+            this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
-            if (this.filtredList.size() == 0) {
+            if (this.filtredList == null || this.filtredList.size() == 0) {
                 this.hidePager();
                 this.showEmptyListView();
             } else {

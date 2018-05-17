@@ -145,4 +145,38 @@ public class DateUtils{
         else
             return false;
     }
+
+    public static boolean isDateTomorrow(Date currentDate, Date nextDate){
+        if(currentDate == null || nextDate == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(currentDate);
+        cal2.setTime(nextDate);
+        boolean sameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        boolean sameMonth = cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1);
+
+        if(sameDay && sameMonth && sameYear)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isDateNextDays(Date currentDate, Date nextDate){
+        if(currentDate == null || nextDate == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(currentDate);
+        cal2.setTime(nextDate);
+        boolean sameDay = (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) || (cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1));
+
+        if(!sameDay)
+            return true;
+        else
+            return false;
+    }
 }

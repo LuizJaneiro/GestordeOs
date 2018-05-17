@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@+id/right_layout">
+                    android:layout_toLeftOf="@id/text_view_distance_toolbar">
 
                     <TextView
                         android:id="@+id/text_view_client_name_toolbar"
@@ -64,34 +64,27 @@
 
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:id="@+id/right_layout"
+
+                <TextView
+                    android:id="@+id/text_view_distance_toolbar"
+                    fontPath="fonts/Lato-Bold.ttf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true">
+                    android:text="2 Km"
+                    android:textColor="@color/text_color_os_item"
+                    android:textSize="20sp"
+                    tools:ignore="MissingPrefix" />
 
-                    <TextView
-                        android:id="@+id/text_view_distance_toolbar"
-                        fontPath="fonts/Lato-Bold.ttf"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:text="2 Km"
-                        android:textColor="@color/text_color_os_item"
-                        android:textSize="20sp"
-                        tools:ignore="MissingPrefix" />
+                <ImageView
+                    android:id="@+id/image_view_status_os"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@+id/text_view_distance_toolbar"
+                    android:layout_marginTop="18dp"
+                    android:src="@drawable/ic_awaiting_os" />
 
-                    <ImageView
-                        android:id="@+id/image_view_status_os"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/text_view_distance_toolbar"
-                        android:layout_centerHorizontal="true"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/ic_awaiting_os" />
-
-                </RelativeLayout>
 
             </RelativeLayout>
 

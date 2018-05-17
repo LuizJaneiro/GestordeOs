@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -61,6 +62,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
@@ -112,12 +114,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private Main.MainPresenter presenter;
 
     private navigateInterface navigateInterface;
-
     private OsSchedulePagerAdapter osSchedulePagerAdapter;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
     private ArrayList<OsTypeModel> osTypeModelList;
-    private ArrayList<Os> scheduleOsArrayList;
 
 
     //Location
@@ -230,6 +230,50 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQ_CODE_SEARCH) {
+            if (resultCode == RESULT_CODE_BACK_SEARCH) {
+                searchViewContainer.collapse();
+            }
+        }
+
+        if (requestCode == REQ_CODE_FILTER) {
+            if (resultCode == REQ_CODE_BACK_FILTER) {
+                SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+                this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_TIME,
+                        sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, true));
+                this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
+                        sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
+                this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
+                        sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+
+                if (this.osTypeModelList == null || osTypeModelList.size() == 0)
+                    presenter.loadOsTypes();
+                else {
+                    for (OsTypeModel model : osTypeModelList) {
+                        this.filters.put(model.getDescricao(),
+                                sharedPref.getBoolean(model.getDescricao(), true));
+                    }
+                }
+                showPager();
+                Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso.", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+/*        if (requestCode == CODE_MAP) {
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    boolean result = data.getBooleanExtra("result", false);
+                    if (result) {
+                        finish();
+                    }
+                }
+            }
+        }*/
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_os_list, menu);
@@ -257,7 +301,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         return super.onOptionsItemSelected(item);
     }
 
-    private void navigateToFilter(){
+    private void navigateToFilter() {
         Intent intent = new Intent(this, OsFilterActivity.class);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
         intent.putExtra(ValenetUtils.KEY_CAME_FROM_MAPS, false);
@@ -497,6 +541,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
                 orderFilters, filters, osTypeModelList, tabLayoutToolbarSearchable.getTabCount());
+        pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());
         pager.setAdapter(osSchedulePagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
             @Override
@@ -538,30 +583,6 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setNavigateInterface(MainActivity.navigateInterface navigateInterface) {
         this.navigateInterface = navigateInterface;
-    }
-
-    public void setScheduleOsArrayList(ArrayList<Os> scheduleOsArrayList) {
-        this.scheduleOsArrayList = scheduleOsArrayList;
-    }
-
-    public TabLayout getTabLayoutToolbarSearchable() {
-        return tabLayoutToolbarSearchable;
-    }
-
-    public HashMap<String, Boolean> getOrderFilters() {
-        return orderFilters;
-    }
-
-    public HashMap<String, Boolean> getFilters() {
-        return filters;
-    }
-
-    public ArrayList<OsTypeModel> getOsTypeModelList() {
-        return osTypeModelList;
-    }
-
-    public Location getMyLocation() {
-        return myLocation;
     }
 
     @Override

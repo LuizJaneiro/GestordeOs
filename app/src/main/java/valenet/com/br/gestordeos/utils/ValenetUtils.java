@@ -1,5 +1,7 @@
 package valenet.com.br.gestordeos.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
@@ -9,7 +11,13 @@ import org.joda.time.format.DateTimeFormatterBuilder;
 import java.text.Normalizer;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
+
+import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class ValenetUtils {
 
@@ -39,7 +47,7 @@ public class ValenetUtils {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
     }
 
-    public static double round (double value, int precision) {
+    public static double round(double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
     }
@@ -47,7 +55,7 @@ public class ValenetUtils {
     public static String firstAndLastWord(String word) {
         String[] firstAndLast = new String[2];
         String firstWord, lastWord;
-        if(!word.contains(" ")){
+        if (!word.contains(" ")) {
             firstAndLast[0] = word;
             firstAndLast[1] = null;
             return firstAndLast[0];
@@ -58,15 +66,15 @@ public class ValenetUtils {
 
         int partsLength = parts.length;
 
-        if(parts[partsLength-1].equals(" ")){
-            if(partsLength - 2 > 0)
+        if (parts[partsLength - 1].equals(" ")) {
+            if (partsLength - 2 > 0)
                 lastWord = parts[partsLength - 2];
             else
                 lastWord = null;
         } else
-            lastWord = parts[partsLength-1];
+            lastWord = parts[partsLength - 1];
 
-        if(firstWord.equals(lastWord) || lastWord == null){
+        if (firstWord.equals(lastWord) || lastWord == null) {
             firstAndLast[0] = firstWord;
             firstAndLast[1] = null;
             return firstAndLast[0];
@@ -78,7 +86,7 @@ public class ValenetUtils {
         return firstAndLast[0] + " " + firstAndLast[1];
     }
 
-    public static String convertJsonToStringDate(String json){
+    public static String convertJsonToStringDate(String json) {
         Date date = DateUtils.parseDate(json);
         DateTime dateTime = new DateTime(date);
 
@@ -93,7 +101,7 @@ public class ValenetUtils {
         return fmt.print(dateTime);
     }
 
-    public static String convertJsonToStringHour(String json){
+    public static String convertJsonToStringHour(String json) {
         Date date = DateUtils.parseDate(json);
         DateTime dateTime = new DateTime(date);
 
@@ -106,8 +114,8 @@ public class ValenetUtils {
         return fmt.print(dateTime);
     }
 
-    public static Date convertStringToDate(String dateString){
-        if(dateString == null)
+    public static Date convertStringToDate(String dateString) {
+        if (dateString == null)
             return null;
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         Date date;
@@ -118,5 +126,29 @@ public class ValenetUtils {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public static ArrayList<Os> filterList(ArrayList<Os> osArrayList, HashMap<String, Boolean> filters, Context context) {
+        if (osArrayList == null || osArrayList.size() == 0 || filters == null || filters.size() == 0)
+            return null;
+
+        SharedPreferences sharedPref = context.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+
+
+        ArrayList<Os> filtredOsArrayList = new ArrayList<>();
+        Set<String> keys = filters.keySet();
+        for (String key : keys) {
+            boolean isSelected = filters.get(key);
+            if (isSelected) {
+                for (Os os : osArrayList) {
+                    String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
+                    String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
+                    if (osTipoAtividade.equals(keyTratada)) {
+                        filtredOsArrayList.add(os);
+                    }
+                }
+            }
+        }
+        return filtredOsArrayList;
     }
 }
