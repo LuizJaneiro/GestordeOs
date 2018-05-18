@@ -159,8 +159,14 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(item.getStatusOs() == null)
             ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
         else{
-            if(item.getStatusOs().toUpperCase().equals("AGUARDANDO"))
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_awaiting_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
+                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_closed_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
+                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_refused_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
+                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_blocked_os));
         }
 
         ((MViewHolder) holder).textViewClientName.setText(clientName);

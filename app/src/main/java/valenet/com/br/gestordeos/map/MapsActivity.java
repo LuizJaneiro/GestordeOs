@@ -343,7 +343,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
         if (requestCode == REQ_CODE_FILTER) {
             if (resultCode == REQ_CODE_BACK_FILTER) {
-                SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
                 filterList(this.osArrayList);
                 Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso", Toast.LENGTH_SHORT).show();
             }
