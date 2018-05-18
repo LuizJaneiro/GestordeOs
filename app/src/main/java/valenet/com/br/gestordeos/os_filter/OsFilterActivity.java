@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -142,12 +144,17 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
         this.osTypeModelList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        recyclerBtnFilters.setLayoutManager(gridLayoutManager);
+/*        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerBtnFilters.setLayoutManager(gridLayoutManager);*/
+
+        recyclerBtnFilters.setLayoutManager(new LinearLayoutManager(this));
+        recyclerBtnFilters.setItemAnimator(new DefaultItemAnimator());
 
         if (osTypeModelList != null && osTypeModelList.size() > 0) {
             osTypeAdapter = new OsTypeAdapter(this, osTypeModelList);
             recyclerBtnFilters.setAdapter(osTypeAdapter);
+            recyclerBtnFilters.setFocusable(false);
+            layoutOsFilterList.requestFocus();
         }
 
         if (osTypeModelList == null || osTypeModelList.size() == 0)
@@ -286,8 +293,10 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
 
     @Override
     public void showFilterView() {
-        if (layoutOsFilter != null)
+        if (layoutOsFilter != null) {
             this.layoutOsFilter.setVisibility(View.VISIBLE);
+            this.layoutOsFilterList.requestFocus();
+        }
     }
 
     @Override
@@ -319,6 +328,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         this.osTypeModelList = (ArrayList) osTypes;
         osTypeAdapter = new OsTypeAdapter(this, osTypeModelList);
         recyclerBtnFilters.setAdapter(osTypeAdapter);
+        recyclerBtnFilters.setFocusable(false);
         showFilterView();
     }
 

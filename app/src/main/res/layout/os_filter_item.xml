@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.AppCompatButton android:id="@+id/btn_filter_item"
-    style="@style/ButtonOsBorderless"
-    android:text="Data"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/check_box_item_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:checked="true"
+        app:buttonTint="#1B1C6B" />
+
+    <TextView
+        android:id="@+id/text_view_item_filter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/check_box_item_filter"
+        android:text="Lembrar-me"
+        android:textColor="@color/text_color_light" />
+
+</RelativeLayout>

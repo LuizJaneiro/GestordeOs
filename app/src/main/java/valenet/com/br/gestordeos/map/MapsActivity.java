@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +89,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     Toolbar toolbar;
     @BindView(R.id.search_view_container)
     SearchViewLayout searchViewContainer;
+    @BindView(R.id.toolbar_searchable_without_tabs_container)
+    LinearLayout toolbarSearchableWithoutTabsContainer;
 
     private final int CODE_MAP = 1000;
     private final int REQ_CODE_SEARCH = 200;
@@ -132,6 +135,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        toolbarSearchableWithoutTabsContainer.setVisibility(View.VISIBLE);
         textViewToolbarTitle.setText(getString(R.string.title_activity_map));
 
         osArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
