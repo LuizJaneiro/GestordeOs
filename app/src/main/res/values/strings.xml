@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Gestor de OS</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="nome_app">Organizador de OS</string>
+    <string name="nome_app">Gestor de OS</string>
     <string name="title_activity_splash">Gestor de OS</string>
     <string name="title_schedule">Agenda</string>
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>

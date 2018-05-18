@@ -325,12 +325,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
             finish();
             return true;
         }
-        if (item.getItemId() == R.id.menu_list) {
-/*            Intent i = new Intent(this, OsListActivity.class);
-            i.putExtra(ValenetUtils.KEY_OS_TYPE, osType);
-            startActivityForResult(i, CODE_MAP);*/
-            return true;
-        }
 
         if (item.getItemId() == R.id.menu_filter) {
             navigateToFilter();

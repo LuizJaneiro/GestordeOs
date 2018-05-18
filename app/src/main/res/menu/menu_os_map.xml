@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_list"
-        android:icon="@drawable/ic_list"
-        android:title="Lista"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/menu_filter"
         android:icon="@drawable/ic_filter"
         android:title="Filtros"
