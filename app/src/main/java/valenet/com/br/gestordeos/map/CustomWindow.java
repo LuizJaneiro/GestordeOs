@@ -40,7 +40,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         String clientName;
         String osType;
         String distance;
-        String dateString = "";
+        String dateString;
 
         if(item.getCliente() == null)
             clientName = "Nome Indefinido";
@@ -70,7 +70,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         if(item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
-            dateString = ValenetUtils.convertJsonToStringDate(item.getDataAgendamento());
+            dateString = ValenetUtils.convertJsonToStringDate(item.getDataAgendamento()) + " - " + ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
         infoMarkerName.setText(clientName);

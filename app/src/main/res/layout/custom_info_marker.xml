@@ -42,7 +42,7 @@
             android:minEms="2"
             android:maxLines="2"
             android:paddingLeft="16dp"
-            android:text="Corretiva Física 03/07/2018"
+            android:text="Corretiva Física 03/07/2018 - 15:10"
             android:ellipsize="end"
             android:textColor="@color/text_color_os_item" />
 
