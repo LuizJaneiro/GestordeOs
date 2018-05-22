@@ -5,6 +5,7 @@ import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +35,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         TextView infoMarkerName = myContentsView.findViewById(R.id.info_marker_name);
         TextView infoMarkerOsTypeAndDate = myContentsView.findViewById(R.id.info_marker_os_type_and_date);
         TextView infoMarkerDistance = myContentsView.findViewById(R.id.info_marker_distance);
+        ImageView infoMarkerImageViewStatusOs = myContentsView.findViewById(R.id.info_marker_image_view_status_os);
         ViewGroup layout = myContentsView.findViewById(R.id.info_marker_layout);
         final Os item = (Os) marker.getTag();
 
@@ -71,6 +73,19 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
             dateString = "Data Indefinida";
         else {
             dateString = ValenetUtils.convertJsonToStringDate(item.getDataAgendamento()) + " - " + ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
+        }
+
+        if(item.getStatusOs() == null)
+            infoMarkerImageViewStatusOs.setVisibility(View.GONE);
+        else{
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
+                infoMarkerImageViewStatusOs.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_awaiting_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
+                infoMarkerImageViewStatusOs.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_closed_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
+                infoMarkerImageViewStatusOs.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_refused_os));
+            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
+                infoMarkerImageViewStatusOs.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_blocked_os));
         }
 
         infoMarkerName.setText(clientName);
