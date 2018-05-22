@@ -65,6 +65,7 @@ import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
+import valenet.com.br.gestordeos.os_next.OsNextFragment;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTodayFragment;
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private OsSchedulePagerAdapter osSchedulePagerAdapter;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> filters;
+
     private ArrayList<OsTypeModel> osTypeModelList;
     private ArrayList<Os> osArrayList;
 
@@ -127,6 +129,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     ReactiveLocationProvider locationProvider;
     private Subscription locationSubscription;
     private final static int REQUEST_CHECK_SETTINGS = 0;
+
     private Location myLocation;
 
     @Override
@@ -259,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                                 sharedPref.getBoolean(model.getDescricao(), true));
                     }
                 }
-                showPager();
+                selectDrawerItem(getCheckedItem(navView));
                 Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -332,16 +335,22 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private void selectDrawerItem(MenuItem item) {
         Fragment fragment = null;
-        Class fragmentClass;
+        Class fragmentClass = null;
+        boolean isSchedule = false;
 
         switch (item.getItemId()) {
             case R.id.nav_item_schedule:
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
+                isSchedule = true;
                 break;
             case R.id.nav_item_map:
-                //fragmentClass = OsScheduleFragment.class;
+                fragmentClass = OsNextFragment.class;
+                hidePager();
+                setupToolbarGetNextOs();
+                showContainer();
+                isSchedule = false;
                 break;
             case R.id.nav_item_history:
                 //fragmentClass = OsScheduleFragment.class;
@@ -354,21 +363,38 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
+                isSchedule = true;
                 break;
         }
 
-/*        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+        if(!isSchedule) {
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+                if(fragment instanceof OsNextFragment)
+                    ((OsNextFragment) fragment).setOsListNavigation();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-        // Insert the fragment by replacing any existing fragment
-/*        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();*/
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+        }
 
         item.setChecked(true);
         drawerLayout.closeDrawers();
+    }
+
+    private MenuItem getCheckedItem(NavigationView navigationView) {
+        Menu menu = navigationView.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            MenuItem item = menu.getItem(i);
+            if (item.isChecked()) {
+                return item;
+            }
+        }
+
+        return null;
     }
 
     private ActionBarDrawerToggle setupDrawerToggle(Toolbar toolbar) {
@@ -501,8 +527,49 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private void setupScheduleToolbar() {
         setSupportActionBar(toolbarSearchable);
-
+        tabLayoutToolbarSearchable.setVisibility(View.VISIBLE);
         textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_schedule));
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerToggle = setupDrawerToggle(toolbarSearchable);
+        setupDrawerContent();
+
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        searchViewContainer.handleToolbarAnimation(toolbarSearchable);
+        searchViewContainer.setHint("Buscar por Os (Id, Tipo ou Cliente)");
+        ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
+        ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
+        searchViewContainer.setTransitionDrawables(collapsed, expanded);
+        searchViewContainer.setSearchListener(new SearchViewLayout.SearchListener() {
+            @Override
+            public void onFinished(String searchKeyword) {
+                searchViewContainer.collapse();
+            }
+        });
+
+        searchViewContainer.setOnToggleAnimationListener(new SearchViewLayout.OnToggleAnimationListener() {
+            @Override
+            public void onStart(boolean expanded) {
+                if (expanded) {
+                    navigateToSearch();
+                } else {
+                    //fab.show();
+                }
+            }
+
+            @Override
+            public void onFinish(boolean expanded) {
+            }
+        });
+    }
+
+    private void setupToolbarGetNextOs(){
+        setSupportActionBar(toolbarSearchable);
+        tabLayoutToolbarSearchable.setVisibility(View.GONE);
+        textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_get_next_os));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -600,6 +667,22 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setOsArrayList(ArrayList<Os> osArrayList) {
         this.osArrayList = osArrayList;
+    }
+
+    public Location getMyLocation() {
+        return myLocation;
+    }
+
+    public ArrayList<OsTypeModel> getOsTypeModelList() {
+        return osTypeModelList;
+    }
+
+    public HashMap<String, Boolean> getOrderFilters() {
+        return orderFilters;
+    }
+
+    public HashMap<String, Boolean> getFilters() {
+        return filters;
     }
 
     @Override

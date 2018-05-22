@@ -8,7 +8,7 @@
             android:checkable="true"/>
         <item android:id="@+id/nav_item_map"
             android:icon="@drawable/ic_location"
-            android:title="Busca de OS"
+            android:title="Busca OSs próximas"
             android:checkable="true"/>
         <item android:id="@+id/nav_item_history"
             android:icon="@drawable/ic_history"

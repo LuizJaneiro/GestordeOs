@@ -4,6 +4,7 @@
     <string name="nome_app">Gestor de OS</string>
     <string name="title_activity_splash">Gestor de OS</string>
     <string name="title_schedule">Agenda</string>
+    <string name="title_get_next_os">Busca OSs Próximas</string>
     <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
     <string name="forgot_password_text">Digite seu usuário e enviaremos\num e-mail com as instruções\npara recuperação da senha</string>
     <string name="title_activity_os_type">Tipos de OS</string>
