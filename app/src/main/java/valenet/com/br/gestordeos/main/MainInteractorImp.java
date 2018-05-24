@@ -2,7 +2,6 @@ package valenet.com.br.gestordeos.main;
 
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -11,8 +10,8 @@ import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
-import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class MainInteractorImp implements Main.MainInteractor {
     // region Members
@@ -36,15 +35,18 @@ public class MainInteractorImp implements Main.MainInteractor {
     }
 
     @Override
-    public void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
+    public void loadOsList(Double latitude, Double longitude, Integer codUser, final Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
         application.API_INTERFACE.getOsList(latitude, longitude, codUser, isSearchingByCloseOs,
-                1).enqueue(new Callback<List<Os>>() {
+                group).enqueue(new Callback<List<Os>>() {
             @Override
             public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Os> osList = response.body();
                     final List<Os> finalOsList = osList;
-                    listener.successLoadingOsList(finalOsList);
+                    if(!isSearchingByCloseOs)
+                        listener.successLoadingOsScheduleList(finalOsList);
+                    else
+                        listener.successLoadingOsNextList(finalOsList);
                 } else {
                     listener.errorServiceOsList("Ocorreu um problema no carregamento da lista de OS!");
                 }
@@ -53,6 +55,32 @@ public class MainInteractorImp implements Main.MainInteractor {
             @Override
             public void onFailure(Call<List<Os>> call, Throwable t) {
                 listener.errorNetworkOsList();
+                Log.d("OsListInteractor", "error loading from API");
+            }
+        });
+    }
+
+    @Override
+    public void loadMainOsList(Double latitude, Double longitude, Integer codUser, final Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
+        application.API_INTERFACE.getOsList(latitude, longitude, codUser, isSearchingByCloseOs,
+                group).enqueue(new Callback<List<Os>>() {
+            @Override
+            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<Os> osList = response.body();
+                    final List<Os> finalOsList = osList;
+                    if(!isSearchingByCloseOs)
+                        listener.successLoadingOsScheduleList(finalOsList);
+                    else
+                        listener.successLoadingOsNextList(finalOsList);
+                } else {
+                    listener.errorMainNetworkOsList();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Os>> call, Throwable t) {
+                listener.errorMainNetworkOsList();
                 Log.d("OsListInteractor", "error loading from API");
             }
         });
@@ -75,6 +103,30 @@ public class MainInteractorImp implements Main.MainInteractor {
             public void onFailure(Call<List<OsTypeModel>> call, Throwable t) {
                 listenerOsTypes.errorNetworkOsTypes();
                 Log.d("OsListInteractor", "error loading from API");
+            }
+        });
+    }
+
+    @Override
+    public void loadOsDistance(Double myLatitude, Double myLongitude, final Os os, final onFinishedListenerOsDistance listener) {
+        application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLatitude + "," + myLongitude,
+                os.getLatitude() + "," + os.getLatitude(), "driving").enqueue(new Callback<Example>() {
+            @Override
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                if (response.isSuccessful()) {
+                    if(response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
+                        listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os);
+                    } else {
+                        listener.errorServiceOsDistance();
+                    }
+                } else {
+                    listener.errorServiceOsDistance();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+                listener.errorNetworkOsDistance();
             }
         });
     }

@@ -132,6 +132,8 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         this.osTypeModelArrayList = ((MainActivity) this.getActivity()).getOsTypeModelList();
         this.orderFilters = ((MainActivity) this.getActivity()).getOrderFilters();
         this.selectedFilters = ((MainActivity) this.getActivity()).getFilters();
+        this.osList = ((MainActivity) this.getActivity()).getOsNextArrayList();
+        this.osType = ((MainActivity) this.getActivity()).getOsType();
 
         refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -145,11 +147,22 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             }
         });
 
-        if(myLocation == null)
-            loadOsListWithoutLocation();
-        else
-            presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                    LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
+        if(this.osList == null || this.osList.size() == 0) {
+            if (myLocation == null)
+                loadOsListWithoutLocation();
+            else
+                presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                        LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
+        } else {
+            hideContainer();
+            hideErrorConnectionView();
+            hideLoading();
+            hideErrorServerView();
+            hidePager();
+            hideEmptyListView();
+            showLoading();
+            loadNextListOs(osList);
+        }
 
         return view;
     }
@@ -237,13 +250,14 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     }
 
     @Override
-    public void loadListOs(List<Os> osList) {
+    public void loadNextListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
-            ((MainActivity) this.getActivity()).setOsArrayList((ArrayList) osList);
+            ((MainActivity) this.getActivity()).setOsNextArrayList((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {
+                this.hideLoading();
                 this.hidePager();
                 this.showEmptyListView();
             } else {
@@ -257,6 +271,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 recyclerViewScheduleOs.setItemAnimator(new DefaultItemAnimator());
+                this.hideLoading();
                 this.hideEmptyListView();
                 this.showPager();
             }
@@ -286,6 +301,21 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void loadOsTypes(List<OsTypeModel> osList) {
+    }
+
+    @Override
+    public void loadScheduleListOs(List<Os> osList) {
+
+    }
+
+    @Override
+    public void setOsDistance(Double osDistance, Os os) {
+
+    }
+
+    @Override
+    public void showErrorMainService() {
+
     }
 
     // end region useless functions interface

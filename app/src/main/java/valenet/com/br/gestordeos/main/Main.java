@@ -1,5 +1,7 @@
 package valenet.com.br.gestordeos.main;
 
+import android.location.Location;
+
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
@@ -37,7 +39,13 @@ public interface Main {
 
         void loadOsTypes(List<OsTypeModel> osList);
 
-        void loadListOs(List<Os> osList);
+        void loadScheduleListOs(List<Os> osList);
+
+        void loadNextListOs(List<Os> osList);
+
+        void setOsDistance(Double osDistance, Os os);
+
+        void showErrorMainService();
     }
 
     interface MainPresenter {
@@ -48,6 +56,10 @@ public interface Main {
         void loadOsTypes();
 
         void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
+
+        void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
+
+        void loadOsDistance(Double myLatitude, Double myLongitude, Os os);
     }
 
     interface MainInteractor {
@@ -56,6 +68,10 @@ public interface Main {
         void loadOsTypes(onFinishedListenerOsTypes listenerOsTypes);
 
         void loadOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
+
+        void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
+
+        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, onFinishedListenerOsDistance listener);
 
         interface onFinishedListenerOsTypes {
             void successLoadingOsTypes(List<OsTypeModel> osList);
@@ -66,11 +82,25 @@ public interface Main {
         }
 
         interface onFinishedListenerOsList{
-            void successLoadingOsList(List<Os> osList);
+            void successLoadingOsScheduleList(List<Os> osList);
+
+            void successLoadingOsNextList(List<Os> osList);
 
             void errorServiceOsList(String error);
 
             void errorNetworkOsList();
+
+            void errorMainServiceOsList();
+
+            void errorMainNetworkOsList();
+        }
+
+        interface  onFinishedListenerOsDistance {
+            void successLoadingOsDistance(Integer distance, Os os);
+
+            void errorServiceOsDistance();
+
+            void errorNetworkOsDistance();
         }
     }
 }

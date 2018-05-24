@@ -5,7 +5,8 @@ import java.util.List;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
-public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor.onFinishedListenerOsTypes, Main.MainInteractor.onFinishedListenerOsList {
+public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor.onFinishedListenerOsTypes, Main.MainInteractor.onFinishedListenerOsList,
+                                            Main.MainInteractor.onFinishedListenerOsDistance {
     // region Members
     private Main.MainView view;
     private Main.MainInteractor interactor;
@@ -47,6 +48,20 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
+    public void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh) {
+        if(!isSwipeRefresh) {
+            hideViews();
+            view.showLoading();
+        }
+        interactor.loadMainOsList(latitude, longitude, codUser, isSearchingByCloseOs, group, this);
+    }
+
+    @Override
+    public void loadOsDistance(Double myLatitude, Double myLongitude, Os os) {
+        interactor.loadOsDistance(myLatitude, myLongitude, os, this);
+    }
+
+    @Override
     public void successLogout() {
         view.navigateToLogin();
     }
@@ -59,7 +74,6 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
                 view.showErrorServerView();
             else{
                 view.loadOsTypes(osList);
-                view.showPager();
             }
         }
     }
@@ -77,13 +91,25 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void successLoadingOsList(List<Os> osList) {
+    public void successLoadingOsScheduleList(List<Os> osList) {
         hideViews();
         if(osList != null) {
             if(osList.size() == 0)
                 view.showEmptyListView();
             else{
-                view.loadListOs(osList);
+                view.loadScheduleListOs(osList);
+            }
+        }
+    }
+
+    @Override
+    public void successLoadingOsNextList(List<Os> osList) {
+        hideViews();
+        if(osList != null) {
+            if(osList.size() == 0)
+                view.showEmptyListView();
+            else{
+                view.loadNextListOs(osList);
             }
         }
     }
@@ -98,6 +124,33 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorNetworkOsList() {
         hideViews();
         view.showErrorConnectionView();
+    }
+
+    @Override
+    public void successLoadingOsDistance(Integer distance, Os os) {
+        view.setOsDistance(distance.doubleValue(), os);
+    }
+
+    @Override
+    public void errorMainServiceOsList() {
+        hideViews();
+        view.showErrorMainService();
+    }
+
+    @Override
+    public void errorMainNetworkOsList() {
+        hideViews();
+        view.showErrorMainService();
+    }
+
+    @Override
+    public void errorServiceOsDistance() {
+
+    }
+
+    @Override
+    public void errorNetworkOsDistance() {
+
     }
 
     private void hideViews(){

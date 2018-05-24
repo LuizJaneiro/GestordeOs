@@ -21,6 +21,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
+import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
 import valenet.com.br.gestordeos.model.service.ApiUtils;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
@@ -29,6 +30,7 @@ import valenet.com.br.gestordeos.provider_location.ProviderLocation;
 public class GestorDeOsApplication extends android.app.Application {
 
     public static final ApiInterface API_INTERFACE = ApiUtils.getService();
+    public static final ApiInterfaceGoogleDistance API_INTERFACE_GOOGLE_DISTANCE = ApiUtils.getServiceGoogleDistance();
     public static Realm realm;
     public static final Locale myLocale = new Locale("pt", "BR");
     //private static FirebaseAnalytics mFirebaseAnalytics;

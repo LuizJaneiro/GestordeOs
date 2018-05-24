@@ -5,20 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -29,6 +36,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final Activity activity;
     private final String sortOsBy;
     private Location myLocation;
+    private GestorDeOsApplication application;
 
     public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy) {
         this.osList = osList;
@@ -36,12 +44,12 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.activity = activity;
         this.myLocation = myLocation;
         this.sortOsBy = sortOsBy;
-        if(sortOsBy != null)
+        if (sortOsBy != null)
             sortOsList(sortOsBy);
     }
 
-    private void sortOsList(String sortOsBy){
-        if(osList != null) {
+    private void sortOsList(String sortOsBy) {
+        if (osList != null) {
             if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)) {
                 Collections.sort(osList, new Comparator<Os>() {
                     @Override
@@ -124,20 +132,20 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String distance;
         String dateString = "";
 
-        if(item.getCliente() == null)
+        if (item.getCliente() == null)
             clientName = "Nome Indefinido";
         else
             clientName = ValenetUtils.firstAndLastWord(item.getCliente());
 
-        if(item.getTipoAtividade() == null)
+        if (item.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
         else
             osType = item.getTipoAtividade();
 
-        if(item.getLatitude() == null || item.getLongitude() == null || myLocation == null)
+        if (item.getLatitude() == null || item.getLongitude() == null || myLocation == null)
             distance = "-";
         else {
-            Location osLocation = new Location("");
+            /*Location osLocation = new Location("");
             osLocation.setLatitude(item.getLatitude());
             osLocation.setLongitude(item.getLongitude());
             double distanceMeters = myLocation.distanceTo(osLocation);
@@ -146,29 +154,53 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             if(distanceDouble >= 100)
                 distance = ">100";
             else
-                distance = String.valueOf(distanceDouble);
+                distance = String.valueOf(distanceDouble);*/
+/*
+            application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLocation.getLatitude() + "," + myLocation.getLongitude(),
+                    item.getLatitude() + "," + item.getLongitude(), "driving").enqueue(new Callback<Example>() {
+                @Override
+                public void onResponse(Call<Example> call, Response<Example> response) {
+                    if (response.isSuccessful()) {
+                        Log.d("NOMEDOIDAO", response.body().getRoutes().get(0).getLegs().get(0).getDistance().getText());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Example> call, Throwable t) {
+                }
+            });*/
+
+/*           try {
+                Integer distanceInt = application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLocation.getLatitude() + "," + myLocation.getLongitude(),
+                        item.getLatitude() + "," + item.getLongitude(), "driving").execute().body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
+                distance = String.valueOf(distanceInt);
+            } catch (IOException e) {
+                e.printStackTrace();
+                distance = "-";
+            }*/
         }
 
-        if(item.getDataAgendamento() == null)
+        if (item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
             dateString = ValenetUtils.convertJsonToStringDate(item.getDataAgendamento()) + " - " +
-                         ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
+                    ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
-        if(item.getStatusOs() == null)
+        if (item.getStatusOs() == null)
             ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
-        else{
-            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
+        else {
+            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_awaiting_os));
-            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
+            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_closed_os));
-            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
+            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_refused_os));
-            if(ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
+            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_blocked_os));
         }
 
+        distance = "1";
         ((MViewHolder) holder).textViewClientName.setText(clientName);
         ((MViewHolder) holder).textViewDistance.setText(distance + " KM");
 

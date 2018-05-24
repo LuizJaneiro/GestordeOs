@@ -126,6 +126,8 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
         this.osTypeModelArrayList = (ArrayList<OsTypeModel>) getArguments().getSerializable(ValenetUtils.KEY_OS_TYPE_LIST);
         this.orderFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_ORDER_FILTERS);
         this.selectedFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_FILTERS);
+        this.osList = (ArrayList<Os>) getArguments().getSerializable(ValenetUtils.KEY_OS_LIST);
+        this.osType = getArguments().getInt(ValenetUtils.KEY_OS_TYPE);
 
         refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -139,11 +141,22 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
             }
         });
 
-        if(myLocation == null)
-            loadOsListWithoutLocation();
-        else
-            presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                    LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
+        if(this.osList == null || this.osList.size() == 0) {
+            if (myLocation == null)
+                loadOsListWithoutLocation();
+            else
+                presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
+                        LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
+        } else {
+            hideContainer();
+            hideErrorConnectionView();
+            hideLoading();
+            hideErrorServerView();
+            hidePager();
+            hideEmptyListView();
+            showLoading();
+            loadScheduleListOs(osList);
+        }
 
         return view;
     }
@@ -230,13 +243,14 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void loadListOs(List<Os> osList) {
+    public void loadScheduleListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
-            ((MainActivity) this.getActivity()).setOsArrayList((ArrayList) osList);
+            ((MainActivity) this.getActivity()).setOsScheduleArrayList((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {
+                this.hideLoading();
                 this.hidePager();
                 this.showEmptyListView();
             } else {
@@ -250,6 +264,7 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 recyclerViewScheduleOs.setItemAnimator(new DefaultItemAnimator());
+                this.hideLoading();
                 this.hideEmptyListView();
                 this.showPager();
             }
@@ -279,6 +294,21 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
 
     @Override
     public void loadOsTypes(List<OsTypeModel> osList) {
+    }
+
+    @Override
+    public void loadNextListOs(List<Os> osList) {
+
+    }
+
+    @Override
+    public void setOsDistance(Double osDistance, Os os) {
+
+    }
+
+    @Override
+    public void showErrorMainService() {
+
     }
 
     // end region useless functions interface

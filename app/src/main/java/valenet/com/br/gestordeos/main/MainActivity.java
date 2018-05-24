@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private HashMap<String, Boolean> filters;
 
     private ArrayList<OsTypeModel> osTypeModelList;
-    private ArrayList<Os> osArrayList;
+    private ArrayList<Os> osScheduleArrayList = null;
+    private ArrayList<Os> osNextArrayList = null;
 
 
     //Location
@@ -131,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private final static int REQUEST_CHECK_SETTINGS = 0;
 
     private Location myLocation;
+    private Integer osType = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +207,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                                             presenter.loadOsTypes();
                                             if (location != null) {
                                                 myLocation = location;
+                                                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                                                        false, osType, false);
                                                 return true;
                                             } else {
                                                 return false;
@@ -318,7 +322,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private void navigateToMap() {
         Intent intent = new Intent(this, MapsActivity.class);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osArrayList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osScheduleArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         startActivityForResult(intent, CODE_MAP);
     }
@@ -367,10 +371,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 break;
         }
 
-        if(!isSchedule) {
+        if (!isSchedule) {
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
-                if(fragment instanceof OsNextFragment)
+                if (fragment instanceof OsNextFragment)
                     ((OsNextFragment) fragment).setOsListNavigation();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -491,8 +495,39 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             pager.setVisibility(View.GONE);
     }
 
-    //region useless function interface
+    @Override
+    public void loadScheduleListOs(List<Os> osList) {
+        if (osList != null)
+            this.osScheduleArrayList = (ArrayList) osList;
+        if(myLocation != null) {
+            presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                    true, osType, false);
+        } else {
+            if(navView != null)
+                selectDrawerItem(getCheckedItem(navView));
+        }
+    }
 
+    @Override
+    public void loadNextListOs(List<Os> osList) {
+        if (osList != null)
+            this.osNextArrayList = (ArrayList) osList;
+        if(navView != null)
+            selectDrawerItem(getCheckedItem(navView));
+    }
+
+    @Override
+    public void showErrorMainService() {
+        if(navView != null)
+            selectDrawerItem(getCheckedItem(navView));
+    }
+
+    @Override
+    public void setOsDistance(Double osDistance, Os os) {
+
+    }
+
+    //region useless function interface
     @Override
     public void showEmptyListView() {
 
@@ -500,11 +535,6 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void hideEmptyListView() {
-
-    }
-
-    @Override
-    public void loadListOs(List<Os> osList) {
 
     }
 
@@ -566,7 +596,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         });
     }
 
-    private void setupToolbarGetNextOs(){
+    private void setupToolbarGetNextOs() {
         setSupportActionBar(toolbarSearchable);
         tabLayoutToolbarSearchable.setVisibility(View.GONE);
         textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_get_next_os));
@@ -619,7 +649,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
-                orderFilters, filters, osTypeModelList, tabLayoutToolbarSearchable.getTabCount());
+                orderFilters, filters, osTypeModelList, osScheduleArrayList, osType, tabLayoutToolbarSearchable.getTabCount());
         pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());
         pager.setAdapter(osSchedulePagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
@@ -664,9 +694,20 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         this.navigateInterface = navigateInterface;
     }
 
+    public void setOsScheduleArrayList(ArrayList<Os> osScheduleArrayList) {
+        this.osScheduleArrayList = osScheduleArrayList;
+    }
 
-    public void setOsArrayList(ArrayList<Os> osArrayList) {
-        this.osArrayList = osArrayList;
+    public void setOsNextArrayList(ArrayList<Os> osNextArrayList) {
+        this.osNextArrayList = osNextArrayList;
+    }
+
+    public Integer getOsType() {
+        return osType;
+    }
+
+    public ArrayList<Os> getOsNextArrayList() {
+        return osNextArrayList;
     }
 
     public Location getMyLocation() {
