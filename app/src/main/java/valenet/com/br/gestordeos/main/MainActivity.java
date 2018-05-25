@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 //fragmentClass = OsScheduleFragment.class;
                 break;
             case R.id.nav_item_exit:
-                //fragmentClass = OsScheduleFragment.class;
+                isSchedule = true;
                 presenter.logout();
                 break;
             default:
