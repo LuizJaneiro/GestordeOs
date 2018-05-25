@@ -33,6 +33,7 @@ public class LoginLocal {
             user = users.first();
         return user;
     }
+
     public void deleteUser(User currentUser){
         if (currentUser != null) {
             final RealmResults<User> results = realm.where(User.class).equalTo("coduser", currentUser.getCoduser()).findAll();

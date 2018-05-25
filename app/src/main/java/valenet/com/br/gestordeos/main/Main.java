@@ -19,9 +19,13 @@ public interface Main {
 
         void showErrorServerView();
 
+        void showErrorServerView(List<Os> osSchedule, List<Os> osNext);
+
         void hideErrorServerView();
 
         void showErrorConnectionView();
+
+        void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext);
 
         void hideErrorConnectionView();
 

@@ -458,6 +458,24 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
+    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule != null)
+            this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
+
+        if(osNext != null)
+            this.osNextArrayList = (ArrayList) osNext;
+    }
+
+    @Override
+    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule != null)
+            this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
+
+        if(osNext != null)
+            this.osNextArrayList = (ArrayList) osNext;
+    }
+
+    @Override
     public void showErrorConnectionView() {
         if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.VISIBLE);

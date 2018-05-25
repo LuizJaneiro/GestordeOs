@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.main;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -9,9 +10,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.model.realm.OsListLocal;
 
 public class MainInteractorImp implements Main.MainInteractor {
     // region Members
@@ -31,6 +34,7 @@ public class MainInteractorImp implements Main.MainInteractor {
     @Override
     public void logout() {
         LoginLocal.getInstance().deleteAllUsers();
+        OsListLocal.getInstance().deleteAllOsLocal();
         presenter.successLogout();
     }
 
@@ -43,10 +47,17 @@ public class MainInteractorImp implements Main.MainInteractor {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Os> osList = response.body();
                     final List<Os> finalOsList = osList;
-                    if(!isSearchingByCloseOs)
+                    if (!isSearchingByCloseOs) {
+                        OsListLocal osListLocal = OsListLocal.getInstance();
+                        if (osListLocal != null)
+                            osListLocal.saveOsScheduleListLocal(finalOsList);
                         listener.successLoadingOsScheduleList(finalOsList);
-                    else
+                    } else {
+                        OsListLocal osListLocal = OsListLocal.getInstance();
+                        if (osListLocal != null)
+                            osListLocal.saveOsNextListLocal(finalOsList);
                         listener.successLoadingOsNextList(finalOsList);
+                    }
                 } else {
                     listener.errorServiceOsList("Ocorreu um problema no carregamento da lista de OS!");
                 }
@@ -69,10 +80,17 @@ public class MainInteractorImp implements Main.MainInteractor {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Os> osList = response.body();
                     final List<Os> finalOsList = osList;
-                    if(!isSearchingByCloseOs)
+                    if (!isSearchingByCloseOs) {
+                        OsListLocal osListLocal = OsListLocal.getInstance();
+                        if (osListLocal != null)
+                            osListLocal.saveOsScheduleListLocal(finalOsList);
                         listener.successLoadingOsScheduleList(finalOsList);
-                    else
+                    } else {
+                        OsListLocal osListLocal = OsListLocal.getInstance();
+                        if (osListLocal != null)
+                            osListLocal.saveOsNextListLocal(finalOsList);
                         listener.successLoadingOsNextList(finalOsList);
+                    }
                 } else {
                     listener.errorMainNetworkOsList();
                 }
@@ -114,7 +132,7 @@ public class MainInteractorImp implements Main.MainInteractor {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 if (response.isSuccessful()) {
-                    if(response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
+                    if (response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
                         listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os);
                     } else {
                         listener.errorServiceOsDistance();
