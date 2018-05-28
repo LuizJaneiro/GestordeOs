@@ -243,6 +243,28 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     }
 
     @Override
+    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule == null){
+            showErrorServerView();
+        } else {
+            loadScheduleListOs(osSchedule);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
+    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule == null){
+            showErrorConnectionView();
+        } else {
+            loadScheduleListOs(osSchedule);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
     public void loadScheduleListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
@@ -308,6 +330,16 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
 
     @Override
     public void showErrorMainService() {
+
+    }
+
+    @Override
+    public void showErrorServerView(ArrayList<OsTypeModel> osTypeModels) {
+
+    }
+
+    @Override
+    public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
 
     }
 

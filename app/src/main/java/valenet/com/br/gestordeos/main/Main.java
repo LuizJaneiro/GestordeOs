@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.main;
 
 import android.location.Location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
@@ -50,6 +51,10 @@ public interface Main {
         void setOsDistance(Double osDistance, Os os);
 
         void showErrorMainService();
+
+        void showErrorServerView(ArrayList<OsTypeModel> osTypeModels);
+
+        void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels);
     }
 
     interface MainPresenter {

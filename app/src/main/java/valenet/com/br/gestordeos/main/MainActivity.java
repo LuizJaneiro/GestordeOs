@@ -541,6 +541,24 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
+    public void showErrorServerView(ArrayList<OsTypeModel> osTypeModels) {
+        if(osTypeModels == null)
+            showErrorServerView();
+        else{
+            loadOsTypes(osTypeModels);
+        }
+    }
+
+    @Override
+    public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
+        if(osTypeModels == null)
+            showErrorConnectionView();
+        else{
+            loadOsTypes(osTypeModels);
+        }
+    }
+
+    @Override
     public void setOsDistance(Double osDistance, Os os) {
 
     }

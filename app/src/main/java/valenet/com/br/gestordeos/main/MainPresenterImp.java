@@ -1,6 +1,7 @@
 package valenet.com.br.gestordeos.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
@@ -83,14 +84,25 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     @Override
     public void errorServiceOsTypes(String error) {
         hideViews();
-
-        view.showErrorServerView();
+        OsListLocal osListLocal = OsListLocal.getInstance();
+        if(osListLocal == null)
+            view.showErrorServerView();
+        else {
+            ArrayList<OsTypeModel> osTypeModels = (ArrayList) osListLocal.getOsTypeModelList();
+            view.showErrorServerView(osTypeModels);
+        }
     }
 
     @Override
     public void errorNetworkOsTypes() {
         hideViews();
-        view.showErrorConnectionView();
+        OsListLocal osListLocal = OsListLocal.getInstance();
+        if(osListLocal == null)
+            view.showErrorConnectionView();
+        else {
+            ArrayList<OsTypeModel> osTypeModels = (ArrayList) osListLocal.getOsTypeModelList();
+            view.showErrorConnectionView(osTypeModels);
+        }
     }
 
     @Override
@@ -120,13 +132,27 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     @Override
     public void errorServiceOsList(String error) {
         hideViews();
-        view.showErrorServerView();
+        OsListLocal osListLocal = OsListLocal.getInstance();
+        if(osListLocal == null)
+            view.showErrorServerView();
+        else{
+            ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
+            ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
+            view.showErrorServerView(scheduleOsList, nextOsList);
+        }
     }
 
     @Override
     public void errorNetworkOsList() {
         hideViews();
-        view.showErrorConnectionView();
+        OsListLocal osListLocal = OsListLocal.getInstance();
+        if(osListLocal == null)
+            view.showErrorConnectionView();
+        else{
+            ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
+            ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
+            view.showErrorConnectionView(scheduleOsList, nextOsList);
+        }
     }
 
     @Override
@@ -163,19 +189,6 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
         view.hideErrorServerView();
         view.hidePager();
         view.hideEmptyListView();
-    }
-
-    private List<Os> loadLocalOsList(Boolean isSearchingByCloseOs) {
-        OsListLocal osListLocal = OsListLocal.getInstance();
-        List<Os> osList = null;
-        if (osListLocal != null) {
-            if (!isSearchingByCloseOs) {
-                osList = osListLocal.getScheduleOsList();
-            } else {
-                osList = osListLocal.getNextOsList();
-            }
-        }
-        return osList;
     }
     // endregion Methods
 }

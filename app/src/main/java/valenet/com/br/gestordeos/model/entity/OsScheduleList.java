@@ -3,28 +3,32 @@ package valenet.com.br.gestordeos.model.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class OsScheduleList extends RealmObject {
     @SerializedName("osListSchedule")
     @Expose
-    private List<Os> osListSchedule;
+    private RealmList<Os> osListSchedule;
 
     public OsScheduleList(){
 
     }
 
-    public OsScheduleList(List<Os> osListSchedule){
+    public OsScheduleList(RealmList<Os> osListSchedule) {
         this.osListSchedule = osListSchedule;
     }
 
-    public List<Os> getOsListSchedule() {
+    public RealmList<Os> getOsListSchedule() {
         return osListSchedule;
     }
 
-    public void setOsListSchedule(List<Os> osListSchedule) {
+    public void setOsListSchedule(RealmList<Os> osListSchedule) {
         this.osListSchedule = osListSchedule;
     }
+
 }

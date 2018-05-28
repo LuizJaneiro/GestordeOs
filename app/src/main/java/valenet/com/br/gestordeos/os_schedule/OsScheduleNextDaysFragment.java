@@ -219,7 +219,7 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
     @Override
     public void showEmptyListView() {
         if(layoutEmptyList != null){
-            textViewErrorEmptyList.setText("Não há OSs agendadas para amanhã!");
+            textViewErrorEmptyList.setText("Não há OSs agendadas para os próximos dias!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
     }
@@ -240,6 +240,28 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
     public void hidePager() {
         if(refreshLayoutScheduleOs != null)
             refreshLayoutScheduleOs.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule == null){
+            showErrorServerView();
+        } else {
+            loadScheduleListOs(osSchedule);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
+    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
+        if(osSchedule == null){
+            showErrorConnectionView();
+        } else {
+            loadScheduleListOs(osSchedule);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
     }
 
     @Override
@@ -308,6 +330,16 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
 
     @Override
     public void showErrorMainService() {
+
+    }
+
+    @Override
+    public void showErrorServerView(ArrayList<OsTypeModel> osTypeModels) {
+
+    }
+
+    @Override
+    public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
 
     }
 

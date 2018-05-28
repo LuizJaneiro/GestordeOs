@@ -111,6 +111,9 @@ public class MainInteractorImp implements Main.MainInteractor {
             public void onResponse(Call<List<OsTypeModel>> call, Response<List<OsTypeModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<OsTypeModel> osTypeModelList = response.body();
+                    OsListLocal osListLocal = OsListLocal.getInstance();
+                    if (osListLocal != null)
+                        osListLocal.saveOsTypeModelLocal(osTypeModelList);
                     listenerOsTypes.successLoadingOsTypes(osTypeModelList);
                 } else {
                     listenerOsTypes.errorServiceOsTypes("Ocorreu um problema no carregamento dos tipos de OS!");

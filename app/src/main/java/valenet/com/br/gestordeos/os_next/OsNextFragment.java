@@ -250,6 +250,28 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     }
 
     @Override
+    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
+        if(osNext == null){
+            showErrorServerView();
+        } else {
+            loadNextListOs(osNext);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs próximas, tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
+    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
+        if(osNext == null){
+            showErrorConnectionView();
+        } else {
+            loadNextListOs(osNext);
+            if(this.getActivity() != null)
+                Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs próximas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
+        }
+    }
+
+    @Override
     public void loadNextListOs(List<Os> osList) {
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
@@ -315,6 +337,16 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void showErrorMainService() {
+
+    }
+
+    @Override
+    public void showErrorServerView(ArrayList<OsTypeModel> osTypeModels) {
+
+    }
+
+    @Override
+    public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
 
     }
 
