@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -35,15 +36,25 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final Context context;
     private final Activity activity;
     private final String sortOsBy;
+    private final HashMap<Integer, Integer> osDistanceHashmap;
     private Location myLocation;
     private GestorDeOsApplication application;
 
-    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy) {
+    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, Integer> osDistanceHashmap) {
         this.osList = osList;
         this.context = context;
         this.activity = activity;
         this.myLocation = myLocation;
         this.sortOsBy = sortOsBy;
+        this.osDistanceHashmap = osDistanceHashmap;
+        if(this.osList == null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
+            for (int i = 0; i < osList.size(); i++) {
+                if(this.osDistanceHashmap.get(this.osList.get(i).getOsid()) == null)
+                    this.osList.get(i).setDistance(null);
+                else
+                    this.osList.get(i).setDistance(this.osDistanceHashmap.get(this.osList.get(i).getOsid()).doubleValue());
+            }
+        }
         if (sortOsBy != null)
             sortOsList(sortOsBy);
     }
@@ -142,42 +153,20 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         else
             osType = item.getTipoAtividade();
 
-        if (item.getLatitude() == null || item.getLongitude() == null || myLocation == null)
+        Integer osDistance = null;
+        if(osDistanceHashmap != null)
+            osDistance = osDistanceHashmap.get(item.getOsid());
+
+        if (item.getLatitude() == null || item.getLongitude() == null || item.getDistance() == null || myLocation == null
+                || osDistance == null)
             distance = "-";
         else {
-            /*Location osLocation = new Location("");
-            osLocation.setLatitude(item.getLatitude());
-            osLocation.setLongitude(item.getLongitude());
-            double distanceMeters = myLocation.distanceTo(osLocation);
-            double distanceDouble = distanceMeters / 1000.0;
+            double distanceDouble = osDistance.doubleValue() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
             if(distanceDouble >= 100)
                 distance = ">100";
             else
-                distance = String.valueOf(distanceDouble);*/
-/*
-            application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLocation.getLatitude() + "," + myLocation.getLongitude(),
-                    item.getLatitude() + "," + item.getLongitude(), "driving").enqueue(new Callback<Example>() {
-                @Override
-                public void onResponse(Call<Example> call, Response<Example> response) {
-                    if (response.isSuccessful()) {
-                        Log.d("NOMEDOIDAO", response.body().getRoutes().get(0).getLegs().get(0).getDistance().getText());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Example> call, Throwable t) {
-                }
-            });*/
-
-/*           try {
-                Integer distanceInt = application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLocation.getLatitude() + "," + myLocation.getLongitude(),
-                        item.getLatitude() + "," + item.getLongitude(), "driving").execute().body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
-                distance = String.valueOf(distanceInt);
-            } catch (IOException e) {
-                e.printStackTrace();
-                distance = "-";
-            }*/
+                distance = String.valueOf(distanceDouble);
         }
 
         if (item.getDataAgendamento() == null)
@@ -200,7 +189,6 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_blocked_os));
         }
 
-        distance = "1";
         ((MViewHolder) holder).textViewClientName.setText(clientName);
         ((MViewHolder) holder).textViewDistance.setText(distance + " KM");
 

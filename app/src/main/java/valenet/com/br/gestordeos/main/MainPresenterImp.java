@@ -60,8 +60,8 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void loadOsDistance(Double myLatitude, Double myLongitude, Os os) {
-        interactor.loadOsDistance(myLatitude, myLongitude, os, this);
+    public void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast) {
+        interactor.loadOsDistance(myLatitude, myLongitude, os, isLast, this);
     }
 
     @Override
@@ -156,8 +156,24 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void successLoadingOsDistance(Integer distance, Os os) {
-        view.setOsDistance(distance.doubleValue(), os);
+    public void successLoadingOsDistance(Integer distance, Os os, boolean isLast) {
+        if(isLast)
+            hideViews();
+        view.setOsDistance(distance, os, isLast);
+    }
+
+    @Override
+    public void errorServiceOsDistance(Integer distance, Os os, boolean isLast) {
+        if(isLast)
+            hideViews();
+        view.setOsDistance(distance, os, isLast);
+    }
+
+    @Override
+    public void errorNetworkOsDistance(Integer distance, Os os, boolean isLast) {
+        if(isLast)
+            hideViews();
+        view.setOsDistance(distance, os, isLast);
     }
 
     @Override
@@ -170,16 +186,6 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorMainNetworkOsList() {
         hideViews();
         view.showErrorMainService();
-    }
-
-    @Override
-    public void errorServiceOsDistance() {
-
-    }
-
-    @Override
-    public void errorNetworkOsDistance() {
-
     }
 
     private void hideViews() {

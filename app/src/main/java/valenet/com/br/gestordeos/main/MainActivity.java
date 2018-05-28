@@ -125,6 +125,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private ArrayList<Os> osScheduleArrayList = null;
     private ArrayList<Os> osNextArrayList = null;
 
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
+
 
     //Location
     ReactiveLocationProvider locationProvider;
@@ -520,17 +522,40 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         if(myLocation != null) {
             presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
                     true, osType, false);
-        } else {
-            if(navView != null)
-                selectDrawerItem(getCheckedItem(navView));
         }
     }
 
     @Override
     public void loadNextListOs(List<Os> osList) {
-        if (osList != null)
+        if (osList != null) {
+            if(osDistanceHashMap == null)
+                osDistanceHashMap = new HashMap<>();
             this.osNextArrayList = (ArrayList) osList;
-        if(navView != null)
+            if(this.osNextArrayList.size() > 0){
+                boolean isLast = false;
+                for(int i = 0; i < osNextArrayList.size(); i++){
+                    if((this.osScheduleArrayList == null || this.osScheduleArrayList.size() == 0) && i == osNextArrayList.size() - 1)
+                        isLast = true;
+                    if(myLocation == null)
+                        osDistanceHashMap.put(osNextArrayList.get(i).getOsid(), null);
+                    else
+                        presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osNextArrayList.get(i), isLast);
+                }
+
+                if(osScheduleArrayList != null && osScheduleArrayList.size() > 0) {
+                    isLast = false;
+                    for (int i = 0; i < this.osScheduleArrayList.size(); i++){
+                        if(i == osScheduleArrayList.size() - 1)
+                            isLast = true;
+                        if(myLocation == null)
+                            osDistanceHashMap.put(osScheduleArrayList.get(i).getOsid(), null);
+                        else
+                            presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osScheduleArrayList.get(i), isLast);
+                    }
+                }
+            }
+        }
+        if(navView != null && myLocation == null)
             selectDrawerItem(getCheckedItem(navView));
     }
 
@@ -559,8 +584,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void setOsDistance(Double osDistance, Os os) {
+    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+        if(osDistanceHashMap == null)
+            osDistanceHashMap = new HashMap<>();
 
+        osDistanceHashMap.put(os.getOsid(), osDistance);
+
+        if(isLast)
+            if(navView != null)
+                selectDrawerItem(getCheckedItem(navView));
     }
 
     //region useless function interface
@@ -685,7 +717,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
-                orderFilters, filters, osTypeModelList, osScheduleArrayList, osType, tabLayoutToolbarSearchable.getTabCount());
+                orderFilters, filters, osTypeModelList, osScheduleArrayList, osType, osDistanceHashMap, tabLayoutToolbarSearchable.getTabCount());
         pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());
         pager.setAdapter(osSchedulePagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
@@ -760,6 +792,14 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public HashMap<String, Boolean> getFilters() {
         return filters;
+    }
+
+    public HashMap<Integer, Integer> getOsDistanceHashMap() {
+        return osDistanceHashMap;
+    }
+
+    public void setOsDistanceHashMap(HashMap<Integer, Integer> osDistanceHashMap) {
+        this.osDistanceHashMap = osDistanceHashMap;
     }
 
     @Override

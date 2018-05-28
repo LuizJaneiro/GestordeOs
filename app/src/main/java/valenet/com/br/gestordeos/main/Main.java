@@ -48,7 +48,7 @@ public interface Main {
 
         void loadNextListOs(List<Os> osList);
 
-        void setOsDistance(Double osDistance, Os os);
+        void setOsDistance(Integer osDistance, Os os, boolean isLast);
 
         void showErrorMainService();
 
@@ -68,7 +68,7 @@ public interface Main {
 
         void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
 
-        void loadOsDistance(Double myLatitude, Double myLongitude, Os os);
+        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast);
     }
 
     interface MainInteractor {
@@ -80,7 +80,7 @@ public interface Main {
 
         void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
 
-        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, onFinishedListenerOsDistance listener);
+        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast, onFinishedListenerOsDistance listener);
 
         interface onFinishedListenerOsTypes {
             void successLoadingOsTypes(List<OsTypeModel> osList);
@@ -105,11 +105,11 @@ public interface Main {
         }
 
         interface  onFinishedListenerOsDistance {
-            void successLoadingOsDistance(Integer distance, Os os);
+            void successLoadingOsDistance(Integer distance, Os os, boolean isLast);
 
-            void errorServiceOsDistance();
+            void errorServiceOsDistance(Integer distance, Os os, boolean isLast);
 
-            void errorNetworkOsDistance();
+            void errorNetworkOsDistance(Integer distance, Os os, boolean isLast);
         }
     }
 }

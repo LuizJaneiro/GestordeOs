@@ -22,12 +22,14 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<Os> osScheduleArrayList;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
     private Integer osType;
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public OsSchedulePagerAdapter(FragmentManager fm, Location myLocation,
                               HashMap<String, Boolean> orderFilters, HashMap<String, Boolean> selectedFilters,
-                              ArrayList<OsTypeModel> modelArrayList, ArrayList<Os> osScheduleArrayList, Integer osType, int numOfTabs) {
+                              ArrayList<OsTypeModel> modelArrayList, ArrayList<Os> osScheduleArrayList, Integer osType,
+                                  HashMap<Integer, Integer> osDistanceHashMap, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.myLocation = myLocation;
@@ -35,6 +37,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
         this.selectedFilters = selectedFilters;
         this.osScheduleArrayList = osScheduleArrayList;
         this.modelArrayList = modelArrayList;
+        this.osDistanceHashMap = osDistanceHashMap;
         this.osType = osType;
     }
 
@@ -57,6 +60,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
         bundle.putSerializable(ValenetUtils.KEY_FILTERS, selectedFilters);
         bundle.putSerializable(ValenetUtils.KEY_OS_TYPE_LIST, modelArrayList);
         bundle.putSerializable(ValenetUtils.KEY_OS_LIST, osScheduleArrayList);
+        bundle.putSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         bundle.putInt(ValenetUtils.KEY_OS_TYPE, osType);
         switch (position) {
             case 0:

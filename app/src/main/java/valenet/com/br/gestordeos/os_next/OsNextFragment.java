@@ -105,6 +105,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
 
     private OsItemAdapter adapter;
     Integer osType = null;
@@ -134,6 +135,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         this.selectedFilters = ((MainActivity) this.getActivity()).getFilters();
         this.osList = ((MainActivity) this.getActivity()).getOsNextArrayList();
         this.osType = ((MainActivity) this.getActivity()).getOsType();
+        this.osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
 
         refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -284,11 +286,11 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 this.showEmptyListView();
             } else {
                 if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
                 else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
                 else
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
 
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -331,11 +333,6 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     }
 
     @Override
-    public void setOsDistance(Double osDistance, Os os) {
-
-    }
-
-    @Override
     public void showErrorMainService() {
 
     }
@@ -347,6 +344,11 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
+
+    }
+
+    @Override
+    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
 
     }
 

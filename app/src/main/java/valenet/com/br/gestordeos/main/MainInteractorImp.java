@@ -2,6 +2,8 @@ package valenet.com.br.gestordeos.main;
 
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,25 +131,26 @@ public class MainInteractorImp implements Main.MainInteractor {
     }
 
     @Override
-    public void loadOsDistance(Double myLatitude, Double myLongitude, final Os os, final onFinishedListenerOsDistance listener) {
+    public void loadOsDistance(Double myLatitude, Double myLongitude, final Os os, final boolean isFalse, final onFinishedListenerOsDistance listener) {
         application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLatitude + "," + myLongitude,
-                os.getLatitude() + "," + os.getLatitude(), "driving").enqueue(new Callback<Example>() {
+                os.getLatitude() + "," + os.getLongitude(), "driving").enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 if (response.isSuccessful()) {
                     if (response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
-                        listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os);
+                        Integer distance = response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
+                        listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os, isFalse);
                     } else {
-                        listener.errorServiceOsDistance();
+                        listener.errorServiceOsDistance(null, os, isFalse);
                     }
                 } else {
-                    listener.errorServiceOsDistance();
+                    listener.errorServiceOsDistance(null, os, isFalse);
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                listener.errorNetworkOsDistance();
+                listener.errorNetworkOsDistance(null, os, isFalse);
             }
         });
     }
