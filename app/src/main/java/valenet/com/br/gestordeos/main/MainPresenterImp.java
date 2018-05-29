@@ -139,7 +139,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
 
     @Override
     public void successLoadingMainOsNextList(List<Os> osList) {
-        if(osList != null)
+        if (osList != null)
             view.loadNextListOs(osList);
     }
 

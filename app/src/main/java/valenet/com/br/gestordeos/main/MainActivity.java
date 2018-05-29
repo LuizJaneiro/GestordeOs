@@ -535,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                     if((this.osScheduleArrayList == null || this.osScheduleArrayList.size() == 0) && i == osNextArrayList.size() - 1)
                         isLast = true;
                     if(myLocation == null)
-                        osDistanceHashMap.put(osNextArrayList.get(i).getOsid(), null);
+                        presenter.loadOsDistance(null, null, osNextArrayList.get(i), isLast);
                     else
                         presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osNextArrayList.get(i), isLast);
                 }
@@ -546,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                         if(i == osScheduleArrayList.size() - 1)
                             isLast = true;
                         if(myLocation == null)
-                            osDistanceHashMap.put(osScheduleArrayList.get(i).getOsid(), null);
+                            presenter.loadOsDistance(null, null, osScheduleArrayList.get(i), isLast);
                         else
                             presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osScheduleArrayList.get(i), isLast);
                     }

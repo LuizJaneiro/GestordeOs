@@ -142,6 +142,10 @@ public class MainInteractorImp implements Main.MainInteractor {
 
     @Override
     public void loadOsDistance(Double myLatitude, Double myLongitude, final Os os, final boolean isFalse, final onFinishedListenerOsDistance listener) {
+        if(myLatitude == null || myLongitude == null){
+            listener.errorServiceOsDistance(null, os, isFalse);
+            return;
+        }
         application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLatitude + "," + myLongitude,
                 os.getLatitude() + "," + os.getLongitude(), "driving").enqueue(new Callback<Example>() {
             @Override
