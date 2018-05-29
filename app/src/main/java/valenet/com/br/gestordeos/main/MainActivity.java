@@ -357,6 +357,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 isSchedule = false;
                 break;
             case R.id.nav_item_history:
+                //tototo
                 //fragmentClass = OsScheduleFragment.class;
                 isSchedule = true;
                 break;
