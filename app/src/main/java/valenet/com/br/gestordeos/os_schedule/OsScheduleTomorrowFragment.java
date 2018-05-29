@@ -53,6 +53,7 @@ import valenet.com.br.gestordeos.main.Main;
 import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.main.MainPresenterImp;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
+import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -94,6 +95,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     private final int RESULT_CODE_BACK_SEARCH = 201;
     private final int REQ_CODE_FILTER = 202;
     private final int REQ_CODE_BACK_FILTER = 203;
+    private final int CODE_MAP = 1000;
     private ArrayList<Os> osList;
     private ArrayList<Os> filtredList;
     private ArrayList<OsTypeModel> osTypeModelArrayList;
@@ -403,6 +405,16 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+    }
+
+    @Override
+    public void navigateToOsMap() {
+        Intent intent = new Intent(this.getActivity(), MapsActivity.class);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
+        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+        this.getActivity().startActivityForResult(intent, CODE_MAP);
     }
 
     private void loadOsListWithoutLocation(){

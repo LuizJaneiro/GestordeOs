@@ -118,6 +118,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     private boolean loadOsTypeModel = false;
 
     private HashMap<String, Boolean> filters;
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +143,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         osArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
+        osDistanceHashMap = (HashMap<Integer, Integer>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+
         if (osArrayList == null || osArrayList.size() == 0)
             loadOsArrayList = true;
 
@@ -270,7 +273,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                 public Boolean call(Location location) {
                                                     if (location != null) {
                                                         myLocation = new Location(location);
-                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation));
+                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation, osDistanceHashMap));
                                                         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                                                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                                                         if (loadOsArrayList) {
@@ -367,6 +370,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredOsArrayList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 

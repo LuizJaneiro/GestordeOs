@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.HashMap;
+
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.utils.ClickGuard;
@@ -22,12 +24,15 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
     private Context context;
     private Location myLocation;
     private int osType;
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
 
-    public CustomWindow(Context context, Location myLocation) {
+    public CustomWindow(Context context, Location myLocation, HashMap<Integer, Integer> osDistanceHashMap) {
         this.context = context;
         this.myLocation = myLocation;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myContentsView = inflater.inflate(R.layout.custom_info_marker, null);
+        if(osDistanceHashMap != null)
+            this.osDistanceHashMap = osDistanceHashMap;
     }
 
     @Override
@@ -54,14 +59,10 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         else
             osType = item.getTipoAtividade();
 
-        if(item.getLatitude() == null || item.getLongitude() == null || myLocation == null)
+        if(item.getLatitude() == null || item.getLongitude() == null || myLocation == null || osDistanceHashMap == null || osDistanceHashMap.get(item.getOsid()) == null)
             distance = "-";
         else {
-            Location osLocation = new Location("");
-            osLocation.setLatitude(item.getLatitude());
-            osLocation.setLongitude(item.getLongitude());
-            double distanceMeters = myLocation.distanceTo(osLocation);
-            double distanceDouble = distanceMeters / 1000.0;
+            double distanceDouble = osDistanceHashMap.get(item.getOsid()).doubleValue() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
             if(distanceDouble >= 100)
                 distance = ">100";

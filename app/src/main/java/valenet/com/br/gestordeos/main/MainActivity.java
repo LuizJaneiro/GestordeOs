@@ -322,11 +322,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     private void navigateToMap() {
-        Intent intent = new Intent(this, MapsActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osScheduleArrayList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        startActivityForResult(intent, CODE_MAP);
+        if (navigateInterface != null) {
+            navigateInterface.navigateToOsMap();
+        }
     }
 
     private void setupDrawerContent() {
@@ -816,5 +814,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public interface navigateInterface {
         void navigateToOsSearch();
+
+        void navigateToOsMap();
     }
 }
