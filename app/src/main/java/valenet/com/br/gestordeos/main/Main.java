@@ -95,6 +95,10 @@ public interface Main {
 
             void successLoadingOsNextList(List<Os> osList);
 
+            void successLoadingMainOsScheduleList(List<Os> osList);
+
+            void successLoadingMainOsNextList(List<Os> osList);
+
             void errorServiceOsList(String error);
 
             void errorNetworkOsList();

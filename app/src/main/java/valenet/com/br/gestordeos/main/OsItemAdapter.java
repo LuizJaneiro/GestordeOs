@@ -75,22 +75,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public int compare(Os o1, Os o2) {
                         Double distance1, distance2;
-                        if (o1.getLongitude() == null || o1.getLatitude() == null)
+                        if (o1.getLongitude() == null || o1.getLatitude() == null || osDistanceHashmap == null
+                                || osDistanceHashmap.get(o1.getOsid()) == null)
                             distance1 = Double.MAX_VALUE;
                         else {
-                            Location location1 = new Location("");
-                            location1.setLatitude(o1.getLatitude());
-                            location1.setLongitude(o1.getLongitude());
-                            distance1 = (double) myLocation.distanceTo(location1);
+                            distance1 = (double) osDistanceHashmap.get(o1.getOsid());
                         }
 
-                        if (o2.getLongitude() == null || o2.getLatitude() == null)
+                        if (o2.getLongitude() == null || o2.getLatitude() == null || osDistanceHashmap == null
+                                || osDistanceHashmap.get(o2.getOsid()) == null)
                             distance2 = Double.MAX_VALUE;
                         else {
-                            Location location2 = new Location("");
-                            location2.setLatitude(o2.getLatitude());
-                            location2.setLongitude(o2.getLongitude());
-                            distance2 = (double) myLocation.distanceTo(location2);
+                            distance2 = (double) osDistanceHashmap.get(o2.getOsid());
                         }
 
                         return distance1.compareTo(distance2);

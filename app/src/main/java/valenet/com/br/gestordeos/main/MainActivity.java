@@ -555,8 +555,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 }
             }
         }
-        if(navView != null && myLocation == null)
+        if(navView != null && myLocation == null) {
+            hideContainer();
+            hideErrorConnectionView();
+            hideLoading();
+            hideErrorServerView();
+            hidePager();
+            hideEmptyListView();
             selectDrawerItem(getCheckedItem(navView));
+        }
     }
 
     @Override

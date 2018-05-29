@@ -61,6 +61,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
 
     @Override
     public void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast) {
+        view.showLoading();
         interactor.loadOsDistance(myLatitude, myLongitude, os, isLast, this);
     }
 
@@ -71,11 +72,11 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
 
     @Override
     public void successLoadingOsTypes(List<OsTypeModel> osList) {
-        hideViews();
         if (osList != null) {
-            if (osList.size() == 0)
+            if (osList.size() == 0) {
+                hideViews();
                 view.showErrorServerView();
-            else {
+            } else {
                 view.loadOsTypes(osList);
             }
         }
@@ -85,7 +86,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorServiceOsTypes(String error) {
         hideViews();
         OsListLocal osListLocal = OsListLocal.getInstance();
-        if(osListLocal == null)
+        if (osListLocal == null)
             view.showErrorServerView();
         else {
             ArrayList<OsTypeModel> osTypeModels = (ArrayList) osListLocal.getOsTypeModelList();
@@ -97,7 +98,7 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorNetworkOsTypes() {
         hideViews();
         OsListLocal osListLocal = OsListLocal.getInstance();
-        if(osListLocal == null)
+        if (osListLocal == null)
             view.showErrorConnectionView();
         else {
             ArrayList<OsTypeModel> osTypeModels = (ArrayList) osListLocal.getOsTypeModelList();
@@ -130,12 +131,25 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
+    public void successLoadingMainOsScheduleList(List<Os> osList) {
+        if (osList != null) {
+            view.loadScheduleListOs(osList);
+        }
+    }
+
+    @Override
+    public void successLoadingMainOsNextList(List<Os> osList) {
+        if(osList != null)
+            view.loadNextListOs(osList);
+    }
+
+    @Override
     public void errorServiceOsList(String error) {
         hideViews();
         OsListLocal osListLocal = OsListLocal.getInstance();
-        if(osListLocal == null)
+        if (osListLocal == null)
             view.showErrorServerView();
-        else{
+        else {
             ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
             ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
             view.showErrorServerView(scheduleOsList, nextOsList);
@@ -146,9 +160,9 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorNetworkOsList() {
         hideViews();
         OsListLocal osListLocal = OsListLocal.getInstance();
-        if(osListLocal == null)
+        if (osListLocal == null)
             view.showErrorConnectionView();
-        else{
+        else {
             ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
             ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
             view.showErrorConnectionView(scheduleOsList, nextOsList);
@@ -157,21 +171,21 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
 
     @Override
     public void successLoadingOsDistance(Integer distance, Os os, boolean isLast) {
-        if(isLast)
+        if (isLast)
             hideViews();
         view.setOsDistance(distance, os, isLast);
     }
 
     @Override
     public void errorServiceOsDistance(Integer distance, Os os, boolean isLast) {
-        if(isLast)
+        if (isLast)
             hideViews();
         view.setOsDistance(distance, os, isLast);
     }
 
     @Override
     public void errorNetworkOsDistance(Integer distance, Os os, boolean isLast) {
-        if(isLast)
+        if (isLast)
             hideViews();
         view.setOsDistance(distance, os, isLast);
     }
