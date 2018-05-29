@@ -8,7 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Os implements Parcelable{
+import io.realm.RealmObject;
+
+public class Os extends RealmObject implements Parcelable{
 
     @SerializedName("osid")
     @Expose
@@ -98,7 +100,7 @@ public class Os implements Parcelable{
     @Expose
     private Integer mapeado;
 
-    public final static Parcelable.Creator<Os> CREATOR = new Creator<Os>() {
+    public final static Creator<Os> CREATOR = new Creator<Os>() {
 
         @SuppressWarnings({
                 "unchecked"

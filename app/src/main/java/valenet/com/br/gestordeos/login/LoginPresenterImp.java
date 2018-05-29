@@ -43,7 +43,7 @@ public class LoginPresenterImp implements Login.LoginPresenter, Login.LoginInter
     @Override
     public void successLogin(String userName, String password) {
         view.saveLoginData(userName, password);
-        view.navigateToOsType();
+        view.navigateToMain();
     }
 
     @Override

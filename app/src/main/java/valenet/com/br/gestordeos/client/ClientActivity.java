@@ -38,7 +38,7 @@ public class ClientActivity extends AppCompatActivity {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
@@ -105,7 +105,7 @@ public class ClientActivity extends AppCompatActivity {
         if (os.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
-            dateString = ValenetUtils.convertJsonToStringDate(os.getDataAgendamento());
+            dateString = ValenetUtils.convertJsonToStringDate(os.getDataAgendamento()) + " - " + ValenetUtils.convertJsonToStringHour(os.getDataAgendamento());
         }
 
         textViewClientNameToolbar.setText(clientName);

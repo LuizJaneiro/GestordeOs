@@ -23,7 +23,7 @@ import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.os_type.OsTypeActivity;
+import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -107,8 +107,8 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     }
 
     @Override
-    public void navigateToOsType() {
-        Intent intent = new Intent(this, OsTypeActivity.class);
+    public void navigateToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         //changes commit

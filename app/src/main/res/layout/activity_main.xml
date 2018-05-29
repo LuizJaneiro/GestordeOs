@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".main.MainActivity"
+    tools:openDrawer="start">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/toolbar_searchable"/>
+            <include layout="@layout/toolbar_searchable_without_tabs"/>
+
+            <!--<include layout="@layout/toolbar_searchable_without_tabs"></include>-->
+
+        </android.support.design.widget.AppBarLayout>
+        <!-- As the main content view, the view below consumes the entire
+             space available using match_parent in both dimensions. -->
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:visibility="gone"
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <include layout="@layout/layout_progress"/>
+        <include layout="@layout/layout_error_internet_connection"/>
+        <include layout="@layout/layout_error_from_server"/>
+
+    </LinearLayout>
+    <!-- The drawer is given a fixed width in dp and extends the full height of
+         the container. -->
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        app:headerLayout="@layout/nav_header_layout"
+        app:menu="@menu/menu_drawer"
+        app:itemBackground="@drawable/drawer_selected_item_background"
+        app:itemIconTint="@color/selector_drawer"
+        app:itemTextColor="@color/selector_drawer"/>
+
+</android.support.v4.widget.DrawerLayout>

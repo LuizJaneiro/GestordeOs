@@ -3,6 +3,7 @@ package valenet.com.br.gestordeos.utils;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -125,5 +126,74 @@ public class DateUtils{
     public static String formatDate(Date date)
     {
         return dateFormats[dateFormat_default].format(date);
+    }
+
+    public static boolean areDatesSameDay(Date date1, Date date2){
+        if(date1 == null || date2 == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        boolean sameMonth = cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+
+        if(sameDay && sameMonth && sameYear)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isDateTomorrow(Date currentDate, Date nextDate){
+        if(currentDate == null || nextDate == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(currentDate);
+        cal2.setTime(nextDate);
+        boolean sameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        boolean sameMonth = cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1);
+
+        if(sameDay && sameMonth && sameYear)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isDateNextDays(Date currentDate, Date nextDate){
+        if(currentDate == null || nextDate == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(currentDate);
+        cal2.setTime(nextDate);
+        boolean sameDay = (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) || (cal1.get(Calendar.DAY_OF_YEAR) == (cal2.get(Calendar.DAY_OF_YEAR) - 1)
+                           || (cal1.get(Calendar.DAY_OF_YEAR) > cal2.get(Calendar.DAY_OF_YEAR)));
+
+        if(!sameDay)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isDateNextDaysWithTomorrow(Date currentDate, Date nextDate){
+        if(currentDate == null || nextDate == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(currentDate);
+        cal2.setTime(nextDate);
+        boolean sameDay = (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH)) || (cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+
+        if(!sameDay)
+            return true;
+        else
+            return false;
     }
 }

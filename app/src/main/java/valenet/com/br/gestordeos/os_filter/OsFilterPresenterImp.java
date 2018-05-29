@@ -5,7 +5,7 @@ import java.util.List;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
-public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilter.OsFilterInteractor.onFinishedListener {
+public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilter.OsFilterInteractor.onFinishedListenerOsTypes {
     // region Members
     private OsFilter.OsFilterView view;
     private OsFilter.OsFilterInteractor interactor;
@@ -24,78 +24,41 @@ public class OsFilterPresenterImp implements OsFilter.OsFilterPresenter, OsFilte
 
 
     @Override
-    public void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Integer group, boolean loadNextOsList,
-                                     boolean loadScheduleOsList, boolean loadOsTypes) {
-        view.hideFilterView();
-        view.hideErrorConectionView();
-        view.hideErrorServerView();
-        view.hideEmptyListView();
+    public void loadOsTypes() {
+        this.hideAllViews();
         view.showLoading();
-        interactor.loadOsListAndOsTypes(latitude, longitude, codUser,
-                group, loadNextOsList, loadScheduleOsList, loadOsTypes, this);
+        interactor.loadOsTypes(this);
     }
 
     @Override
-    public void successLoading(List<Os> nextOsList, List<Os> scheduleOsList, List<OsTypeModel> osTypes, boolean loadNextOsList, boolean loadScheduleOsList, boolean loadOsTypes) {
-        view.hideErrorConectionView();
-        view.hideErrorServerView();
-        view.hideEmptyListView();
-        view.hideFilterView();
-        view.hideLoading();
-
-        boolean showEmptyList = false;
-        if(loadNextOsList){
-            if(nextOsList != null){
-                if(nextOsList.size() == 0) {
-                    showEmptyList = true;
-                    view.showEmptyListView();
-                } else {
-                    view.loadNextOsList(nextOsList);
-                }
-            }
+    public void successLoadingOsTypes(List<OsTypeModel> osList) {
+        this.hideAllViews();
+        if(osList != null && osList.size() == 0){
+            view.showEmptyListView();
+        }else {
+            view.loadOsTypesList(osList);
         }
-        if(loadScheduleOsList){
-            if(scheduleOsList != null){
-                if(scheduleOsList.size() == 0){
-                    showEmptyList = true;
-                    view.showEmptyListView();
-                }else {
-                    view.loadScheduleOsList(scheduleOsList);
-                }
-            }
-        }
-        if(loadOsTypes){
-            if(osTypes != null){
-                if(osTypes.size() == 0) {
-                    showEmptyList = true;
-                    view.showEmptyListView();
-                } else
-                    view.loadOsTypesList(osTypes);
-            }
-        }
-        if(!showEmptyList)
-            view.showFilterView();
     }
 
     @Override
-    public void errorService(String error) {
-        view.hideLoading();
-        view.hideFilterView();
-        view.hideEmptyListView();
-        view.hideErrorConectionView();
+    public void errorServiceOsTypes(String error) {
+        this.hideAllViews();
         view.showErrorServerView();
     }
 
     @Override
-    public void errorNetwork() {
-        view.hideLoading();
-        view.hideFilterView();
-        view.hideEmptyListView();
-        view.hideErrorServerView();
+    public void errorNetworkOsTypes() {
+        this.hideAllViews();
         view.showErrorConectionView();
     }
 
-
+    private void hideAllViews(){
+        view.hideFilterView();
+        view.hideEmptyListView();
+        view.hideErrorConectionView();
+        view.hideErrorServerView();
+        view.hideLoading();
+    }
 
 
     // endregion Methods

@@ -24,7 +24,7 @@ public class EndOsActivity extends AppCompatActivity {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.web_view_progressBar)
     ProgressBar webViewProgressBar;

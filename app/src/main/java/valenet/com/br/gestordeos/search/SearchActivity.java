@@ -34,9 +34,9 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.os_list.OsItemAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class SearchActivity extends AppCompatActivity {
@@ -46,11 +46,11 @@ public class SearchActivity extends AppCompatActivity {
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
-    @BindView(R.id.toolbar)
+    @BindView(R.id.toolbar_basic)
     Toolbar toolbar;
     @BindView(R.id.search_view)
     MaterialSearchView searchView;
-    @BindView(R.id.toolbar_container)
+    @BindView(R.id.toolbar_search_container)
     FrameLayout toolbarContainer;
     @BindView(R.id.recycler_view_search)
     RecyclerView recyclerViewSearch;
@@ -66,6 +66,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
+    private HashMap<Integer, Integer> osDistanceHashMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +78,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar por Cliente");
+        searchView.setHint("Buscar por Os (Id, Tipo ou Cliente)");
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
@@ -88,16 +89,17 @@ public class SearchActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
+        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_TIME,
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, true));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true));
+                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
-        this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_DATE,
-                sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DATE, false));
 
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
+        osDistanceHashMap = (HashMap<Integer, Integer>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
         if(filtredList == null || osTypeModelArrayList == null) {
             //TODO carrega do banco de dados a lista de os
@@ -225,11 +227,11 @@ public class SearchActivity extends AppCompatActivity {
 
     public void setAdapter(ArrayList<Os> list) {
         if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE);
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
         else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME);
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
         else
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DATE);
+            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
         this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
         this.recyclerViewSearch.setAdapter(adapter);
@@ -246,12 +248,20 @@ public class SearchActivity extends AppCompatActivity {
         if (osListArray != null) {
             for (int i = 0; i < osListArray.size(); i++) {
                 Os os = osListArray.get(i);
-                String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
+                if(s.matches("[0-9]+")){
+                    Integer id = os.getOsid();
+                    String idString = id.toString();
+                    if(idString.contains(s))
+                        filteredList.add(os);
+                } else {
+                    String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
+                    String type = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
 
-                name = ValenetUtils.removeAccent(name).toUpperCase();
-                s = ValenetUtils.removeAccent(s).toUpperCase();
-                if (name.contains(s.toUpperCase()))
-                    filteredList.add(os);
+                    name = ValenetUtils.removeAccent(name).toUpperCase();
+                    s = ValenetUtils.removeAccent(s).toUpperCase();
+                    if (name.contains(s.toUpperCase()) || type.contains(s.toUpperCase()))
+                        filteredList.add(os);
+                }
             }
         }
 
