@@ -137,4 +137,34 @@ public class OsListLocal {
             }
         });
     }
+
+    public void deleteScheduleOsListLocal(){
+        final RealmResults<OsScheduleList> resultsOsScheduleList = realm.where(OsScheduleList.class).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                resultsOsScheduleList.deleteAllFromRealm();
+            }
+        });
+    }
+
+    public void deleteNextOsListLocal(){
+        final RealmResults<OsNextList> resultsOsNextList = realm.where(OsNextList.class).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                resultsOsNextList.deleteAllFromRealm();
+            }
+        });
+    }
+
+    public void deleteOsTypeListLocal(){
+        final RealmResults<OsTypeModelList> resultsOsTypeModelList = realm.where(OsTypeModelList.class).findAll();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                resultsOsTypeModelList.deleteAllFromRealm();
+            }
+        });
+    }
 }

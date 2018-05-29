@@ -47,7 +47,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.myLocation = myLocation;
         this.sortOsBy = sortOsBy;
         this.osDistanceHashmap = osDistanceHashmap;
-        if(this.osList == null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
+
+        if(this.osList != null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
             for (int i = 0; i < osList.size(); i++) {
                 if(this.osDistanceHashmap.get(this.osList.get(i).getOsid()) == null)
                     this.osList.get(i).setDistance(null);

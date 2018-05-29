@@ -164,7 +164,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             hidePager();
             hideEmptyListView();
             showLoading();
-            loadScheduleListOs(osList);
+            loadMainScheduleOs(osList);
         }
 
         return view;
@@ -251,12 +251,26 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
     }
 
     @Override
+    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+        if(osDistanceHashMap == null)
+            osDistanceHashMap = new HashMap<>();
+
+        osDistanceHashMap.put(os.getOsid(), osDistance);
+
+        if(isLast){
+            if(this.getActivity() != null){
+                ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
+                ((MainActivity) this.getActivity()).showPager();
+            }
+        }
+    }
+
+    @Override
     public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
         if(osSchedule == null){
             showErrorServerView();
         } else {
             loadScheduleListOs(osSchedule);
-            Os osteste = osSchedule.get(0);
             if(this.getActivity() != null)
             Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, tente novamente!", Toast.LENGTH_LONG, true).show();
         }
@@ -268,7 +282,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             showErrorConnectionView();
         } else {
             loadScheduleListOs(osSchedule);
-            Os osteste = osSchedule.get(0);
             if(this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
         }
@@ -276,9 +289,30 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     @Override
     public void loadScheduleListOs(List<Os> osList) {
+        if(this.getActivity() != null && osList != null) {
+            ((MainActivity) this.getActivity()).setOsScheduleArrayList((ArrayList) osList);
+
+            if(((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
+                osDistanceHashMap = new HashMap<>();
+            else
+                osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
+            boolean isLast = false;
+            for(int i = 0; i < osList.size(); i++){
+                if(i == osList.size() - 1)
+                    isLast = true;
+                Os os = osList.get(i);
+                if(os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
+                    presenter.loadOsDistance(null, null, os, isLast);
+                else
+                    presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), os, isLast);
+            }
+        }
+    }
+
+    private void loadMainScheduleOs(List<Os> osList){
         if(this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
-            ((MainActivity) this.getActivity()).setOsScheduleArrayList((ArrayList) osList);
+
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {
@@ -348,11 +382,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     }
 
-    @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
-
-    }
-
     // end region useless functions interface
 
     @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
@@ -378,6 +407,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 

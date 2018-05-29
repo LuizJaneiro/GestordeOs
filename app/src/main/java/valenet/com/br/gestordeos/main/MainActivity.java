@@ -722,7 +722,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         }
     }
 
-    private void setOsSchedulePagerAdapter() {
+    public void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
                 orderFilters, filters, osTypeModelList, osScheduleArrayList, osType, osDistanceHashMap, tabLayoutToolbarSearchable.getTabCount());
         pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());

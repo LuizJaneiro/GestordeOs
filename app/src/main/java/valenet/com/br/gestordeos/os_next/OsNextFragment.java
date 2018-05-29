@@ -280,6 +280,35 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             ((MainActivity) this.getActivity()).setOsNextArrayList((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
+            if(((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
+                osDistanceHashMap = new HashMap<>();
+            else
+                osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
+            boolean isLast = false;
+            for(int i = 0; i < osList.size(); i++){
+                if(i == osList.size() - 1)
+                    isLast = true;
+                Os os = osList.get(i);
+                if(os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
+                    presenter.loadOsDistance(null, null, os, isLast);
+                else
+                    presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), os, isLast);
+            }
+        }
+    }
+
+    @Override
+    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+
+        if(osDistanceHashMap == null)
+            osDistanceHashMap = new HashMap<>();
+
+        osDistanceHashMap.put(os.getOsid(), osDistance);
+
+        if(isLast){
+            if(this.getActivity() != null){
+                ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
+            }
             if (this.filtredList == null || this.filtredList.size() == 0) {
                 this.hideLoading();
                 this.hidePager();
@@ -347,11 +376,6 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     }
 
-    @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
-
-    }
-
     // end region useless functions interface
 
     @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
@@ -377,6 +401,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 

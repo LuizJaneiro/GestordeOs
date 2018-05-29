@@ -370,6 +370,7 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 

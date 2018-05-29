@@ -51,13 +51,17 @@ public class MainInteractorImp implements Main.MainInteractor {
                     final List<Os> finalOsList = osList;
                     if (!isSearchingByCloseOs) {
                         OsListLocal osListLocal = OsListLocal.getInstance();
-                        if (osListLocal != null)
+                        if (osListLocal != null) {
+                            osListLocal.deleteScheduleOsListLocal();
                             osListLocal.saveOsScheduleListLocal(finalOsList);
+                        }
                         listener.successLoadingOsScheduleList(finalOsList);
                     } else {
                         OsListLocal osListLocal = OsListLocal.getInstance();
-                        if (osListLocal != null)
+                        if (osListLocal != null) {
+                            osListLocal.deleteNextOsListLocal();
                             osListLocal.saveOsNextListLocal(finalOsList);
+                        }
                         listener.successLoadingOsNextList(finalOsList);
                     }
                 } else {
@@ -84,14 +88,18 @@ public class MainInteractorImp implements Main.MainInteractor {
                     final List<Os> finalOsList = osList;
                     if (!isSearchingByCloseOs) {
                         OsListLocal osListLocal = OsListLocal.getInstance();
-                        if (osListLocal != null)
+                        if (osListLocal != null) {
+                            osListLocal.deleteScheduleOsListLocal();
                             osListLocal.saveOsScheduleListLocal(finalOsList);
-                        listener.successLoadingOsScheduleList(finalOsList);
+                        }
+                        listener.successLoadingMainOsScheduleList(finalOsList);
                     } else {
                         OsListLocal osListLocal = OsListLocal.getInstance();
-                        if (osListLocal != null)
+                        if (osListLocal != null) {
+                            osListLocal.deleteNextOsListLocal();
                             osListLocal.saveOsNextListLocal(finalOsList);
-                        listener.successLoadingOsNextList(finalOsList);
+                        }
+                        listener.successLoadingMainOsNextList(finalOsList);
                     }
                 } else {
                     listener.errorMainNetworkOsList();
@@ -114,8 +122,10 @@ public class MainInteractorImp implements Main.MainInteractor {
                 if (response.isSuccessful() && response.body() != null) {
                     List<OsTypeModel> osTypeModelList = response.body();
                     OsListLocal osListLocal = OsListLocal.getInstance();
-                    if (osListLocal != null)
+                    if (osListLocal != null) {
+                        osListLocal.deleteOsTypeListLocal();
                         osListLocal.saveOsTypeModelLocal(osTypeModelList);
+                    }
                     listenerOsTypes.successLoadingOsTypes(osTypeModelList);
                 } else {
                     listenerOsTypes.errorServiceOsTypes("Ocorreu um problema no carregamento dos tipos de OS!");
