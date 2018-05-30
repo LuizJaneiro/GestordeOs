@@ -19,8 +19,8 @@
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             app:lottie_autoPlay="true"
-            app:lottie_fileName="lottie/empty_box.json"
-            app:lottie_loop="true" />
+            app:lottie_fileName="lottie/empty_view.json"
+            app:lottie_loop="false" />
 
         <TextView
             android:id="@+id/text_view_error_empty_list"
