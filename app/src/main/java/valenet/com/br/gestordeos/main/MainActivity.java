@@ -65,6 +65,7 @@ import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
+import valenet.com.br.gestordeos.os_history.OsHistoryFragment;
 import valenet.com.br.gestordeos.os_next.OsNextFragment;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private Location myLocation;
     private Integer osType = 1;
+    private boolean isHistory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -289,6 +291,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_os_list, menu);
+        if(isHistory)
+            menu.findItem(R.id.menu_map).setVisible(false);
         return true;
     }
 
@@ -344,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         switch (item.getItemId()) {
             case R.id.nav_item_schedule:
+                isHistory = false;
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
@@ -352,20 +357,26 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             case R.id.nav_item_map:
                 fragmentClass = OsNextFragment.class;
                 hidePager();
+                isHistory = false;
                 setupToolbarGetNextOs();
                 showContainer();
                 isSchedule = false;
                 break;
             case R.id.nav_item_history:
-                //tototo
-                //fragmentClass = OsScheduleFragment.class;
-                isSchedule = true;
+                fragmentClass = OsHistoryFragment.class;
+                hidePager();
+                isHistory = true;
+                setupToolbarOsHistory();
+                showContainer();
+                isSchedule = false;
                 break;
             case R.id.nav_item_exit:
                 isSchedule = true;
+                isHistory = false;
                 presenter.logout();
                 break;
             default:
+                isHistory = false;
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
@@ -675,6 +686,47 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         setSupportActionBar(toolbarSearchable);
         tabLayoutToolbarSearchable.setVisibility(View.GONE);
         textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_get_next_os));
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerToggle = setupDrawerToggle(toolbarSearchable);
+        setupDrawerContent();
+
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        searchViewContainer.handleToolbarAnimation(toolbarSearchable);
+        searchViewContainer.setHint("Buscar por Os (Id, Tipo ou Cliente)");
+        ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
+        ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
+        searchViewContainer.setTransitionDrawables(collapsed, expanded);
+        searchViewContainer.setSearchListener(new SearchViewLayout.SearchListener() {
+            @Override
+            public void onFinished(String searchKeyword) {
+                searchViewContainer.collapse();
+            }
+        });
+
+        searchViewContainer.setOnToggleAnimationListener(new SearchViewLayout.OnToggleAnimationListener() {
+            @Override
+            public void onStart(boolean expanded) {
+                if (expanded) {
+                    navigateToSearch();
+                } else {
+                    //fab.show();
+                }
+            }
+
+            @Override
+            public void onFinish(boolean expanded) {
+            }
+        });
+    }
+
+    private void setupToolbarOsHistory() {
+        setSupportActionBar(toolbarSearchable);
+        tabLayoutToolbarSearchable.setVisibility(View.GONE);
+        textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_history_os));
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

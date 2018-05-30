@@ -17,11 +17,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.main.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryView {
+public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryView, MainActivity.navigateInterface  {
 
 
     @BindView(R.id.recycler_view_history_os)
@@ -141,6 +142,20 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
         if(layoutEmptyList != null)
             layoutEmptyList.setVisibility(View.VISIBLE);
     }
+
+    // begin region MainNavigate interface
+
+    @Override
+    public void navigateToOsSearch() {
+
+    }
+
+    @Override
+    public void navigateToOsMap() {
+
+    }
+
+    // end region MainNavigate interface
 
     @OnClick({R.id.btn_try_again, R.id.btn_try_again_server_error, R.id.btn_reload})
     public void onViewClicked(View view) {
