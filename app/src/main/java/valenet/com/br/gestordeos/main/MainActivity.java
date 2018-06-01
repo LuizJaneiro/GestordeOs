@@ -395,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
         }
 
         item.setChecked(true);

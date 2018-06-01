@@ -145,7 +145,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             }
         });
 
-        if(this.osList == null || this.osList.size() == 0) {
+        if (this.osList == null || this.osList.size() == 0) {
             if (myLocation == null)
                 loadOsListWithoutLocation();
             else
@@ -183,46 +183,46 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
 
     @Override
     public void showLoading() {
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if(refreshLayoutScheduleOs != null && refreshLayoutScheduleOs.isRefreshing())
+        if (refreshLayoutScheduleOs != null && refreshLayoutScheduleOs.isRefreshing())
             refreshLayoutScheduleOs.setRefreshing(false);
 
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyListView() {
-        if(layoutEmptyList != null){
+        if (layoutEmptyList != null) {
             textViewErrorEmptyList.setText("Não há OSs agendadas para amanhã!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
@@ -230,53 +230,53 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
 
     @Override
     public void hideEmptyListView() {
-        if(layoutEmptyList != null)
+        if (layoutEmptyList != null)
             layoutEmptyList.setVisibility(View.GONE);
     }
 
     @Override
     public void showPager() {
-        if(refreshLayoutScheduleOs != null)
+        if (refreshLayoutScheduleOs != null)
             refreshLayoutScheduleOs.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hidePager() {
-        if(refreshLayoutScheduleOs != null)
+        if (refreshLayoutScheduleOs != null)
             refreshLayoutScheduleOs.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
-        if(osSchedule == null){
+        if (osSchedule == null) {
             showErrorServerView();
         } else {
             loadScheduleListOs(osSchedule);
-            if(this.getActivity() != null)
+            if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
     public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
-        if(osSchedule == null){
+        if (osSchedule == null) {
             showErrorConnectionView();
         } else {
             loadScheduleListOs(osSchedule);
-            if(this.getActivity() != null)
+            if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
     public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
-        if(osDistanceHashMap == null)
+        if (osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
         osDistanceHashMap.put(os.getOsid(), osDistance);
 
-        if(isLast){
-            if(this.getActivity() != null){
+        if (isLast) {
+            if (this.getActivity() != null) {
                 ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
                 ((MainActivity) this.getActivity()).showPager();
             }
@@ -285,19 +285,19 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
 
     @Override
     public void loadScheduleListOs(List<Os> osList) {
-        if(this.getActivity() != null && osList != null) {
+        if (this.getActivity() != null && osList != null) {
             ((MainActivity) this.getActivity()).setOsScheduleArrayList((ArrayList) osList);
 
-            if(((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
+            if (((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
                 osDistanceHashMap = new HashMap<>();
             else
                 osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
             boolean isLast = false;
-            for(int i = 0; i < osList.size(); i++){
-                if(i == osList.size() - 1)
+            for (int i = 0; i < osList.size(); i++) {
+                if (i == osList.size() - 1)
                     isLast = true;
                 Os os = osList.get(i);
-                if(os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
+                if (os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
                     presenter.loadOsDistance(null, null, os, isLast);
                 else
                     presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), os, isLast);
@@ -305,8 +305,8 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
         }
     }
 
-    private void loadMainScheduleOs(List<Os> osList){
-        if(this.getActivity() != null) {
+    private void loadMainScheduleOs(List<Os> osList) {
+        if (this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
 
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
@@ -386,7 +386,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
             case R.id.btn_reload:
-                if(myLocation != null){
+                if (myLocation != null) {
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
                 } else {
@@ -399,25 +399,29 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     //navigate interface
     @Override
     public void navigateToOsSearch() {
-        Intent intent = new Intent(this.getActivity(), SearchActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
-        this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+        if (this.getActivity() != null) {
+            Intent intent = new Intent(this.getActivity(), SearchActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+        }
     }
 
     @Override
     public void navigateToOsMap() {
-        Intent intent = new Intent(this.getActivity(), MapsActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
-        this.getActivity().startActivityForResult(intent, CODE_MAP);
+        if (this.getActivity() != null) {
+            Intent intent = new Intent(this.getActivity(), MapsActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            this.getActivity().startActivityForResult(intent, CODE_MAP);
+        }
     }
 
-    private void loadOsListWithoutLocation(){
+    private void loadOsListWithoutLocation() {
         this.showLoading();
         RxPermissions.getInstance(this.getActivity())
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -468,7 +472,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
                                                 presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
                                                 return true;
-                                            }else {
+                                            } else {
                                                 presenter.loadOsList(1.1, 1.1,
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
                                                 return false;
@@ -499,20 +503,20 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
                 }).subscribe();
     }
 
-    private ArrayList<Os> selectTodayOs(ArrayList<Os> osArrayList){
-        if(osArrayList != null && osArrayList.size() > 0){
+    private ArrayList<Os> selectTodayOs(ArrayList<Os> osArrayList) {
+        if (osArrayList != null && osArrayList.size() > 0) {
             ArrayList<Os> todayOsList = new ArrayList<>();
             Date currentDate = Calendar.getInstance().getTime();
-            for(int i = 0; i < osArrayList.size(); i++){
+            for (int i = 0; i < osArrayList.size(); i++) {
                 Os os = osArrayList.get(i);
-                if(os.getDataAgendamento() != null){
+                if (os.getDataAgendamento() != null) {
                     Date osDate = DateUtils.parseDate(os.getDataAgendamento());
-                    if(DateUtils.isDateTomorrow(currentDate, osDate))
+                    if (DateUtils.isDateTomorrow(currentDate, osDate))
                         todayOsList.add(os);
                 }
             }
             return todayOsList;
-        }else
+        } else
             return null;
     }
 }

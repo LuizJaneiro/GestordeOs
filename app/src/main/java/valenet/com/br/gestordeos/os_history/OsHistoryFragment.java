@@ -22,7 +22,7 @@ import valenet.com.br.gestordeos.main.MainActivity;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryView, MainActivity.navigateInterface  {
+public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryView, MainActivity.navigateInterface {
 
 
     @BindView(R.id.recycler_view_history_os)
@@ -81,57 +81,57 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
 
     @Override
     public void showLayoutHistory() {
-        if(refreshLayoutHistoryOs != null)
+        if (refreshLayoutHistoryOs != null)
             refreshLayoutHistoryOs.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLayoutHistory() {
-        if(refreshLayoutHistoryOs != null)
+        if (refreshLayoutHistoryOs != null)
             refreshLayoutHistoryOs.setVisibility(View.GONE);
     }
 
     @Override
     public void showLoading() {
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoading() {
-        if(refreshLayoutHistoryOs != null && refreshLayoutHistoryOs.isRefreshing())
+        if (refreshLayoutHistoryOs != null && refreshLayoutHistoryOs.isRefreshing())
             refreshLayoutHistoryOs.setRefreshing(false);
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorConectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorConectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyListView() {
-        if(layoutEmptyList != null){
+        if (layoutEmptyList != null) {
             textViewErrorEmptyList.setText("Não há OSs no histórico no momento!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
@@ -139,7 +139,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
 
     @Override
     public void hideEmptyListView() {
-        if(layoutEmptyList != null)
+        if (layoutEmptyList != null)
             layoutEmptyList.setVisibility(View.VISIBLE);
     }
 
