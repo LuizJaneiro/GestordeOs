@@ -71,6 +71,7 @@ import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTodayFragment;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTomorrowFragment;
+import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
 
@@ -247,7 +248,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
-                searchViewContainer.collapse();
+                if(searchViewContainer != null)
+                    searchViewContainer.collapse();
             }
         }
 
@@ -436,6 +438,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void navigateToSearch() {
         if (navigateInterface != null) {
             navigateInterface.navigateToOsSearch();
+        } else {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, null);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, null);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            startActivityForResult(intent, REQ_CODE_SEARCH);
         }
     }
 
