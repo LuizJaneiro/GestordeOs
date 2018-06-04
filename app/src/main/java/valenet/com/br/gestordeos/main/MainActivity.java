@@ -541,8 +541,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             this.osScheduleArrayList = (ArrayList) osList;
         if(myLocation != null) {
             if(LoginLocal.getInstance() != null)
-                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                    true, osType, false);
+                if(LoginLocal.getInstance().getCurrentUser().getCoduser() != null)
+                    presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        true, osType, false);
         }
     }
 
