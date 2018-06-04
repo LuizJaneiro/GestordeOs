@@ -56,6 +56,7 @@ import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.DateUtils;
@@ -107,7 +108,7 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
     private OsItemAdapter adapter;
     Integer osType = null;
@@ -131,7 +132,7 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
         this.selectedFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_FILTERS);
         this.osList = (ArrayList<Os>) getArguments().getSerializable(ValenetUtils.KEY_OS_LIST);
         this.osType = getArguments().getInt(ValenetUtils.KEY_OS_TYPE);
-        this.osDistanceHashMap = (HashMap<Integer, Integer>) getArguments().getSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+        this.osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getArguments().getSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
         refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -328,8 +329,18 @@ public class OsScheduleNextDaysFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+        if (osDistanceHashMap == null)
+            osDistanceHashMap = new HashMap<>();
 
+        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
+
+        if (isLast) {
+            if (this.getActivity() != null) {
+                ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
+                ((MainActivity) this.getActivity()).showPager();
+            }
+        }
     }
 
     @Override

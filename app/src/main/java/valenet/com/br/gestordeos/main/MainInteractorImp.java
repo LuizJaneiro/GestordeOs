@@ -15,6 +15,7 @@ import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 
@@ -153,7 +154,9 @@ public class MainInteractorImp implements Main.MainInteractor {
                 if (response.isSuccessful()) {
                     if (response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
                         Integer distance = response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
-                        listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os, isFalse);
+                        String points = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
+                        OsDistanceAndPoints osDistanceAndPoints = new OsDistanceAndPoints(distance, points);
+                        listener.successLoadingOsDistance(osDistanceAndPoints, os, isFalse);
                     } else {
                         listener.errorServiceOsDistance(null, os, isFalse);
                     }

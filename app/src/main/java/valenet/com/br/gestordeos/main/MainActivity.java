@@ -63,6 +63,7 @@ import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_history.OsHistoryFragment;
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private ArrayList<Os> osScheduleArrayList = null;
     private ArrayList<Os> osNextArrayList = null;
 
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
 
     //Location
@@ -613,11 +614,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
         if(osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(os.getOsid(), osDistance);
+        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
 
         if(isLast)
             if(navView != null)
@@ -864,11 +865,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         return filters;
     }
 
-    public HashMap<Integer, Integer> getOsDistanceHashMap() {
+    public HashMap<Integer, OsDistanceAndPoints> getOsDistanceHashMap() {
         return osDistanceHashMap;
     }
 
-    public void setOsDistanceHashMap(HashMap<Integer, Integer> osDistanceHashMap) {
+    public void setOsDistanceHashMap(HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap) {
         this.osDistanceHashMap = osDistanceHashMap;
     }
 

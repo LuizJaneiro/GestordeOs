@@ -7,6 +7,7 @@ import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 
 public interface Main {
     interface MainView {
@@ -48,7 +49,7 @@ public interface Main {
 
         void loadNextListOs(List<Os> osList);
 
-        void setOsDistance(Integer osDistance, Os os, boolean isLast);
+        void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
 
         void showErrorMainService();
 
@@ -109,11 +110,11 @@ public interface Main {
         }
 
         interface  onFinishedListenerOsDistance {
-            void successLoadingOsDistance(Integer distance, Os os, boolean isLast);
+            void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
 
-            void errorServiceOsDistance(Integer distance, Os os, boolean isLast);
+            void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
 
-            void errorNetworkOsDistance(Integer distance, Os os, boolean isLast);
+            void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
         }
     }
 }

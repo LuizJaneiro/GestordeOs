@@ -37,6 +37,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class SearchActivity extends AppCompatActivity {
@@ -66,7 +67,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +100,7 @@ public class SearchActivity extends AppCompatActivity {
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
-        osDistanceHashMap = (HashMap<Integer, Integer>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+        osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
         if(filtredList == null || osTypeModelArrayList == null) {
             //TODO carrega do banco de dados a lista de os

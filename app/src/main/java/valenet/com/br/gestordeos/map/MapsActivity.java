@@ -61,6 +61,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.search.SearchActivity;
@@ -118,7 +119,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     private boolean loadOsTypeModel = false;
 
     private HashMap<String, Boolean> filters;
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +144,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         osArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
-        osDistanceHashMap = (HashMap<Integer, Integer>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+        osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
         if (osArrayList == null || osArrayList.size() == 0)
             loadOsArrayList = true;
@@ -273,7 +274,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                 public Boolean call(Location location) {
                                                     if (location != null) {
                                                         myLocation = new Location(location);
-                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation, osDistanceHashMap));
+                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation, osDistanceHashMap, mMap));
                                                         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                                                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                                                         if (loadOsArrayList) {
