@@ -64,6 +64,14 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         ((MViewHolder) holder).textViewItemFilter.setText(item.getDescricao());
         renderButton(item, ((MViewHolder) holder).checkBoxItemFilter);
 
+        ((MViewHolder) holder).layoutItemFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean isSelected = !isSelectedFilterList.get(item.getDescricao());
+                ((MViewHolder) holder).checkBoxItemFilter.setChecked(isSelected);
+            }
+        });
+
         ((MViewHolder) holder).checkBoxItemFilter.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -90,7 +98,7 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         Boolean isSelected = this.isSelectedFilterList.get(osTypeModel.getDescricao());
         final int sdk = Build.VERSION.SDK_INT;
         if (isSelected) {
-           checkBox.setChecked(true);
+            checkBox.setChecked(true);
         } else {
             checkBox.setChecked(false);
         }
@@ -99,11 +107,13 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     class MViewHolder extends RecyclerView.ViewHolder {
         final AppCompatCheckBox checkBoxItemFilter;
         final TextView textViewItemFilter;
+        final ViewGroup layoutItemFilter;
 
         MViewHolder(View container) {
             super(container);
             this.checkBoxItemFilter = container.findViewById(R.id.check_box_item_filter);
             this.textViewItemFilter = container.findViewById(R.id.text_view_item_filter);
+            this.layoutItemFilter = container.findViewById(R.id.layout_item_filter);
         }
     }
 
