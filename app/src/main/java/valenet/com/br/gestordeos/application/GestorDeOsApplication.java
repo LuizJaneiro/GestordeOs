@@ -2,6 +2,7 @@ package valenet.com.br.gestordeos.application;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -78,6 +79,7 @@ public class GestorDeOsApplication extends android.app.Application {
         );
         get_hash_key();
         registerActivityLifecycleCallbacks(new AppLifeTracker());
+        startService(new Intent(this, LocationService.class));
     }
 
     public void get_hash_key() {
