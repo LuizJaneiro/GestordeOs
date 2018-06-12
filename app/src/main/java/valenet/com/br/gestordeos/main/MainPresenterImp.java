@@ -203,6 +203,11 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
         view.showErrorMainService();
     }
 
+    @Override
+    public void sendUserPoint() {
+        interactor.sendUserPoints();
+    }
+
     private void hideViews() {
         view.hideContainer();
         view.hideErrorConnectionView();

@@ -17,7 +17,7 @@ public class OsLocationData extends RealmObject {
     private Double longitude;
     @SerializedName("dataColeta")
     @Expose
-    private Date date;
+    private Date dataColeta;
     @SerializedName("codUser")
     @Expose
     private Integer codUser;
@@ -29,7 +29,7 @@ public class OsLocationData extends RealmObject {
     public OsLocationData(Double latitude, Double longitude, Date date, Integer codUser) {
         this.latitude = latitude;
         this.longitude = longitude;
-        this.date = date;
+        this.dataColeta = date;
         this.codUser = codUser;
     }
 
@@ -50,11 +50,11 @@ public class OsLocationData extends RealmObject {
     }
 
     public Date getDate() {
-        return date;
+        return dataColeta;
     }
 
     public void setDate(Date date) {
-        this.date = date;
+        this.dataColeta = date;
     }
 
     public Integer getCodUser() {
@@ -64,4 +64,14 @@ public class OsLocationData extends RealmObject {
     public void setCodUser(Integer codUser) {
         this.codUser = codUser;
     }
+    @Override
+    public String toString() {
+        return "Post{" +
+                "latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", date=" + dataColeta +
+                ", codUser=" + codUser +
+                '}';
+    }
+
 }

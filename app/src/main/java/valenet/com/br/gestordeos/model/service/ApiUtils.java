@@ -11,4 +11,8 @@ public class ApiUtils {
     public static ApiInterfaceGoogleDistance getServiceGoogleDistance(){
         return ApiValenet.getConnectionGoogleDistance().create(ApiInterfaceGoogleDistance.class);
     }
+
+    public static ApiMarceloInterface getMarceloService() {
+        return ApiValenet.getConnectionApiMarcelo().create(ApiMarceloInterface.class);
+    }
 }

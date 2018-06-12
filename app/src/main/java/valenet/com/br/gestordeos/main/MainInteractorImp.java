@@ -16,8 +16,10 @@ import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
+import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
+import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
 public class MainInteractorImp implements Main.MainInteractor {
     // region Members
@@ -170,6 +172,36 @@ public class MainInteractorImp implements Main.MainInteractor {
                 listener.errorNetworkOsDistance(null, os, isFalse);
             }
         });
+    }
+
+    @Override
+    public void sendUserPoints() {
+        OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
+        if(osLocationDataListLocal != null){
+            List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
+            if(osLocationDataList != null && osLocationDataList.size() >= 2){
+                //OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
+                OsLocationData[] osLocationDataArray = new OsLocationData[2];
+                osLocationDataArray[0] = osLocationDataList.get(0);
+                osLocationDataArray[1] = osLocationDataList.get(1);
+                //osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
+                application.API_MARCELO_INTERFACE.enviarPosicoes(osLocationDataArray).enqueue(new Callback<OsLocationData[]>() {
+                    @Override
+                    public void onResponse(Call<OsLocationData[]> call, Response<OsLocationData[]> response) {
+                        if(response.isSuccessful()){
+                            Log.i("TESTEAPI", "post submitted to API." + response.body().toString());
+                        }else {
+                            Log.i("TESTEAPI", "resposefailed" + response.body().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<OsLocationData[]> call, Throwable t) {
+                        Log.i("TESTEAPI", "Unable to submit post to API.");
+                    }
+                });
+            }
+        }
     }
 
     // endRegion Methods
