@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private final static int REQUEST_CHECK_SETTINGS = 0;
 
     private Location myLocation;
-    private Integer osType = 1;
+    private Integer osType = 0;
     private boolean isHistory = false;
 
     @Override

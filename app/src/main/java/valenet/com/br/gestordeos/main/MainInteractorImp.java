@@ -176,28 +176,26 @@ public class MainInteractorImp implements Main.MainInteractor {
 
     @Override
     public void sendUserPoints() {
-        OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
+        final OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
         if(osLocationDataListLocal != null){
             List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
-            if(osLocationDataList != null && osLocationDataList.size() >= 2){
-                //OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
-                OsLocationData[] osLocationDataArray = new OsLocationData[2];
-                osLocationDataArray[0] = osLocationDataList.get(0);
-                osLocationDataArray[1] = osLocationDataList.get(1);
-                //osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
-                application.API_MARCELO_INTERFACE.enviarPosicoes(osLocationDataArray).enqueue(new Callback<OsLocationData[]>() {
+            if(osLocationDataList != null && osLocationDataList.size() > 0){
+                OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
+                osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
+                final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
+                application.API_INTERFACE.enviarPosicoes(osLocationDataArray).enqueue(new Callback<Integer>() {
                     @Override
-                    public void onResponse(Call<OsLocationData[]> call, Response<OsLocationData[]> response) {
-                        if(response.isSuccessful()){
-                            Log.i("TESTEAPI", "post submitted to API." + response.body().toString());
-                        }else {
-                            Log.i("TESTEAPI", "resposefailed" + response.body().toString());
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if(response.isSuccessful() && response.body() != null){
+                            Integer qtdSendPoints = response.body();
+                            if(qtdSendPoints == finalOsLocationDataArray.length){
+                                osLocationDataListLocal.deleteOsLocationDataLists();
+                            }
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<OsLocationData[]> call, Throwable t) {
-                        Log.i("TESTEAPI", "Unable to submit post to API.");
+                    public void onFailure(Call<Integer> call, Throwable t) {
                     }
                 });
             }
