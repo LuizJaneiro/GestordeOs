@@ -1,10 +1,14 @@
 package valenet.com.br.gestordeos.os_history;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +16,20 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.main.MainActivity;
+import valenet.com.br.gestordeos.main.OsItemAdapter;
+import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.search.SearchActivity;
+import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,10 +63,22 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     RelativeLayout layoutEmptyList;
     Unbinder unbinder;
 
+    private final int REQ_CODE_SEARCH = 200;
+
+    private OsItemHistoryAdapter adapter;
+    private OsHistory.OsHistoryPresenter presenter;
+    private List<Os> osHistoryList;
+
     public OsHistoryFragment() {
         // Required empty public constructor
     }
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        ((MainActivity) this.getActivity()).setNavigateInterface(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,10 +87,18 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
         View view = inflater.inflate(R.layout.fragment_os_history, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        this.presenter = new OsHistoryPresenterImp(this);
+        this.osHistoryList = null;
+
+        if(LoginLocal.getInstance() != null){
+            presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), false);
+        }
         refreshLayoutHistoryOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
+                if(LoginLocal.getInstance() != null){
+                    presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), true);
+                }
             }
         });
 
@@ -132,7 +164,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     @Override
     public void showEmptyListView() {
         if (layoutEmptyList != null) {
-            textViewErrorEmptyList.setText("Não há OSs no histórico no momento!");
+            textViewErrorEmptyList.setText("Não há OSs no seu histórico no momento!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
     }
@@ -143,11 +175,31 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
             layoutEmptyList.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void loadOsHistoryList(List<Os> osHistoryList) {
+        if(this.getActivity() != null) {
+            this.osHistoryList = osHistoryList;
+            this.adapter = new OsItemHistoryAdapter(osHistoryList, this.getActivity().getApplicationContext(), this.getActivity());
+            if(recyclerViewHistoryOs != null) {
+                recyclerViewHistoryOs.setAdapter(adapter);
+                recyclerViewHistoryOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                recyclerViewHistoryOs.setItemAnimator(new DefaultItemAnimator());
+                this.showLayoutHistory();
+            }
+        }
+    }
+
     // begin region MainNavigate interface
 
     @Override
     public void navigateToOsSearch() {
-
+        if (this.getActivity() != null) {
+            Intent intent = new Intent(this.getActivity(), SearchActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, (ArrayList) osHistoryList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, null);
+            intent.putExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, true);
+            this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+        }
     }
 
     @Override
@@ -161,10 +213,11 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_try_again:
-                break;
             case R.id.btn_try_again_server_error:
-                break;
             case R.id.btn_reload:
+                if(LoginLocal.getInstance() != null){
+                    presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), false);
+                }
                 break;
         }
     }

@@ -2,9 +2,6 @@ package valenet.com.br.gestordeos.main;
 
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,7 +9,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.Os;
-import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -183,7 +179,7 @@ public class MainInteractorImp implements Main.MainInteractor {
                 OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
                 osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
                 final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
-                application.API_INTERFACE.enviarPosicoes(osLocationDataArray).enqueue(new Callback<Integer>() {
+                application.API_INTERFACE.sendUserPostions(osLocationDataArray).enqueue(new Callback<Integer>() {
                     @Override
                     public void onResponse(Call<Integer> call, Response<Integer> response) {
                         if(response.isSuccessful() && response.body() != null){

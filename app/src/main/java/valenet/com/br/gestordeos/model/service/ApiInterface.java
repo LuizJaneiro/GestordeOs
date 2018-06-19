@@ -24,6 +24,9 @@ public interface ApiInterface {
     @GET("TipoAtividade")
     Call<List<OsTypeModel>> getOsTypeList();
 
+    @GET("OrdemDeServico/{codUser}/historico")
+    Call<List<Os>> getUserHistory(@Path("codUser") Integer codUser);
+
     @POST("/localizacaoapp")
-    Call<Integer> enviarPosicoes(@Body OsLocationData[] posicoes);
+    Call<Integer> sendUserPostions(@Body OsLocationData[] posicoes);
 }

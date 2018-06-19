@@ -296,8 +296,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_os_list, menu);
-        if(isHistory)
+        if(isHistory) {
             menu.findItem(R.id.menu_map).setVisible(false);
+            menu.findItem(R.id.menu_filter).setVisible(false);
+        }
         return true;
     }
 

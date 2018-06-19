@@ -38,6 +38,7 @@ import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
+import valenet.com.br.gestordeos.os_history.OsItemHistoryAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class SearchActivity extends AppCompatActivity {
@@ -62,12 +63,14 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayList<Os> searchList;
     private ArrayList<OsTypeModel> osTypeModelArrayList;
     private OsItemAdapter adapter;
+    private OsItemHistoryAdapter adapterHistory;
     private MenuItem item;
     private Location myLocation;
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
     private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
+    private Boolean cameFromHistoryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,8 @@ public class SearchActivity extends AppCompatActivity {
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+        cameFromHistoryFragment = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
+
 
         if(filtredList == null || osTypeModelArrayList == null) {
             //TODO carrega do banco de dados a lista de os
@@ -227,15 +232,22 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setAdapter(ArrayList<Os> list) {
-        if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
-        else if(this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
-        else
-            adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
-        this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
-        this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
-        this.recyclerViewSearch.setAdapter(adapter);
+        if(!cameFromHistoryFragment) {
+            if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
+            else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
+            else
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
+            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
+            this.recyclerViewSearch.setAdapter(adapter);
+        } else {
+            adapterHistory = new OsItemHistoryAdapter(list, this, this);
+            this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
+            this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
+            this.recyclerViewSearch.setAdapter(adapterHistory);
+        }
     }
 
     public void filter(String s, boolean submit) {
