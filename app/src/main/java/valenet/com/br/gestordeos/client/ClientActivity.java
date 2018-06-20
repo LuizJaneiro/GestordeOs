@@ -1,6 +1,7 @@
 package valenet.com.br.gestordeos.client;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,7 +31,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
-import valenet.com.br.gestordeos.refuse_os.RefuseOs;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -58,9 +58,12 @@ public class ClientActivity extends AppCompatActivity {
     RelativeLayout footerLayout;
     @BindView(R.id.btn_nav)
     AppCompatButton btnNav;
+    @BindView(R.id.text_view_os_status_toolbar)
+    TextView textViewOsStatusToolbar;
 
     private PagerAdapter pagerAdapter;
     private Os os;
+    private Boolean cameFromHistory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class ClientActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
+        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
         String clientName;
         String osType;
@@ -112,6 +116,14 @@ public class ClientActivity extends AppCompatActivity {
         textViewDistanceToolbar.setText(distance + " KM");
         textViewOsTypeToolbar.setText(osType);
         textViewOsDateToolbar.setText(dateString);
+
+        if(cameFromHistory){
+            textViewDistanceToolbar.setVisibility(View.GONE);
+            if(os.getStatusOs() != null) {
+                textViewOsStatusToolbar.setText(os.getStatusOs());
+                textViewOsStatusToolbar.setVisibility(View.VISIBLE);
+            }
+        }
 
         tabLayout.addTab(tabLayout.newTab().setText("OS"));
         tabLayout.addTab(tabLayout.newTab().setText("Cliente"));
@@ -152,7 +164,8 @@ public class ClientActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_os_options, menu);
+        if(!cameFromHistory)
+            inflater.inflate(R.menu.menu_os_options, menu);
         return true;
     }
 
@@ -174,19 +187,32 @@ public class ClientActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
+            if(resultCode == Activity.RESULT_OK) {
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+            }
+        }
+    }
+
+    @Override
     public void onBackPressed() {
+        Intent resultIntent = new Intent();
+        setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
     }
 
-    public void navigateToRefuseOsActivity(){
+    public void navigateToRefuseOsActivity() {
         Intent intent = new Intent(this, RefuseOsActivity.class);
-        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
-        startActivity(intent);
+        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getAgendaEventoID());
+        startActivityForResult(intent, ValenetUtils.REQUEST_CODE_CLIENT);
     }
 
-    public void navigateToEndOsActivity(){
+    public void navigateToEndOsActivity() {
         Intent intent = new Intent(this, EndOsActivity.class);
-        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
+        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getAgendaEventoID());
         startActivity(intent);
     }
 
@@ -233,7 +259,7 @@ public class ClientActivity extends AppCompatActivity {
 
     }
 
-    public void navigateToMap(){
+    public void navigateToMap() {
         android.app.AlertDialog.Builder builderCad;
         builderCad = new android.app.AlertDialog.Builder(this);
         builderCad.setTitle("Atenção");
@@ -251,14 +277,13 @@ public class ClientActivity extends AppCompatActivity {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if(intent.resolveActivity(getPackageManager()) != null)
+                        if (intent.resolveActivity(getPackageManager()) != null)
                             startActivity(intent);
                     } else {
                         ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
                     }
-                else
-                    if(intent.resolveActivity(getPackageManager()) != null)
-                        startActivity(intent);
+                else if (intent.resolveActivity(getPackageManager()) != null)
+                    startActivity(intent);
 
             }
         });

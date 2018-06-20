@@ -6,10 +6,12 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.ReasonRefuseOs;
 import valenet.com.br.gestordeos.model.entity.User;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 
@@ -27,6 +29,12 @@ public interface ApiInterface {
     @GET("OrdemDeServico/{codUser}/historico")
     Call<List<Os>> getUserHistory(@Path("codUser") Integer codUser);
 
+    @GET("OrdemDeServico/CancelamentoMotivos")
+    Call<List<ReasonRefuseOs>> getReasonsToRefuseOs();
+
     @POST("/localizacaoapp")
     Call<Integer> sendUserPostions(@Body OsLocationData[] posicoes);
+
+    @PUT("OrdemDeServico/AgendaCancelamento")
+    Call<Void> putRefuseOs(@Query("id") Integer agendamentoId, @Query("motcanId") Integer motCanId, @Query("motcanTx") String motcanTx);
 }

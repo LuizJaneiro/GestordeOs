@@ -117,6 +117,7 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ClientActivity.class);
                 intent.putExtra(ValenetUtils.KEY_OS, item);
+                intent.putExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, true);
                 activity.startActivity(intent);
             }
         });

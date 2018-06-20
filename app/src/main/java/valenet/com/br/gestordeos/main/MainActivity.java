@@ -280,6 +280,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             }
         }
 
+        if(requestCode == ValenetUtils.REQUEST_CODE_CLIENT){
+            if(resultCode == Activity.RESULT_OK){
+                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        false, osType, false);
+            }
+        }
+
 /*        if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
@@ -549,6 +556,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 if(LoginLocal.getInstance().getCurrentUser().getCoduser() != null)
                     presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         true, osType, false);
+        }
+        if(navView != null && myLocation == null) {
+            hideContainer();
+            hideErrorConnectionView();
+            hideLoading();
+            hideErrorServerView();
+            hidePager();
+            hideEmptyListView();
+            selectDrawerItem(getCheckedItem(navView));
         }
     }
 

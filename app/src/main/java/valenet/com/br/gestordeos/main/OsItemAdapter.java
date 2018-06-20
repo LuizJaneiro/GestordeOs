@@ -198,7 +198,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ClientActivity.class);
                 intent.putExtra(ValenetUtils.KEY_OS, item);
-                activity.startActivity(intent);
+                activity.startActivityForResult(intent, ValenetUtils.REQUEST_CODE_CLIENT);
             }
         });
         ClickGuard.guard(((MViewHolder) holder).osItemView);
