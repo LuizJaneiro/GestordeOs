@@ -687,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         drawerLayout.addDrawerListener(drawerToggle);
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
+        searchViewContainer.setHint(getString(R.string.text_search_box));
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -728,7 +728,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         drawerLayout.addDrawerListener(drawerToggle);
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
+        searchViewContainer.setHint(getString(R.string.text_search_box));
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -769,7 +769,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         drawerLayout.addDrawerListener(drawerToggle);
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
+        searchViewContainer.setHint(getString(R.string.text_search_box));
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);

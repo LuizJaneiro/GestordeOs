@@ -82,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
-        searchView.setHint("Buscar por Os (Id, tipo ou cliente)");
+        searchView.setHint(getString(R.string.text_search_box));
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
 
