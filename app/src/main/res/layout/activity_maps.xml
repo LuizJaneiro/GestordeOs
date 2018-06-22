@@ -32,7 +32,7 @@
             tools:context=".map.MapsActivity" />
     </LinearLayout>
 
-    <include layout="@layout/layout_progress"></include>
+    <include layout="@layout/layout_progress_maps"></include>
 
     <include layout="@layout/layout_error_from_server"></include>
 

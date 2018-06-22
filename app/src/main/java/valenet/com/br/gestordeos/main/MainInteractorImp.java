@@ -2,9 +2,6 @@ package valenet.com.br.gestordeos.main;
 
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,11 +9,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.Os;
-import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
+import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
+import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
 public class MainInteractorImp implements Main.MainInteractor {
     // region Members
@@ -153,7 +152,9 @@ public class MainInteractorImp implements Main.MainInteractor {
                 if (response.isSuccessful()) {
                     if (response.body().getRoutes() != null && response.body().getRoutes().size() > 0) {
                         Integer distance = response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
-                        listener.successLoadingOsDistance(response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue(), os, isFalse);
+                        String points = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
+                        OsDistanceAndPoints osDistanceAndPoints = new OsDistanceAndPoints(distance, points);
+                        listener.successLoadingOsDistance(osDistanceAndPoints, os, isFalse);
                     } else {
                         listener.errorServiceOsDistance(null, os, isFalse);
                     }
@@ -167,6 +168,34 @@ public class MainInteractorImp implements Main.MainInteractor {
                 listener.errorNetworkOsDistance(null, os, isFalse);
             }
         });
+    }
+
+    @Override
+    public void sendUserPoints() {
+        final OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
+        if(osLocationDataListLocal != null){
+            List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
+            if(osLocationDataList != null && osLocationDataList.size() > 0){
+                OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
+                osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
+                final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
+                application.API_INTERFACE.sendUserPostions(osLocationDataArray).enqueue(new Callback<Integer>() {
+                    @Override
+                    public void onResponse(Call<Integer> call, Response<Integer> response) {
+                        if(response.isSuccessful() && response.body() != null){
+                            Integer qtdSendPoints = response.body();
+                            if(qtdSendPoints == finalOsLocationDataArray.length){
+                                osLocationDataListLocal.deleteOsLocationDataLists();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Integer> call, Throwable t) {
+                    }
+                });
+            }
+        }
     }
 
     // endRegion Methods

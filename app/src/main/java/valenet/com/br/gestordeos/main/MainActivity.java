@@ -63,13 +63,16 @@ import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
+import valenet.com.br.gestordeos.os_history.OsHistoryFragment;
 import valenet.com.br.gestordeos.os_next.OsNextFragment;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleNextDaysFragment;
 import valenet.com.br.gestordeos.os_schedule.OsSchedulePagerAdapter;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTodayFragment;
 import valenet.com.br.gestordeos.os_schedule.OsScheduleTomorrowFragment;
+import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 import xyz.sahildave.widget.SearchViewLayout;
 
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private ArrayList<Os> osScheduleArrayList = null;
     private ArrayList<Os> osNextArrayList = null;
 
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
 
     //Location
@@ -134,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private final static int REQUEST_CHECK_SETTINGS = 0;
 
     private Location myLocation;
-    private Integer osType = 1;
+    private Integer osType = 0;
+    private boolean isHistory = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false));
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
+
+        this.presenter.sendUserPoint();
 
         this.showLoading();
         RxPermissions.getInstance(MainActivity.this)
@@ -245,7 +251,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
-                searchViewContainer.collapse();
+                if(searchViewContainer != null)
+                    searchViewContainer.collapse();
             }
         }
 
@@ -273,6 +280,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             }
         }
 
+        if(requestCode == ValenetUtils.REQUEST_CODE_CLIENT){
+            if(resultCode == Activity.RESULT_OK){
+                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        false, osType, false);
+            }
+        }
+
 /*        if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
@@ -289,6 +303,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_os_list, menu);
+        if(isHistory) {
+            menu.findItem(R.id.menu_map).setVisible(false);
+            menu.findItem(R.id.menu_filter).setVisible(false);
+        }
         return true;
     }
 
@@ -344,6 +362,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         switch (item.getItemId()) {
             case R.id.nav_item_schedule:
+                isHistory = false;
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
@@ -352,19 +371,26 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             case R.id.nav_item_map:
                 fragmentClass = OsNextFragment.class;
                 hidePager();
+                isHistory = false;
                 setupToolbarGetNextOs();
                 showContainer();
                 isSchedule = false;
                 break;
             case R.id.nav_item_history:
-                //fragmentClass = OsScheduleFragment.class;
-                isSchedule = true;
+                fragmentClass = OsHistoryFragment.class;
+                hidePager();
+                isHistory = true;
+                setupToolbarOsHistory();
+                showContainer();
+                isSchedule = false;
                 break;
             case R.id.nav_item_exit:
                 isSchedule = true;
+                isHistory = false;
                 presenter.logout();
                 break;
             default:
+                isHistory = false;
                 setupScheduleToolbar();
                 hideContainer();
                 showPager();
@@ -383,7 +409,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+            fragmentManager.beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
         }
 
         item.setChecked(true);
@@ -424,6 +450,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void navigateToSearch() {
         if (navigateInterface != null) {
             navigateInterface.navigateToOsSearch();
+        } else {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, null);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, null);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            startActivityForResult(intent, REQ_CODE_SEARCH);
         }
     }
 
@@ -519,8 +552,19 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         if (osList != null)
             this.osScheduleArrayList = (ArrayList) osList;
         if(myLocation != null) {
-            presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                    true, osType, false);
+            if(LoginLocal.getInstance() != null)
+                if(LoginLocal.getInstance().getCurrentUser().getCoduser() != null)
+                    presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        true, osType, false);
+        }
+        if(navView != null && myLocation == null) {
+            hideContainer();
+            hideErrorConnectionView();
+            hideLoading();
+            hideErrorServerView();
+            hidePager();
+            hideEmptyListView();
+            selectDrawerItem(getCheckedItem(navView));
         }
     }
 
@@ -590,11 +634,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
         if(osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(os.getOsid(), osDistance);
+        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
 
         if(isLast)
             if(navView != null)
@@ -643,7 +687,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         drawerLayout.addDrawerListener(drawerToggle);
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Os (Id, Tipo ou Cliente)");
+        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -684,7 +728,48 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         drawerLayout.addDrawerListener(drawerToggle);
 
         searchViewContainer.handleToolbarAnimation(toolbarSearchable);
-        searchViewContainer.setHint("Buscar por Os (Id, Tipo ou Cliente)");
+        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
+        ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
+        ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
+        searchViewContainer.setTransitionDrawables(collapsed, expanded);
+        searchViewContainer.setSearchListener(new SearchViewLayout.SearchListener() {
+            @Override
+            public void onFinished(String searchKeyword) {
+                searchViewContainer.collapse();
+            }
+        });
+
+        searchViewContainer.setOnToggleAnimationListener(new SearchViewLayout.OnToggleAnimationListener() {
+            @Override
+            public void onStart(boolean expanded) {
+                if (expanded) {
+                    navigateToSearch();
+                } else {
+                    //fab.show();
+                }
+            }
+
+            @Override
+            public void onFinish(boolean expanded) {
+            }
+        });
+    }
+
+    private void setupToolbarOsHistory() {
+        setSupportActionBar(toolbarSearchable);
+        tabLayoutToolbarSearchable.setVisibility(View.GONE);
+        textViewToolbarSearchableTitle.setText(getResources().getString(R.string.title_history_os));
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerToggle = setupDrawerToggle(toolbarSearchable);
+        setupDrawerContent();
+
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        searchViewContainer.handleToolbarAnimation(toolbarSearchable);
+        searchViewContainer.setHint("Buscar por Os (Id, tipo ou cliente)");
         ColorDrawable collapsed = new ColorDrawable(ContextCompat.getColor(this, R.color.colorPrimary));
         ColorDrawable expanded = new ColorDrawable(ContextCompat.getColor(this, R.color.default_color_expanded));
         searchViewContainer.setTransitionDrawables(collapsed, expanded);
@@ -800,11 +885,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         return filters;
     }
 
-    public HashMap<Integer, Integer> getOsDistanceHashMap() {
+    public HashMap<Integer, OsDistanceAndPoints> getOsDistanceHashMap() {
         return osDistanceHashMap;
     }
 
-    public void setOsDistanceHashMap(HashMap<Integer, Integer> osDistanceHashMap) {
+    public void setOsDistanceHashMap(HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap) {
         this.osDistanceHashMap = osDistanceHashMap;
     }
 

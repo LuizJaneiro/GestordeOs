@@ -21,7 +21,10 @@ import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class ValenetUtils {
 
-    public static final String BASE_URL = "https://api.valenet.com.br/api/";
+    // homologacao
+    //public static final String BASE_URL = "https://api.valenet.com.br/api/";
+    // marcelo
+    public static final String BASE_URL = "http://192.168.32.253/";
     public static final String BASE_URL_GOOGLE_DISTANCE = "https://maps.googleapis.com/maps/";
     public static final String KEY_FILTERED_LIST = "KEY_FILTERED_LIST";
     public static final String KEY_OS_LIST = "KEY_OS_LIST";
@@ -34,6 +37,7 @@ public class ValenetUtils {
     public static final String KEY_FILTERS = "KEY_FILTERS";
     public static final String KEY_CAME_FROM_MAPS = "KEY_CAME_FROM_MAPS";
     public static final String KEY_OS_DISTANCE_HASHMAP = "KEY_OS_DISTANCE_HASHMAP";
+    public static final String KEY_CAME_FROM_OS_HISTORY = "KEY_CAME_FROM_OS_HISTORY";
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
     public static final String SHARED_PREF_KEY_EMAIL_CLIENT = "SHARED_PREF_KEY_EMAIL_CLIENT";
     public static final String SHARED_PREF_KEY_PASSWORD_CLIENT = "SHARED_PREF_KEY_PASSWORD_CLIENT";
@@ -42,6 +46,7 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
     public static final String SHARED_PREF_KEY_OS_TIME = "SHARED_PREF_KEY_OS_TIME";
     public static final String SHARED_PREF_KEY_OS_NEXT = "SHARED_PREF_KEY_OS_NEXT";
+    public static final int REQUEST_CODE_CLIENT = 3000;
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
 

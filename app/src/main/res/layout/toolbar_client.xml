@@ -63,6 +63,17 @@
                     android:textColor="@android:color/white"
                     android:textSize="15sp" />
 
+                <TextView
+                    android:id="@+id/text_view_os_status_toolbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_view_os_date_toolbar"
+                    android:text="StatusOs"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:visibility="gone" />
+
+
             </RelativeLayout>
 
             <TextView

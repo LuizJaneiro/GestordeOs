@@ -6,6 +6,7 @@ import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 
 public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor.onFinishedListenerOsTypes, Main.MainInteractor.onFinishedListenerOsList,
@@ -170,24 +171,24 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void successLoadingOsDistance(Integer distance, Os os, boolean isLast) {
+    public void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(distance, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, os, isLast);
     }
 
     @Override
-    public void errorServiceOsDistance(Integer distance, Os os, boolean isLast) {
+    public void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(distance, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, os, isLast);
     }
 
     @Override
-    public void errorNetworkOsDistance(Integer distance, Os os, boolean isLast) {
+    public void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(distance, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, os, isLast);
     }
 
     @Override
@@ -200,6 +201,11 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void errorMainNetworkOsList() {
         hideViews();
         view.showErrorMainService();
+    }
+
+    @Override
+    public void sendUserPoint() {
+        interactor.sendUserPoints();
     }
 
     private void hideViews() {

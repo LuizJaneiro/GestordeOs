@@ -58,6 +58,7 @@ import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.DateUtils;
@@ -107,7 +108,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
     private OsItemAdapter adapter;
     Integer osType = null;
@@ -300,12 +301,12 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     }
 
     @Override
-    public void setOsDistance(Integer osDistance, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
 
         if(osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(os.getOsid(), osDistance);
+        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
 
         if(isLast){
             if(this.getActivity() != null){
@@ -323,9 +324,11 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 else
                     adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
 
-                recyclerViewScheduleOs.setAdapter(adapter);
-                recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
-                recyclerViewScheduleOs.setItemAnimator(new DefaultItemAnimator());
+                if(recyclerViewScheduleOs != null) {
+                    recyclerViewScheduleOs.setAdapter(adapter);
+                    recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
+                    recyclerViewScheduleOs.setItemAnimator(new DefaultItemAnimator());
+                }
                 this.hideLoading();
                 this.hideEmptyListView();
                 this.showPager();
@@ -399,22 +402,26 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     //navigate interface
     @Override
     public void navigateToOsSearch() {
-        Intent intent = new Intent(this.getActivity(), SearchActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
-        this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+        if(this.getActivity() != null) {
+            Intent intent = new Intent(this.getActivity(), SearchActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
+        }
     }
 
     @Override
     public void navigateToOsMap() {
-        Intent intent = new Intent(this.getActivity(), MapsActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
-        intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
-        this.getActivity().startActivityForResult(intent, CODE_MAP);
+        if(this.getActivity() != null) {
+            Intent intent = new Intent(this.getActivity(), MapsActivity.class);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
+            intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
+            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            this.getActivity().startActivityForResult(intent, CODE_MAP);
+        }
     }
 
     private void loadOsListWithoutLocation(){

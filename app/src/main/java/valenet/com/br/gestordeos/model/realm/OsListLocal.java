@@ -66,7 +66,6 @@ public class OsListLocal {
             arrayListOfUnmanagedObjects = realm.copyFromRealm(osTypeModelList.getOsTypeModelListRealmList());
         }
 
-
         if (osTypeModelList == null)
             return null;
 

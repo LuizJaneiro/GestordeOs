@@ -9,103 +9,109 @@
     tools:context=".login.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <FrameLayout
-        android:id="@+id/layout_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/valenet_logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="110dp"
-            android:text="@string/nome_app"
-            android:textColor="#1B1C6B"
-            android:textSize="24sp" />
-
-    </FrameLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/text_input_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_logo"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginTop="64dp"
-        android:textColorHint="@color/text_color_light">
-
-        <EditText
-            android:id="@+id/edit_text_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/line_color"
-            android:hint="Usuário"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/text_color_light"
-            android:textColorHint="@color/text_color_light"
-            android:textSize="16sp" />
-    </android.support.design.widget.TextInputLayout>
-
     <RelativeLayout
-        android:id="@+id/layout_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/text_input_email">
+        android:layout_height="match_parent"
+        android:layout_above="@id/btn_entrar"
+        android:gravity="center">
+
+        <FrameLayout
+            android:id="@+id/layout_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="230dp"
+                android:layout_height="200dp"
+                android:src="@drawable/valenet_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="150dp"
+                android:text="@string/nome_app"
+                android:textColor="#1B1C6B"
+                android:textSize="24sp" />
+
+        </FrameLayout>
 
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/text_input_password"
+            android:id="@+id/text_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/layout_logo"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="64dp"
             android:textColorHint="@color/text_color_light">
 
             <EditText
-                android:id="@+id/edit_text_password"
+                android:id="@+id/edit_text_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/line_color"
-                android:hint="Senha"
-                android:inputType="textPassword"
+                android:hint="Usuário"
+                android:inputType="textEmailAddress"
                 android:textColor="@color/text_color_light"
                 android:textColorHint="@color/text_color_light"
                 android:textSize="16sp" />
-
         </android.support.design.widget.TextInputLayout>
-    </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/layout_password"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal">
-
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/check_box_remember_me"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/layout_password"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:checked="true"
-            app:buttonTint="#1B1C6B" />
+            android:layout_below="@id/text_input_email">
 
-        <TextView
-            android:layout_width="wrap_content"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/text_input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="12dp"
+                android:textColorHint="@color/text_color_light">
+
+                <EditText
+                    android:id="@+id/edit_text_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/line_color"
+                    android:hint="Senha"
+                    android:inputType="textPassword"
+                    android:textColor="@color/text_color_light"
+                    android:textColorHint="@color/text_color_light"
+                    android:textSize="16sp" />
+
+            </android.support.design.widget.TextInputLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/check_box_remember_me"
-            android:text="Lembrar-me"
-            android:textColor="@color/text_color_light" />
+            android:layout_below="@id/layout_password"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal">
 
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/check_box_remember_me"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:checked="true"
+                app:buttonTint="#1B1C6B" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/check_box_remember_me"
+                android:text="Lembrar-me"
+                android:textColor="@color/text_color_light" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <android.support.v7.widget.AppCompatButton

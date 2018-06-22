@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
@@ -22,14 +23,14 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
     private ArrayList<Os> osScheduleArrayList;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, Integer> osDistanceHashMap = null;
+    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
     private Integer osType;
     private SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public OsSchedulePagerAdapter(FragmentManager fm, Location myLocation,
-                              HashMap<String, Boolean> orderFilters, HashMap<String, Boolean> selectedFilters,
-                              ArrayList<OsTypeModel> modelArrayList, ArrayList<Os> osScheduleArrayList, Integer osType,
-                                  HashMap<Integer, Integer> osDistanceHashMap, int numOfTabs) {
+                                  HashMap<String, Boolean> orderFilters, HashMap<String, Boolean> selectedFilters,
+                                  ArrayList<OsTypeModel> modelArrayList, ArrayList<Os> osScheduleArrayList, Integer osType,
+                                  HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.myLocation = myLocation;
