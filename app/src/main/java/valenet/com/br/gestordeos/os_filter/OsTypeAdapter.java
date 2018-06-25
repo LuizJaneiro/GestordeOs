@@ -104,6 +104,25 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
+    public void selectAll(boolean select) {
+        Set<String> keys = this.isSelectedFilterList.keySet();
+        SharedPreferences sharedPref = context.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        if (select) {
+            for (String key : keys) {
+                this.isSelectedFilterList.put(key, true);
+                editor.putBoolean(key, true);
+                editor.apply();
+            }
+        } else {
+            for (String key : keys) {
+                this.isSelectedFilterList.put(key, false);
+                editor.putBoolean(key, false);
+                editor.apply();
+            }
+        }
+    }
+
     class MViewHolder extends RecyclerView.ViewHolder {
         final AppCompatCheckBox checkBoxItemFilter;
         final TextView textViewItemFilter;

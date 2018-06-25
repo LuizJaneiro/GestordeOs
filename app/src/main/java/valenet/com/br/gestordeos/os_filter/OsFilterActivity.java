@@ -3,11 +3,10 @@ package valenet.com.br.gestordeos.os_filter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,15 +15,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,10 +66,16 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
     AppCompatRadioButton radioButtonItemName;
     @BindView(R.id.radio_group_items)
     RadioGroup radioGroupItems;
+    @BindView(R.id.check_box_select_all)
+    AppCompatCheckBox checkBoxSelectAll;
+    @BindView(R.id.layout_item_select_all)
+    RelativeLayout layoutItemSelectAll;
 
     private final int REQ_CODE_BACK_FILTER = 203;
 
+
     private boolean cameFromMaps;
+    private boolean isSelectAllSelected = false;
 
     private ArrayList<OsTypeModel> osTypeModelList;
     private OsFilter.OsFilterPresenter presenter;
@@ -107,12 +111,12 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                if(checkedId == R.id.radio_button_item_distance){
+                if (checkedId == R.id.radio_button_item_distance) {
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true);
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, false);
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false);
                     editor.apply();
-                } else if(checkedId == R.id.radio_button_item_name) {
+                } else if (checkedId == R.id.radio_button_item_name) {
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, false);
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, false);
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, true);
@@ -122,6 +126,32 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_TIME, true);
                     editor.putBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false);
                     editor.apply();
+                }
+            }
+        });
+
+
+        layoutItemSelectAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkBoxSelectAll.setChecked(!isSelectAllSelected);
+                isSelectAllSelected = !isSelectAllSelected;
+            }
+        });
+
+        checkBoxSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(!isChecked) {
+                    if(osTypeAdapter != null){
+                        osTypeAdapter.selectAll(false);
+                        osTypeAdapter.notifyDataSetChanged();
+                    }
+                } else {
+                    if(osTypeAdapter != null){
+                        osTypeAdapter.selectAll(true);
+                        osTypeAdapter.notifyDataSetChanged();
+                    }
                 }
             }
         });

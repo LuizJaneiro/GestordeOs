@@ -89,6 +89,33 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="24dp" />
 
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/layout_item_select_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="left">
+
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/check_box_select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:checked="false"
+                    app:buttonTint="#1B1C6B" />
+
+                <TextView
+                    android:id="@+id/text_view_select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/check_box_select_all"
+                    android:text="SELECIONAR TODOS"
+                    android:textColor="@color/text_color_light" />
+
+            </RelativeLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_btn_filters"
                 android:layout_width="match_parent"
