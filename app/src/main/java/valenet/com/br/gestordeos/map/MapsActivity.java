@@ -306,7 +306,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                 }
                                             });
                                 } else {
-                                    Toasty.error(MapsActivity.this, "Erro ao conseguir permissões", Toast.LENGTH_SHORT, true).show();
+                                    Toasty.error(MapsActivity.this, "Erro ao conseguir permissões", Toast.LENGTH_LONG, true).show();
                                 }
                                 return null;
                             }

@@ -16,4 +16,18 @@
         app:lottie_fileName="lottie/glow_loading.json"
         app:lottie_loop="true" />
 
+
+    <TextView
+        android:id="@+id/text_view_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lottie_animation_loading"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="Carregando sua agenda..."
+        android:textColor="@color/text_color_light"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
 </RelativeLayout>

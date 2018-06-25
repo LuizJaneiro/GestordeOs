@@ -89,6 +89,8 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     @BindView(R.id.layout_empty_list)
     RelativeLayout layoutEmptyList;
     Unbinder unbinder;
+    @BindView(R.id.text_view_loading_maps)
+    TextView textViewLoadingMaps;
 
     private Main.MainPresenter presenter;
 
@@ -120,7 +122,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((MainActivity)this.getActivity()).setNavigateInterface(this);
+        ((MainActivity) this.getActivity()).setNavigateInterface(this);
     }
 
 
@@ -152,7 +154,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             }
         });
 
-        if(this.osList == null || this.osList.size() == 0) {
+        if (this.osList == null || this.osList.size() == 0) {
             if (myLocation == null)
                 loadOsListWithoutLocation();
             else
@@ -191,46 +193,48 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void showLoading() {
-        if(loadingView != null)
+        if (loadingView != null && textViewLoadingMaps != null) {
             loadingView.setVisibility(View.VISIBLE);
+            textViewLoadingMaps.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void hideLoading() {
-        if(refreshLayoutScheduleOs != null && refreshLayoutScheduleOs.isRefreshing())
+        if (refreshLayoutScheduleOs != null && refreshLayoutScheduleOs.isRefreshing())
             refreshLayoutScheduleOs.setRefreshing(false);
 
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorServerView() {
-        if(layoutErrorServer != null)
+        if (layoutErrorServer != null)
             layoutErrorServer.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideErrorConnectionView() {
-        if(layoutErrorConection != null)
+        if (layoutErrorConection != null)
             layoutErrorConection.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyListView() {
-        if(layoutEmptyList != null){
+        if (layoutEmptyList != null) {
             textViewErrorEmptyList.setText("Não há OSs agendadas para amanhã!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
@@ -238,61 +242,61 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void hideEmptyListView() {
-        if(layoutEmptyList != null)
+        if (layoutEmptyList != null)
             layoutEmptyList.setVisibility(View.GONE);
     }
 
     @Override
     public void showPager() {
-        if(refreshLayoutScheduleOs != null)
+        if (refreshLayoutScheduleOs != null)
             refreshLayoutScheduleOs.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hidePager() {
-        if(refreshLayoutScheduleOs != null)
+        if (refreshLayoutScheduleOs != null)
             refreshLayoutScheduleOs.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
-        if(osNext == null){
+        if (osNext == null) {
             showErrorServerView();
         } else {
             loadNextListOs(osNext);
-            if(this.getActivity() != null)
+            if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs próximas, tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
     public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
-        if(osNext == null){
+        if (osNext == null) {
             showErrorConnectionView();
         } else {
             loadNextListOs(osNext);
-            if(this.getActivity() != null)
+            if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs próximas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
     public void loadNextListOs(List<Os> osList) {
-        if(this.getActivity() != null) {
+        if (this.getActivity() != null) {
             this.osList = selectTodayOs((ArrayList) osList);
             ((MainActivity) this.getActivity()).setOsNextArrayList((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
-            if(((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
+            if (((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
                 osDistanceHashMap = new HashMap<>();
             else
                 osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
             boolean isLast = false;
-            for(int i = 0; i < osList.size(); i++){
-                if(i == osList.size() - 1)
+            for (int i = 0; i < osList.size(); i++) {
+                if (i == osList.size() - 1)
                     isLast = true;
                 Os os = osList.get(i);
-                if(os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
+                if (os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
                     presenter.loadOsDistance(null, null, os, isLast);
                 else
                     presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), os, isLast);
@@ -303,13 +307,13 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     @Override
     public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
 
-        if(osDistanceHashMap == null)
+        if (osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
         osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
 
-        if(isLast){
-            if(this.getActivity() != null){
+        if (isLast) {
+            if (this.getActivity() != null) {
                 ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
             }
             if (this.filtredList == null || this.filtredList.size() == 0) {
@@ -324,7 +328,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 else
                     adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
 
-                if(recyclerViewScheduleOs != null) {
+                if (recyclerViewScheduleOs != null) {
                     recyclerViewScheduleOs.setAdapter(adapter);
                     recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
                     recyclerViewScheduleOs.setItemAnimator(new DefaultItemAnimator());
@@ -389,7 +393,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
             case R.id.btn_reload:
-                if(myLocation != null){
+                if (myLocation != null) {
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                             LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                 } else {
@@ -402,7 +406,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     //navigate interface
     @Override
     public void navigateToOsSearch() {
-        if(this.getActivity() != null) {
+        if (this.getActivity() != null) {
             Intent intent = new Intent(this.getActivity(), SearchActivity.class);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
@@ -414,7 +418,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
 
     @Override
     public void navigateToOsMap() {
-        if(this.getActivity() != null) {
+        if (this.getActivity() != null) {
             Intent intent = new Intent(this.getActivity(), MapsActivity.class);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
@@ -424,7 +428,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         }
     }
 
-    private void loadOsListWithoutLocation(){
+    private void loadOsListWithoutLocation() {
         this.showLoading();
         RxPermissions.getInstance(this.getActivity())
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -475,7 +479,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                                                 presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                                                 return true;
-                                            }else {
+                                            } else {
                                                 presenter.loadOsList(1.1, 1.1,
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                                                 return false;
@@ -506,20 +510,20 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 }).subscribe();
     }
 
-    private ArrayList<Os> selectTodayOs(ArrayList<Os> osArrayList){
-        if(osArrayList != null && osArrayList.size() > 0){
+    private ArrayList<Os> selectTodayOs(ArrayList<Os> osArrayList) {
+        if (osArrayList != null && osArrayList.size() > 0) {
             ArrayList<Os> todayOsList = new ArrayList<>();
             Date currentDate = Calendar.getInstance().getTime();
-            for(int i = 0; i < osArrayList.size(); i++){
+            for (int i = 0; i < osArrayList.size(); i++) {
                 Os os = osArrayList.get(i);
-                if(os.getDataAgendamento() != null){
+                if (os.getDataAgendamento() != null) {
                     Date osDate = DateUtils.parseDate(os.getDataAgendamento());
-                    if(DateUtils.isDateNextDaysWithTomorrow(currentDate, osDate))
+                    if (DateUtils.isDateNextDaysWithTomorrow(currentDate, osDate))
                         todayOsList.add(os);
                 }
             }
             return todayOsList;
-        }else
+        } else
             return null;
     }
 

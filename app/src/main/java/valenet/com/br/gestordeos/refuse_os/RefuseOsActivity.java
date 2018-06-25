@@ -149,7 +149,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
 
     @Override
     public void showErrorRefuseOs() {
-        Toasty.error(this, "Ocorreu um problema ao recusar a OS. Tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
+        Toasty.error(this, "Ocorreu um problema ao recusar a OS. Tente novamente mais tarde!", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
         switch (view.getId()) {
             case R.id.btn_send_os_reasons:
                 if(selectedItem == null || selectedItem.equals("Motivo")){
-                    Toasty.error(this, "Você deve selecionar o motivo da recusa primeiro!", Toast.LENGTH_SHORT).show();
+                    Toasty.error(this, "Você deve selecionar o motivo da recusa primeiro!", Toast.LENGTH_LONG).show();
                 }else {
                     ReasonRefuseOs reasonRefuseOsSelected = null;
                     for(ReasonRefuseOs reasonRefuseOs : reasonRefuseOsArray){

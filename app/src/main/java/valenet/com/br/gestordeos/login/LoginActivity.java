@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void showErrorLogin(String error) {
-        Toasty.error(getApplicationContext(), error, Toast.LENGTH_SHORT).show();
+        Toasty.error(getApplicationContext(), error, Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -89,6 +89,8 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     @BindView(R.id.layout_empty_list)
     RelativeLayout layoutEmptyList;
     Unbinder unbinder;
+    @BindView(R.id.text_view_loading)
+    TextView textViewLoading;
 
     private Main.MainPresenter presenter;
 
@@ -184,8 +186,10 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
 
     @Override
     public void showLoading() {
-        if (loadingView != null)
+        if (loadingView != null && textViewLoading != null) {
             loadingView.setVisibility(View.VISIBLE);
+            textViewLoading.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

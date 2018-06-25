@@ -25,7 +25,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.main.MainActivity;
-import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.search.SearchActivity;
@@ -61,7 +60,10 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     AppCompatButton btnReload;
     @BindView(R.id.layout_empty_list)
     RelativeLayout layoutEmptyList;
+    @BindView(R.id.text_view_loading)
+    TextView textViewLoading;
     Unbinder unbinder;
+
 
     private final int REQ_CODE_SEARCH = 200;
 
@@ -90,13 +92,13 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
         this.presenter = new OsHistoryPresenterImp(this);
         this.osHistoryList = null;
 
-        if(LoginLocal.getInstance() != null){
+        if (LoginLocal.getInstance() != null) {
             presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), false);
         }
         refreshLayoutHistoryOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(LoginLocal.getInstance() != null){
+                if (LoginLocal.getInstance() != null) {
                     presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), true);
                 }
             }
@@ -125,8 +127,11 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
 
     @Override
     public void showLoading() {
-        if (loadingView != null)
+        if (loadingView != null && textViewLoading != null) {
+            textViewLoading.setText("Carregando seu histórico...");
             loadingView.setVisibility(View.VISIBLE);
+            textViewLoading.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -177,10 +182,10 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
 
     @Override
     public void loadOsHistoryList(List<Os> osHistoryList) {
-        if(this.getActivity() != null) {
+        if (this.getActivity() != null) {
             this.osHistoryList = osHistoryList;
             this.adapter = new OsItemHistoryAdapter(osHistoryList, this.getActivity().getApplicationContext(), this.getActivity());
-            if(recyclerViewHistoryOs != null) {
+            if (recyclerViewHistoryOs != null) {
                 recyclerViewHistoryOs.setAdapter(adapter);
                 recyclerViewHistoryOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
                 recyclerViewHistoryOs.setItemAnimator(new DefaultItemAnimator());
@@ -215,7 +220,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
             case R.id.btn_try_again:
             case R.id.btn_try_again_server_error:
             case R.id.btn_reload:
-                if(LoginLocal.getInstance() != null){
+                if (LoginLocal.getInstance() != null) {
                     presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), false);
                 }
                 break;

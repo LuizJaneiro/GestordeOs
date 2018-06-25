@@ -60,7 +60,6 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.login.LoginActivity;
-import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -107,6 +106,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     SearchViewLayout searchViewContainer;
     @BindView(R.id.tab_layout_toolbar_searchable)
     TabLayout tabLayoutToolbarSearchable;
+    @BindView(R.id.text_view_loading)
+    TextView textViewLoading;
+
 
     ActionBarDrawerToggle drawerToggle;
 
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_SEARCH) {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
-                if(searchViewContainer != null)
+                if (searchViewContainer != null)
                     searchViewContainer.collapse();
             }
         }
@@ -280,8 +282,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             }
         }
 
-        if(requestCode == ValenetUtils.REQUEST_CODE_CLIENT){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
+            if (resultCode == Activity.RESULT_OK) {
                 presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         false, osType, false);
             }
@@ -303,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_os_list, menu);
-        if(isHistory) {
+        if (isHistory) {
             menu.findItem(R.id.menu_map).setVisible(false);
             menu.findItem(R.id.menu_filter).setVisible(false);
         }
@@ -469,8 +471,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void showLoading() {
-        if (loadingView != null)
+        if (loadingView != null && textViewLoading != null) {
             loadingView.setVisibility(View.VISIBLE);
+            textViewLoading.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -493,19 +497,19 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
-        if(osSchedule != null)
+        if (osSchedule != null)
             this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
 
-        if(osNext != null)
+        if (osNext != null)
             this.osNextArrayList = (ArrayList) osNext;
     }
 
     @Override
     public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
-        if(osSchedule != null)
+        if (osSchedule != null)
             this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
 
-        if(osNext != null)
+        if (osNext != null)
             this.osNextArrayList = (ArrayList) osNext;
     }
 
@@ -551,13 +555,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void loadScheduleListOs(List<Os> osList) {
         if (osList != null)
             this.osScheduleArrayList = (ArrayList) osList;
-        if(myLocation != null) {
-            if(LoginLocal.getInstance() != null)
-                if(LoginLocal.getInstance().getCurrentUser().getCoduser() != null)
+        if (myLocation != null) {
+            if (LoginLocal.getInstance() != null)
+                if (LoginLocal.getInstance().getCurrentUser().getCoduser() != null)
                     presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                        true, osType, false);
+                            true, osType, false);
         }
-        if(navView != null && myLocation == null) {
+        if (navView != null && myLocation == null) {
             hideContainer();
             hideErrorConnectionView();
             hideLoading();
@@ -571,26 +575,26 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     @Override
     public void loadNextListOs(List<Os> osList) {
         if (osList != null) {
-            if(osDistanceHashMap == null)
+            if (osDistanceHashMap == null)
                 osDistanceHashMap = new HashMap<>();
             this.osNextArrayList = (ArrayList) osList;
-            if(this.osNextArrayList.size() > 0){
+            if (this.osNextArrayList.size() > 0) {
                 boolean isLast = false;
-                for(int i = 0; i < osNextArrayList.size(); i++){
-                    if((this.osScheduleArrayList == null || this.osScheduleArrayList.size() == 0) && i == osNextArrayList.size() - 1)
+                for (int i = 0; i < osNextArrayList.size(); i++) {
+                    if ((this.osScheduleArrayList == null || this.osScheduleArrayList.size() == 0) && i == osNextArrayList.size() - 1)
                         isLast = true;
-                    if(myLocation == null)
+                    if (myLocation == null)
                         presenter.loadOsDistance(null, null, osNextArrayList.get(i), isLast);
                     else
                         presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osNextArrayList.get(i), isLast);
                 }
 
-                if(osScheduleArrayList != null && osScheduleArrayList.size() > 0) {
+                if (osScheduleArrayList != null && osScheduleArrayList.size() > 0) {
                     isLast = false;
-                    for (int i = 0; i < this.osScheduleArrayList.size(); i++){
-                        if(i == osScheduleArrayList.size() - 1)
+                    for (int i = 0; i < this.osScheduleArrayList.size(); i++) {
+                        if (i == osScheduleArrayList.size() - 1)
                             isLast = true;
-                        if(myLocation == null)
+                        if (myLocation == null)
                             presenter.loadOsDistance(null, null, osScheduleArrayList.get(i), isLast);
                         else
                             presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osScheduleArrayList.get(i), isLast);
@@ -598,7 +602,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 }
             }
         }
-        if(navView != null && myLocation == null) {
+        if (navView != null && myLocation == null) {
             hideContainer();
             hideErrorConnectionView();
             hideLoading();
@@ -611,37 +615,37 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void showErrorMainService() {
-        if(navView != null)
+        if (navView != null)
             selectDrawerItem(getCheckedItem(navView));
     }
 
     @Override
     public void showErrorServerView(ArrayList<OsTypeModel> osTypeModels) {
-        if(osTypeModels == null)
+        if (osTypeModels == null)
             showErrorServerView();
-        else{
+        else {
             loadOsTypes(osTypeModels);
         }
     }
 
     @Override
     public void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels) {
-        if(osTypeModels == null)
+        if (osTypeModels == null)
             showErrorConnectionView();
-        else{
+        else {
             loadOsTypes(osTypeModels);
         }
     }
 
     @Override
     public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
-        if(osDistanceHashMap == null)
+        if (osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
         osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
 
-        if(isLast)
-            if(navView != null)
+        if (isLast)
+            if (navView != null)
                 selectDrawerItem(getCheckedItem(navView));
     }
 

@@ -35,7 +35,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,6 +90,8 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
     @BindView(R.id.layout_empty_list)
     RelativeLayout layoutEmptyList;
     Unbinder unbinder;
+    @BindView(R.id.text_view_loading)
+    TextView textViewLoading;
 
     private Main.MainPresenter presenter;
 
@@ -191,8 +192,10 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     @Override
     public void showLoading() {
-        if (loadingView != null)
+        if (loadingView != null && textViewLoading != null) {
             loadingView.setVisibility(View.VISIBLE);
+            textViewLoading.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -316,7 +319,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
         if (this.getActivity() != null) {
             //this.osList = selectTodayOs((ArrayList) osList);
 
-            this.osList = ((ArrayList)osList);
+            this.osList = ((ArrayList) osList);
             this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {

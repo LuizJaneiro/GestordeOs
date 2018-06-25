@@ -280,7 +280,7 @@ public class SearchActivity extends AppCompatActivity {
 
         if (filteredList.isEmpty()) {
             if (submit)
-                Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_SHORT, true).show();
+                Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_LONG, true).show();
             setAdapter(osListArray);
         } else {
             setAdapter(filteredList);
