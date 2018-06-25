@@ -81,7 +81,7 @@ public class SearchActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_os_list));
+        textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_search));
         searchView.setHint(getString(R.string.text_search_box));
 
         recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));

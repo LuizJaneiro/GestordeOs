@@ -6,14 +6,12 @@
     <string name="title_schedule">Agenda</string>
     <string name="title_get_next_os">Pesca</string>
     <string name="title_history_os">Histórico</string>
-    <string name="title_activity_os_type">Tipos de OS</string>
-    <string name="title_activity_os_list">Lista de OS</string>
-    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_search">Pesquisa</string>
     <string name="error_field_required">Este campo é obrigatório!</string>
     <string name="title_activity_client">OS</string>
     <string name="title_activity_os_filter">Filtros</string>
-    <string name="title_activity_refuse_os">Recusa de OS</string>
-    <string name="title_activity_end_os">Encerramento de OS</string>
+    <string name="title_activity_refuse_os">Recusa</string>
+    <string name="title_activity_end_os">Encerramento</string>
     <string name="title_activity_map">Mapa de OS</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
