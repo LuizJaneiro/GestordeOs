@@ -64,8 +64,8 @@ public class SpinnerAdapterOsReasons extends ArrayAdapter<String> {
 
 
         //Set meta data here and later we can access these values from OnItemSelected Event Of Spinner
-        row.setTag(R.string.meta_position, Integer.toString(position));
-        row.setTag(R.string.meta_title, mData.get(position).toString());
+        row.setTag(R.string.text_meta_position, Integer.toString(position));
+        row.setTag(R.string.text_meta_title, mData.get(position).toString());
 
         return row;
     }

@@ -429,7 +429,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     private ActionBarDrawerToggle setupDrawerToggle(Toolbar toolbar) {
-        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        return new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.text_open_drawer, R.string.text_close_drawer);
     }
 
     @Override

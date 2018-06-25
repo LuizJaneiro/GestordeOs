@@ -6,8 +6,6 @@
     <string name="title_schedule">Agenda</string>
     <string name="title_get_next_os">Busca OSs Próximas</string>
     <string name="title_history_os">Histórico</string>
-    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
-    <string name="forgot_password_text">Digite seu usuário e enviaremos\num e-mail com as instruções\npara recuperação da senha</string>
     <string name="title_activity_os_type">Tipos de OS</string>
     <string name="title_activity_os_list">Lista de OS</string>
     <string name="title_activity_search">SearchActivity</string>
@@ -17,26 +15,13 @@
     <string name="title_activity_refuse_os">Recusa de OS</string>
     <string name="title_activity_end_os">Encerramento de OS</string>
     <string name="title_activity_map">Mapa de OS</string>
-    <string name="meta_position">meta_position</string>
-    <string name="meta_title">meta_title</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="text_search_box">Buscar por OS (Código, tipo ou cliente)</string>
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="text_open_drawer">Open Drawer</string>
+    <string name="text_close_drawer">Close Drawer</string>
 
-    <string name="action_example">Example action</string>
-
-    <string name="action_settings">Settings</string>
-
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
+    <string name="text_meta_title">meta_title</string>
+    <string name="text_meta_position">meta_position</string>
 </resources>
