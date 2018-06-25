@@ -21,6 +21,7 @@
     <string name="meta_title">meta_title</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="text_search_box">Buscar por OS (Código, tipo ou cliente)</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
