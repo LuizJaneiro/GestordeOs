@@ -107,7 +107,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         }
 
         infoMarkerName.setText(clientName);
-        infoMarkerDistance.setText(distance + " KM");
+        infoMarkerDistance.setText(distance + "KM");
 
         infoMarkerOsTypeAndDate.setText(osType + " " + dateString);
         infoMarkerAddress.setText(address);

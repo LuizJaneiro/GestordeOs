@@ -169,23 +169,23 @@ public class ValenetUtils {
             endereco += tipoLogradouro + " ";
 
         if (logradouro == null)
-            endereco += "Desconhecida";
+            endereco += "Desconhecida, ";
         else
-            endereco += logradouro;
-
-        if (complemento == null)
-            endereco += " , ";
-        else {
-            if (complemento.equals("-"))
-                endereco += " , ";
-            else
-                endereco += " - " + complemento + " , ";
-        }
+            endereco += logradouro + ", ";
 
         if (numero == null)
-            endereco += "N° desconhecido, ";
+            endereco += "N° desconhecido";
         else
-            endereco += "N° " + numero + ", ";
+            endereco += "N° " + numero;
+
+        if (complemento == null)
+            endereco += ", ";
+        else {
+            if (complemento.equals("-"))
+                endereco += ", ";
+            else
+                endereco += " - " + complemento + ", ";
+        }
 
         if (andar != null)
             endereco += Math.abs(andar) + "º Andar, ";
