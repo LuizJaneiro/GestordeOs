@@ -2,12 +2,16 @@ package valenet.com.br.gestordeos.end_os;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class EndOsActivity extends AppCompatActivity {
@@ -51,14 +56,18 @@ public class EndOsActivity extends AppCompatActivity {
 
         webViewProgressBar.setVisibility(View.VISIBLE);
         webview.setVisibility(View.INVISIBLE);
+
         WebSettings webSettings = webview.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setDomStorageEnabled(true);
         webSettings.setSupportZoom(false);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDatabaseEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 
-        webview.loadUrl("https://os.valenet.com.br/encerrar/" + osId);
-
+        webview.loadUrl("https://helpdesk.valenet.local/CSC/OS/?id=" + osId + "&coduser=" + LoginLocal.getInstance().getCurrentUser().getCoduser());
         webViewProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         webview.setWebViewClient(new WebViewClient() {
@@ -71,6 +80,10 @@ public class EndOsActivity extends AppCompatActivity {
                 webview.setVisibility(View.VISIBLE);
             }
 
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                handler.proceed();
+            }
         });
     }
 

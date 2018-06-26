@@ -228,7 +228,7 @@ public class ClientActivity extends AppCompatActivity {
 
     public void navigateToEndOsActivity() {
         Intent intent = new Intent(this, EndOsActivity.class);
-        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getAgendaEventoID());
+        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
         startActivity(intent);
     }
 
