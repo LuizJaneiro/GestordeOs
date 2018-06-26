@@ -145,12 +145,18 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                 if(!isChecked) {
                     if(osTypeAdapter != null){
                         osTypeAdapter.selectAll(false);
-                        osTypeAdapter.notifyDataSetChanged();
+                        osTypeAdapter = new OsTypeAdapter(OsFilterActivity.this, osTypeModelList);
+                        recyclerBtnFilters.setAdapter(osTypeAdapter);
+                        recyclerBtnFilters.setFocusable(false);
+                        layoutOsFilterList.requestFocus();
                     }
                 } else {
                     if(osTypeAdapter != null){
                         osTypeAdapter.selectAll(true);
-                        osTypeAdapter.notifyDataSetChanged();
+                        osTypeAdapter = new OsTypeAdapter(OsFilterActivity.this, osTypeModelList);
+                        recyclerBtnFilters.setAdapter(osTypeAdapter);
+                        recyclerBtnFilters.setFocusable(false);
+                        layoutOsFilterList.requestFocus();
                     }
                 }
             }
