@@ -3,6 +3,7 @@ package valenet.com.br.gestordeos.map;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         TextView infoMarkerName = myContentsView.findViewById(R.id.info_marker_name);
         TextView infoMarkerOsTypeAndDate = myContentsView.findViewById(R.id.info_marker_os_type_and_date);
         TextView infoMarkerDistance = myContentsView.findViewById(R.id.info_marker_distance);
+        TextView infoMarkerAddress = myContentsView.findViewById(R.id.info_marker_text_view_os_address);
         ImageView infoMarkerImageViewStatusOs = myContentsView.findViewById(R.id.info_marker_image_view_status_os);
         ViewGroup layout = myContentsView.findViewById(R.id.info_marker_layout);
         final Os item = (Os) marker.getTag();
@@ -59,6 +61,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         String osType;
         String distance;
         String dateString;
+        String address;
 
         if (item.getCliente() == null)
             clientName = "Nome Indefinido";
@@ -81,6 +84,8 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
             else
                 distance = String.valueOf(distanceDouble);
         }
+
+        address = ValenetUtils.buildOsAddress(item.getTpLogradouro(), item.getLogradouro(), item.getComplemento(), item.getNumero(), item.getAndar(), item.getBairro());
 
         if (item.getDataAgendamento() == null)
             dateString = "Data Indefinida";
@@ -105,6 +110,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         infoMarkerDistance.setText(distance + " KM");
 
         infoMarkerOsTypeAndDate.setText(osType + " " + dateString);
+        infoMarkerAddress.setText(address);
 
         if(line != null){
             line.remove();

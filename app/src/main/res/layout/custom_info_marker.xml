@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="280dp"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/box_google">
@@ -47,6 +47,26 @@
             android:textColor="@color/text_color_os_item" />
 
         <TextView
+            android:id="@+id/info_marker_text_view_os_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_marker_os_type_and_date"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:freezesText="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Rua itacolomi, 1032, Saramenha, Apartamento 01"
+            android:textColor="@color/text_color_os_item" />
+
+        <TextView
             android:id="@+id/info_marker_distance"
             fontPath="fonts/Lato-Bold.ttf"
             android:layout_width="80dp"
@@ -66,9 +86,9 @@
             android:id="@+id/info_marker_image_view_status_os"
             android:layout_width="12dp"
             android:layout_height="12dp"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/info_marker_distance"
             android:layout_marginEnd="38dp"
-            android:layout_alignParentEnd="true"
             android:src="@drawable/ic_awaiting_os" />
 
     </RelativeLayout>
