@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
+import valenet.com.br.gestordeos.main.Main;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
@@ -157,5 +158,43 @@ public class ValenetUtils {
             }
         }
         return filtredOsArrayList;
+    }
+
+    public static String buildOsAddress(String tipoLogradouro, String logradouro, String complemento, String numero, Integer andar, String bairro) {
+        if (tipoLogradouro == null && logradouro == null && numero == null && andar == null && bairro == null)
+            return "Endereço Desconhecido";
+
+        String endereco = "";
+        if (tipoLogradouro != null)
+            endereco += tipoLogradouro + " ";
+
+        if (logradouro == null)
+            endereco += "Desconhecida";
+        else
+            endereco += logradouro;
+
+        if (complemento == null)
+            endereco += " , ";
+        else {
+            if (complemento.equals("-"))
+                endereco += " , ";
+            else
+                endereco += " - " + complemento + " , ";
+        }
+
+        if (numero == null)
+            endereco += "N° desconhecido, ";
+        else
+            endereco += "N° " + numero + ", ";
+
+        if (andar != null)
+            endereco += Math.abs(andar) + "º Andar, ";
+
+        if (bairro == null)
+            endereco += "Bairro Desconhecido.";
+        else
+            endereco += bairro + ".";
+
+        return endereco;
     }
 }

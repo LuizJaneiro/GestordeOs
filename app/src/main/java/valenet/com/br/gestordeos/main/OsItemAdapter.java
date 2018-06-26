@@ -49,9 +49,9 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.sortOsBy = sortOsBy;
         this.osDistanceHashmap = osDistanceHashmap;
 
-        if(this.osList != null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
+        if (this.osList != null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
             for (int i = 0; i < osList.size(); i++) {
-                if(this.osDistanceHashmap.get(this.osList.get(i).getOsid()) == null || this.osDistanceHashmap.get(this.osList.get(i).getOsid()).getDistance() == null)
+                if (this.osDistanceHashmap.get(this.osList.get(i).getOsid()) == null || this.osDistanceHashmap.get(this.osList.get(i).getOsid()).getDistance() == null)
                     this.osList.get(i).setDistance(null);
                 else
                     this.osList.get(i).setDistance(this.osDistanceHashmap.get(this.osList.get(i).getOsid()).getDistance().doubleValue());
@@ -140,11 +140,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String osType;
         String distance;
         String dateString = "";
+        String city;
+        String address;
 
         if (item.getCliente() == null)
             clientName = "Nome Indefinido";
         else
             clientName = ValenetUtils.firstAndLastWord(item.getCliente());
+
+        if(item.getCidade() == null)
+            city = "Cidade Indefinida";
+        else
+            city = item.getCidade();
 
         if (item.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
@@ -152,16 +159,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             osType = item.getTipoAtividade();
 
         Integer osDistance = null;
-        if(osDistanceHashmap != null && osDistanceHashmap.get(item.getOsid()) != null)
+        if (osDistanceHashmap != null && osDistanceHashmap.get(item.getOsid()) != null)
             osDistance = osDistanceHashmap.get(item.getOsid()).getDistance();
 
+        address = ValenetUtils.buildOsAddress(item.getTpLogradouro(), item.getLogradouro(), item.getComplemento(), item.getNumero(), item.getAndar(), item.getBairro());
+
         if (item.getLatitude() == null || item.getLongitude() == null || item.getDistance() == null || myLocation == null
-                || osDistance == null)
+                || osDistance == null) {
             distance = "-";
-        else {
+        } else {
             double distanceDouble = osDistance.doubleValue() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
-            if(distanceDouble >= 100)
+            if (distanceDouble >= 100)
                 distance = ">100";
             else
                 distance = String.valueOf(distanceDouble);
@@ -192,6 +201,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ((MViewHolder) holder).textViewType.setText(osType);
         ((MViewHolder) holder).textViewDate.setText(dateString);
+        ((MViewHolder) holder).textViewCity.setText(city);
+        ((MViewHolder) holder).textViewAddress.setText(address);
 
         ((MViewHolder) holder).osItemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +228,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final TextView textViewType;
         final TextView textViewDate;
         final TextView textViewDistance;
+        final TextView textViewCity;
+        final TextView textViewAddress;
         final ImageView imageViewStatusOs;
         final ViewGroup osItemView;
 
@@ -227,6 +240,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.textViewDate = container.findViewById(R.id.text_view_os_date_toolbar);
             this.textViewDistance = container.findViewById(R.id.text_view_distance_toolbar);
             this.imageViewStatusOs = container.findViewById(R.id.image_view_status_os);
+            this.textViewCity = container.findViewById(R.id.text_view_os_city_toolbar);
+            this.textViewAddress = container.findViewById(R.id.text_view_os_address_toolbar);
             this.osItemView = container.findViewById(R.id.os_item_view);
         }
     }

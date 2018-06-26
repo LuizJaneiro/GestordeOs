@@ -60,6 +60,10 @@ public class ClientActivity extends AppCompatActivity {
     AppCompatButton btnNav;
     @BindView(R.id.text_view_os_status_toolbar)
     TextView textViewOsStatusToolbar;
+    @BindView(R.id.text_view_os_city_toolbar)
+    TextView textViewOsCityToolbar;
+    @BindView(R.id.text_view_os_address_toolbar)
+    TextView textViewOsAddressToolbar;
 
     private PagerAdapter pagerAdapter;
     private Os os;
@@ -84,11 +88,20 @@ public class ClientActivity extends AppCompatActivity {
         String osType;
         String distance;
         String dateString = "";
+        String city;
+        String address;
 
         if (os.getCliente() == null)
             clientName = "Nome Indefinido";
         else
             clientName = ValenetUtils.firstAndLastWord(os.getCliente());
+
+        if (os.getCidade() == null)
+            city = "Cidade Indefinida";
+        else
+            city = os.getCidade();
+
+        address = ValenetUtils.buildOsAddress(os.getTpLogradouro(), os.getLogradouro(), os.getComplemento(), os.getNumero(), os.getAndar(), os.getBairro());
 
         if (os.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
@@ -116,10 +129,13 @@ public class ClientActivity extends AppCompatActivity {
         textViewDistanceToolbar.setText(distance + " KM");
         textViewOsTypeToolbar.setText(osType);
         textViewOsDateToolbar.setText(dateString);
+        textViewOsCityToolbar.setText(city);
+        textViewOsAddressToolbar.setText(address);
+        textViewOsAddressToolbar.setSelected(true);
 
-        if(cameFromHistory){
+        if (cameFromHistory) {
             textViewDistanceToolbar.setVisibility(View.GONE);
-            if(os.getStatusOs() != null) {
+            if (os.getStatusOs() != null) {
                 textViewOsStatusToolbar.setText(os.getStatusOs());
                 textViewOsStatusToolbar.setVisibility(View.VISIBLE);
             }
@@ -164,7 +180,7 @@ public class ClientActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if(!cameFromHistory)
+        if (!cameFromHistory)
             inflater.inflate(R.menu.menu_os_options, menu);
         return true;
     }
@@ -188,8 +204,8 @@ public class ClientActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
-            if(resultCode == Activity.RESULT_OK) {
+        if (requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
+            if (resultCode == Activity.RESULT_OK) {
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
                 finish();

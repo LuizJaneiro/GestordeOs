@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_toLeftOf="@id/text_view_distance_toolbar">
+                    android:layout_toLeftOf="@id/layout_os_distance">
 
                     <TextView
                         android:id="@+id/text_view_client_name_toolbar"
@@ -62,28 +62,57 @@
                         android:textColor="@color/text_color_os_item"
                         android:textSize="15sp" />
 
+
+                    <TextView
+                        android:id="@+id/text_view_os_city_toolbar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text_view_os_date_toolbar"
+                        android:layout_marginTop="4dp"
+                        android:text="Ouro Preto"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/text_view_os_address_toolbar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/text_view_os_city_toolbar"
+                        android:layout_marginTop="4dp"
+                        android:text="Rua itacolomi, 1032, Saramenha, Apartamento 01"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="15sp" />
+
                 </RelativeLayout>
 
 
-                <TextView
-                    android:id="@+id/text_view_distance_toolbar"
-                    fontPath="fonts/Lato-Bold.ttf"
+                <LinearLayout
+                    android:id="@+id/layout_os_distance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="2 Km"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="20sp"
-                    tools:ignore="MissingPrefix" />
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/image_view_status_os"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_below="@+id/text_view_distance_toolbar"
-                    android:layout_marginTop="18dp"
-                    android:src="@drawable/ic_awaiting_os" />
+                    <TextView
+                        android:id="@+id/text_view_distance_toolbar"
+                        fontPath="fonts/Lato-Bold.ttf"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2 Km"
+                        android:textColor="@color/text_color_os_item"
+                        android:textSize="20sp"
+                        tools:ignore="MissingPrefix" />
+
+                    <ImageView
+                        android:id="@+id/image_view_status_os"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal|center_vertical"
+                        android:layout_marginTop="12dp"
+                        android:src="@drawable/ic_awaiting_os" />
+
+                </LinearLayout>
 
 
             </RelativeLayout>
