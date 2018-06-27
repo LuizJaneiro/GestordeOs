@@ -85,6 +85,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
         editTextRefuseOsObservation.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
         if (getSupportActionBar() != null) {
+            
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
