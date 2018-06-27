@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -38,7 +41,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
     @BindView(R.id.edit_text_refuse_os_reason)
     AppCompatSpinner editTextRefuseOsReasonSpinner;
     @BindView(R.id.edit_text_refuse_os_observation)
-    EditText editTextRefuseOsObservation;
+    TextInputEditText editTextRefuseOsObservation;
     @BindView(R.id.btn_send_os_reasons)
     AppCompatButton btnSendOsReasons;
     @BindView(R.id.layout_refuse_os)
@@ -78,6 +81,8 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
         this.presenter = new RefuseOsPresenterImp(this);
 
         textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_refuse_os));
+        editTextRefuseOsObservation.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editTextRefuseOsObservation.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -197,7 +202,9 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
             case R.id.btn_send_os_reasons:
                 if(selectedItem == null || selectedItem.equals("Motivo")){
                     Toasty.error(this, "Você deve selecionar o motivo da recusa primeiro!", Toast.LENGTH_LONG).show();
-                }else {
+                }else if (editTextRefuseOsObservation != null && editTextRefuseOsObservation.getText().toString().length() > 144) {
+                    Toasty.error(this, "A observação deve conter no máximo 144 caracteres!", Toast.LENGTH_LONG).show();
+                } else {
                     ReasonRefuseOs reasonRefuseOsSelected = null;
                     for(ReasonRefuseOs reasonRefuseOs : reasonRefuseOsArray){
                         if(reasonRefuseOs.getDescricao().equals(selectedItem)){
