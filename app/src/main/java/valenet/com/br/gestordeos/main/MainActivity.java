@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
 
-        this.presenter.sendUserPoint();
+        //this.presenter.sendUserPoint();
 
         this.showLoading();
         RxPermissions.getInstance(MainActivity.this)

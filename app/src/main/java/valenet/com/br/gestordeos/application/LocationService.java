@@ -12,6 +12,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.BatteryManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -26,8 +27,12 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import io.fabric.sdk.android.services.common.CommonUtils;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationDataList;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -44,6 +49,7 @@ public class LocationService extends Service {
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
         GestorDeOsApplication application;
+        private int intervalSendPointsMinutes = 1;
 
         public LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
@@ -67,6 +73,35 @@ public class LocationService extends Service {
                                                                                         codUser, application.batteryLevel));
                 }
             }
+
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    final OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
+                    if(osLocationDataListLocal != null){
+                        List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
+                        if(osLocationDataList != null && osLocationDataList.size() > 0){
+                            OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
+                            osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
+                            final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
+                            application.API_INTERFACE.sendUserPostions(osLocationDataArray).enqueue(new Callback<Integer>() {
+                                @Override
+                                public void onResponse(Call<Integer> call, Response<Integer> response) {
+                                    if(response.isSuccessful() && response.body() != null){
+                                        Integer qtdSendPoints = response.body();
+                                        if(qtdSendPoints == finalOsLocationDataArray.length){
+                                            osLocationDataListLocal.deleteOsLocationDataLists();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Integer> call, Throwable t) {
+                                }
+                            });
+                        }
+                    }
+                }
+            }, intervalSendPointsMinutes * 60 * 1000);
         }
 
         @Override
