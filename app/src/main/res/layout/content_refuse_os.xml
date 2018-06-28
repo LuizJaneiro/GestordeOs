@@ -13,84 +13,79 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
-        <LinearLayout
-            android:id="@+id/layout_text"
-            android:layout_above="@+id/btn_send_os_reasons"
+        <TextView
+            android:id="@+id/text_view_1"
+            fontPath="fonts/Lato-Semibold.ttf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="Insira as razões da recusa da OS"
+            android:textAlignment="center"
+            android:textColor="@color/text_color_os_item"
+            android:textSize="16sp"
+            tools:ignore="MissingPrefix" />
+
+        <FrameLayout
+            android:id="@+id/frame_layout_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:orientation="vertical">
+            android:layout_below="@+id/text_view_1"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            android:background="@drawable/background_btn_blue"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp">
 
-            <TextView
-                fontPath="fonts/Lato-Semibold.ttf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="50dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:text="Insira as razões da recusa da OS"
-                android:textAlignment="center"
-                android:textColor="@color/text_color_os_item"
-                android:textSize="16sp"
-                tools:ignore="MissingPrefix" />
-
-            <FrameLayout
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/edit_text_refuse_os_reason"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:hint="Motivo"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="4dp"
+                android:textColor="@color/text_color_os_item" />
+        </FrameLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_send_os_reasons"
+            android:layout_below="@+id/frame_layout_1"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="144"
+            app:counterOverflowTextAppearance="@style/TextLimitError"
+            app:hintEnabled="false">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/edit_text_refuse_os_observation"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="36dp"
-                android:background="@drawable/background_btn_blue"
-                android:paddingBottom="5dp"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp">
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/edit_text_refuse_os_reason"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Motivo"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="4dp"
-                    android:textColor="@color/text_color_os_item" />
-            </FrameLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="10dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="144"
-                app:counterOverflowTextAppearance="@style/TextLimitError"
-                app:hintEnabled="false">
+                android:background="@drawable/background_btn_blue"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="Observações"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences|textMultiLine"
+                android:padding="5dp"
+                android:textColor="@color/text_color_os_item" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/edit_text_refuse_os_observation"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/background_btn_blue"
-                    android:ems="10"
-                    android:gravity="start"
-                    android:hint="Observações"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:padding="5dp"
-                    android:textColor="@color/text_color_os_item" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-        </LinearLayout>
+        </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_send_os_reasons"
@@ -98,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="32dp"
             android:text="Recusar" />
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
