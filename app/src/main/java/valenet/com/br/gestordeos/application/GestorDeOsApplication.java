@@ -1,11 +1,14 @@
 package valenet.com.br.gestordeos.application;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -24,7 +27,9 @@ import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
 import valenet.com.br.gestordeos.model.service.ApiUtils;
+
 import com.crashlytics.android.Crashlytics;
+
 import io.fabric.sdk.android.Fabric;
 import valenet.com.br.gestordeos.provider_location.ProviderLocation;
 
@@ -38,6 +43,15 @@ public class GestorDeOsApplication extends android.app.Application {
     ProviderLocation providerLocation;
     // region Members
     private static Context appContext;
+
+    public static int batteryLevel = 0;
+
+    private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context ctxt, Intent intent) {
+            batteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
+        }
+    };
 
     //private String appId = "DIWBEIDNHNWA64DD295FWD293QB3A5NDODOP5WI";
     //producao
@@ -80,6 +94,7 @@ public class GestorDeOsApplication extends android.app.Application {
         get_hash_key();
         registerActivityLifecycleCallbacks(new AppLifeTracker());
         startService(new Intent(this, LocationService.class));
+        this.registerReceiver(this.mBatInfoReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     public void get_hash_key() {
@@ -108,7 +123,7 @@ public class GestorDeOsApplication extends android.app.Application {
         super.onTerminate();
     }
 
-    public static Realm getRealmInstance(){
+    public static Realm getRealmInstance() {
         return realm;
     }
 
@@ -126,7 +141,7 @@ public class GestorDeOsApplication extends android.app.Application {
             if (numStarted == 0) {
                 Log.e("app", "App in forregorund ");
                 if (LoginLocal.getInstance().getCurrentUser() != null)
-                        providerLocation = new ProviderLocation();
+                    providerLocation = new ProviderLocation();
 //                        providerLocation.setListenerChanges(GestorDeOsApplication.this);
             }
             numStarted++;

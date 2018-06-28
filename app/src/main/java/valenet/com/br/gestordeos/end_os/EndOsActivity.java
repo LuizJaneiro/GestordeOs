@@ -67,7 +67,7 @@ public class EndOsActivity extends AppCompatActivity {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 
-        webview.loadUrl("https://helpdesk.valenet.local/CSC/OS/?id=" + osId + "&coduser=" + LoginLocal.getInstance().getCurrentUser().getCoduser());
+        webview.loadUrl("https://os.valenet.com.br/csc/os/?id=" + osId + "&coduser=" + LoginLocal.getInstance().getCurrentUser().getCoduser());
         webViewProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
 
         webview.setWebViewClient(new WebViewClient() {

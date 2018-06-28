@@ -2,12 +2,15 @@ package valenet.com.br.gestordeos.application;
 
 import android.Manifest;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -30,8 +33,7 @@ import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationDataLis
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
-public class LocationService extends Service
-{
+public class LocationService extends Service {
     private static final String TAG = "BOOMBOOMTESTGPS";
     private LocationManager mLocationManager = null;
     //milliseconds
@@ -39,75 +41,68 @@ public class LocationService extends Service
     //meters
     private static final float LOCATION_DISTANCE = 0;
 
-    private class LocationListener implements android.location.LocationListener
-    {
+    private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
+        GestorDeOsApplication application;
 
-        public LocationListener(String provider)
-        {
+        public LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
             mLastLocation = new Location(provider);
         }
 
         @Override
-        public void onLocationChanged(Location location)
-        {
+        public void onLocationChanged(Location location) {
             mLastLocation.set(location);
             Date currentTime = Calendar.getInstance().getTime();
             Integer codUser = null;
-            if(LoginLocal.getInstance() != null) {
-                if(LoginLocal.getInstance().getCurrentUser() != null)
+            if (LoginLocal.getInstance() != null) {
+                if (LoginLocal.getInstance().getCurrentUser() != null)
                     codUser = LoginLocal.getInstance().getCurrentUser().getCoduser();
             }
 
-            if(codUser != null){
-                Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser);
-                if(OsLocationDataListLocal.getInstance() != null){
-                    OsLocationDataListLocal.getInstance().addOsLocationdataOnListLocal(new OsLocationData(location.getLatitude(), location.getLongitude(), currentTime, codUser));
+            if (codUser != null) {
+                Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser + " batteryLevel: " + application.batteryLevel);
+                if (OsLocationDataListLocal.getInstance() != null) {
+                    OsLocationDataListLocal.getInstance().addOsLocationdataOnListLocal(new OsLocationData(location.getLatitude(), location.getLongitude(), currentTime,
+                                                                                        codUser, application.batteryLevel));
                 }
             }
         }
 
         @Override
-        public void onProviderDisabled(String provider)
-        {
+        public void onProviderDisabled(String provider) {
             Log.e(TAG, "onProviderDisabled: " + provider);
         }
 
         @Override
-        public void onProviderEnabled(String provider)
-        {
+        public void onProviderEnabled(String provider) {
             Log.e(TAG, "onProviderEnabled: " + provider);
         }
 
         @Override
-        public void onStatusChanged(String provider, int status, Bundle extras)
-        {
+        public void onStatusChanged(String provider, int status, Bundle extras) {
             Log.e(TAG, "onStatusChanged: " + provider);
         }
     }
 
-    LocationListener[] mLocationListeners = new LocationListener[] {
+    LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER)
     };
 
     @Override
-    public IBinder onBind(Intent arg0)
-    {
+    public IBinder onBind(Intent arg0) {
         return null;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId)
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         Log.e(TAG, "onCreate");
         initializeLocationManager();
         try {
@@ -122,8 +117,7 @@ public class LocationService extends Service
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         Log.e(TAG, "onDestroy");
         super.onDestroy();
         if (mLocationManager != null) {

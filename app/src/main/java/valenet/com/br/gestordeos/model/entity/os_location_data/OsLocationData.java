@@ -22,15 +22,20 @@ public class OsLocationData extends RealmObject {
     @Expose
     private Integer codUser;
 
+    @SerializedName("nivelBateria")
+    @Expose
+    private Integer nivelBateria;
+
     public OsLocationData(){
 
     }
 
-    public OsLocationData(Double latitude, Double longitude, Date date, Integer codUser) {
+    public OsLocationData(Double latitude, Double longitude, Date date, Integer codUser, Integer nivelBateria) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.dataColeta = date;
         this.codUser = codUser;
+        this.nivelBateria = nivelBateria;
     }
 
     public Double getLatitude() {
@@ -64,6 +69,15 @@ public class OsLocationData extends RealmObject {
     public void setCodUser(Integer codUser) {
         this.codUser = codUser;
     }
+
+    public Integer getNivelBateria() {
+        return nivelBateria;
+    }
+
+    public void setNivelBateria(Integer nivelBateria) {
+        this.nivelBateria = nivelBateria;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -71,6 +85,7 @@ public class OsLocationData extends RealmObject {
                 ", longitude='" + longitude + '\'' +
                 ", date=" + dataColeta +
                 ", codUser=" + codUser +
+                ", nivelBateria=" + nivelBateria +
                 '}';
     }
 
