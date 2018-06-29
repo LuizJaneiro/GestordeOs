@@ -11,6 +11,12 @@
     <item
         android:id="@+id/menu_os_end"
         fontPath="fonts/Lato-Bold.ttf"
-        android:title="Encerrar"
+        android:title="Confirmar"
+        android:visible="true" />
+
+    <item
+        android:id="@+id/menu_os_call"
+        fontPath="fonts/Lato-Bold.ttf"
+        android:title="Ligar para cliente"
         android:visible="true" />
 </menu>

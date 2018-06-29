@@ -33,33 +33,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
-            android:paddingLeft="28dp"
-            android:paddingRight="28dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
             android:paddingTop="4dp">
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_call"
-                style="@style/ButtonClient"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:backgroundTint="#7DD61D"
-                android:drawableLeft="@drawable/call_icon"
-                android:drawablePadding="28dp"
-                android:paddingRight="32dp"
-                android:text="Ligar" />
+                android:orientation="horizontal"
+                android:weightSum="2.0">
 
-            <android.support.v7.widget.AppCompatButton
-                android:id="@+id/btn_nav"
-                style="@style/ButtonClient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:backgroundTint="#2E3191"
-                android:drawableLeft="@drawable/nav_icon"
-                android:drawablePadding="28dp"
-                android:paddingRight="32dp"
-                android:text="Ir Para" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_checkin"
+                    style="@style/ButtonClient"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#7DD61D"
+                    android:drawableLeft="@drawable/ic_checkin"
+                    android:drawablePadding="16dp"
+                    android:paddingBottom="15dp"
+                    android:paddingTop="18dp"
+                    android:paddingRight="32dp"
+                    android:text="Check in" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/btn_nav"
+                    style="@style/ButtonClient"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="#2E3191"
+                    android:drawableLeft="@drawable/nav_icon"
+                    android:drawablePadding="28dp"
+                    android:paddingBottom="19dp"
+                    android:paddingRight="32dp"
+                    android:text="Ir Para" />
+
+            </LinearLayout>
         </RelativeLayout>
 
     </RelativeLayout>

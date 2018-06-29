@@ -52,8 +52,8 @@ public class ClientActivity extends AppCompatActivity {
     TextView textViewOsDateToolbar;
     @BindView(R.id.text_view_distance_toolbar)
     TextView textViewDistanceToolbar;
-    @BindView(R.id.btn_call)
-    AppCompatButton btnCall;
+    @BindView(R.id.btn_checkin)
+    AppCompatButton btnCheckin;
     @BindView(R.id.footer_layout)
     RelativeLayout footerLayout;
     @BindView(R.id.btn_nav)
@@ -146,10 +146,11 @@ public class ClientActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        if (os.getTelefoneCliente() == null) {
+        //Todo: BTN CHECKIN DISABLE
+/*        if (os.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
             btnCall.setBackgroundColor(getResources().getColor(R.color.btn_call_transparent));
-        }
+        }*/
 
         if (os.getLatitude() == null || os.getLongitude() == null) {
             btnNav.setEnabled(false);
@@ -180,8 +181,11 @@ public class ClientActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (!cameFromHistory)
+        if (!cameFromHistory) {
             inflater.inflate(R.menu.menu_os_options, menu);
+            if(this.os.getTelefoneCliente() == null)
+                menu.findItem(R.id.menu_os_call).setVisible(false);
+        }
         return true;
     }
 
@@ -196,6 +200,9 @@ public class ClientActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_os_refuse:
                 navigateToRefuseOsActivity();
+                return true;
+            case R.id.menu_os_call:
+                this.callPhone(this.os.getTelefoneCliente() + "");
                 return true;
             default:
                 return super.onOptionsItemSelected(os);
@@ -320,11 +327,11 @@ public class ClientActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    @OnClick({R.id.btn_call, R.id.footer_layout, R.id.btn_nav})
+    @OnClick({R.id.btn_checkin, R.id.footer_layout, R.id.btn_nav})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.btn_call:
-                this.callPhone(os.getTelefoneCliente() + "");
+            case R.id.btn_checkin:
+                //TODO: Logica do Checkin
                 break;
             case R.id.btn_nav:
                 navigateToMap();
