@@ -20,10 +20,10 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="18dp"
+            android:paddingBottom="8dp"
             android:paddingLeft="28dp"
             android:paddingRight="28dp"
-            android:paddingTop="18dp">
+            android:paddingTop="0dp">
 
             <RelativeLayout
                 android:id="@+id/content_text_view"
@@ -72,32 +72,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="15sp"
                     android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/text_view_os_city_toolbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/text_view_os_date_toolbar"
-                    android:layout_marginTop="4dp"
-                    android:text="Ouro Preto"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_address_toolbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/text_view_os_city_toolbar"
-                    android:layout_marginTop="4dp"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="Rua itacolomi, 1032, Saramenha, Apartamento 01"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp" />
 
             </RelativeLayout>
 

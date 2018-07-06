@@ -33,49 +33,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp"
+            android:paddingLeft="42dp"
+            android:paddingRight="42dp"
             android:paddingTop="4dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2.0">
+            <ImageButton
+                android:id="@+id/btn_checkout"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_checkin"
+                android:paddingBottom="14dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_checkout"
+                android:visibility="gone" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_checkin"
-                    style="@style/ButtonClient"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#7DD61D"
-                    android:drawableLeft="@drawable/ic_checkin"
-                    android:drawablePadding="16dp"
-                    android:paddingBottom="15dp"
-                    android:paddingTop="18dp"
-                    android:paddingRight="32dp"
-                    android:text="Check in" />
+            <ImageButton
+                android:id="@+id/btn_checkin"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_checkin"
+                android:paddingBottom="14dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_checkin" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/white" />
+            <ImageButton
+                android:id="@+id/btn_call"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_call"
+                android:padding="18dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_call" />
 
-                <android.support.v7.widget.AppCompatButton
-                    android:id="@+id/btn_nav"
-                    style="@style/ButtonClient"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#2E3191"
-                    android:drawableLeft="@drawable/nav_icon"
-                    android:drawablePadding="28dp"
-                    android:paddingBottom="19dp"
-                    android:paddingRight="32dp"
-                    android:text="Ir Para" />
 
-            </LinearLayout>
+            <ImageButton
+                android:id="@+id/btn_confirm"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_confirm"
+                android:padding="18dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_finish"
+                android:visibility="gone" />
+
+
+            <ImageButton
+                android:id="@+id/btn_nav"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentRight="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_nav"
+                android:paddingBottom="14dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="6dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_nav" />
+
         </RelativeLayout>
 
     </RelativeLayout>

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -42,26 +43,11 @@ public class OsDataFragment extends Fragment {
     TextView textViewOsTpDesignacao;
     @BindView(R.id.os_layout_tp_designacao)
     ViewGroup osLayoutTpDesignacao;
-    @BindView(R.id.text_view_os_designacao_descricao)
-    TextView textViewOsDesignacaoDescricao;
-    @BindView(R.id.os_layout_designacao_descricao)
-    ViewGroup osLayoutDesignacaoDescricao;
-    @BindView(R.id.text_view_os_rede)
-    TextView textViewOsRede;
-    @BindView(R.id.os_layout_rede)
-    ViewGroup osLayoutRede;
-    @BindView(R.id.text_view_os_status)
-    TextView textViewOsStatus;
-    @BindView(R.id.os_layout_status)
-    ViewGroup osLayoutStatus;
-    @BindView(R.id.text_view_os_agendado_para)
-    TextView textViewOsAgendadoPara;
-    @BindView(R.id.os_layout_agendado_para)
-    ViewGroup osLayoutAgendadoPara;
-    @BindView(R.id.text_view_os_mapeado)
-    TextView textViewOsMapeado;
-    @BindView(R.id.os_layout_mapeado)
-    ViewGroup osLayoutMapeado;
+    @BindView(R.id.text_view_os_address)
+    TextView textViewOsAddress;
+    @BindView(R.id.os_layout_address)
+    RelativeLayout osLayoutAddress;
+
     Unbinder unbinder;
 
     private Os os;
@@ -79,50 +65,36 @@ public class OsDataFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_os_data, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if(os.getOsid() == null)
+        if (os.getOsid() == null)
             osLayoutId.setVisibility(View.GONE);
         else
-            textViewOsId.setText(os.getOsid()+"");
+            textViewOsId.setText(os.getOsid() + "");
 
-        if(os.getEmissao() == null)
+        if (os.getEmissao() == null)
             osLayoutEmissao.setVisibility(View.GONE);
         else
             textViewOsEmissao.setText(ValenetUtils.convertJsonToStringDate(os.getEmissao()));
 
-        if(os.getTipoRede() == null)
+        if (os.getTipoRede() == null)
             osLayoutTpRede.setVisibility(View.GONE);
         else
-            textViewOsTpRede.setText(os.getTipoRede()+"");
+            textViewOsTpRede.setText(os.getTipoRede() + "");
 
-        if(os.getDesignacaoTipo() == null)
+        if (os.getDesignacaoTipo() == null)
             osLayoutTpDesignacao.setVisibility(View.GONE);
-        else
-            textViewOsTpDesignacao.setText(os.getDesignacaoTipo()+"");
+        else {
+            String designacao = os.getDesignacaoTipo() + " - ";
+            if(os.getDesignacaoDescricao() == null) {
+                designacao += "Sem descrição";
+            } else {
+                designacao += os.getDesignacaoDescricao();
+            }
+            textViewOsTpDesignacao.setText(designacao);
+        }
 
-        if(os.getDesignacaoDescricao() == null)
-            osLayoutDesignacaoDescricao.setVisibility(View.GONE);
-        else
-            textViewOsDesignacaoDescricao.setText(os.getDesignacaoDescricao()+"");
+        String address = ValenetUtils.buildOsAddress(os.getTpLogradouro(), os.getLogradouro(), os.getComplemento(), os.getNumero(), os.getAndar(), os.getBairro());
 
-        if(os.getRede() == null)
-            osLayoutRede.setVisibility(View.GONE);
-        else
-            textViewOsRede.setText(os.getRede()+"");
-
-        if(os.getStatusOs() == null)
-            osLayoutStatus.setVisibility(View.GONE);
-        else
-            textViewOsStatus.setText(os.getStatusOs()+"");
-
-        if(os.getAgendadoPara() == null)
-            osLayoutAgendadoPara.setVisibility(View.GONE);
-        else
-            textViewOsAgendadoPara.setText(os.getAgendadoPara()+"");
-
-        if(os.getMapeado() == null)
-            osLayoutMapeado.setVisibility(View.GONE);
-        else
-            textViewOsMapeado.setText(os.getMapeado()+"");
+        textViewOsAddress.setText(address);
 
         return view;
     }

@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,18 +53,20 @@ public class ClientActivity extends AppCompatActivity {
     TextView textViewOsDateToolbar;
     @BindView(R.id.text_view_distance_toolbar)
     TextView textViewDistanceToolbar;
-    @BindView(R.id.btn_checkin)
-    AppCompatButton btnCheckin;
     @BindView(R.id.footer_layout)
     RelativeLayout footerLayout;
-    @BindView(R.id.btn_nav)
-    AppCompatButton btnNav;
     @BindView(R.id.text_view_os_status_toolbar)
     TextView textViewOsStatusToolbar;
-    @BindView(R.id.text_view_os_city_toolbar)
-    TextView textViewOsCityToolbar;
-    @BindView(R.id.text_view_os_address_toolbar)
-    TextView textViewOsAddressToolbar;
+    @BindView(R.id.btn_checkout)
+    ImageButton btnCheckout;
+    @BindView(R.id.btn_checkin)
+    ImageButton btnCheckin;
+    @BindView(R.id.btn_call)
+    ImageButton btnCall;
+    @BindView(R.id.btn_confirm)
+    ImageButton btnConfirm;
+    @BindView(R.id.btn_nav)
+    ImageButton btnNav;
 
     private PagerAdapter pagerAdapter;
     private Os os;
@@ -76,13 +79,18 @@ public class ClientActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
-        textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_client));
+        os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
+        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
+
+        Integer codigoOs = os.getOsid();
+
+        if (codigoOs == null)
+            textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_client));
+        else
+            textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_client) + " - " + codigoOs);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
-        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
         String clientName;
         String osType;
@@ -129,9 +137,8 @@ public class ClientActivity extends AppCompatActivity {
         textViewDistanceToolbar.setText(distance + " KM");
         textViewOsTypeToolbar.setText(osType);
         textViewOsDateToolbar.setText(dateString);
-        textViewOsCityToolbar.setText(city);
-        textViewOsAddressToolbar.setText(address);
-        textViewOsAddressToolbar.setSelected(true);
+/*        textViewOsAddressToolbar.setText(address);
+        textViewOsAddressToolbar.setSelected(true);*/
 
         if (cameFromHistory) {
             textViewDistanceToolbar.setVisibility(View.GONE);
@@ -146,11 +153,10 @@ public class ClientActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        //Todo: BTN CHECKIN DISABLE
-/*        if (os.getTelefoneCliente() == null) {
+        if (os.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
             btnCall.setBackgroundColor(getResources().getColor(R.color.btn_call_transparent));
-        }*/
+        }
 
         if (os.getLatitude() == null || os.getLongitude() == null) {
             btnNav.setEnabled(false);
@@ -183,8 +189,6 @@ public class ClientActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         if (!cameFromHistory) {
             inflater.inflate(R.menu.menu_os_options, menu);
-            if(this.os.getTelefoneCliente() == null)
-                menu.findItem(R.id.menu_os_call).setVisible(false);
         }
         return true;
     }
@@ -195,14 +199,8 @@ public class ClientActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-            case R.id.menu_os_end:
-                navigateToEndOsActivity();
-                return true;
             case R.id.menu_os_refuse:
                 navigateToRefuseOsActivity();
-                return true;
-            case R.id.menu_os_call:
-                this.callPhone(this.os.getTelefoneCliente() + "");
                 return true;
             default:
                 return super.onOptionsItemSelected(os);
@@ -327,23 +325,29 @@ public class ClientActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    @OnClick({R.id.btn_checkin, R.id.footer_layout, R.id.btn_nav})
-    public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.btn_checkin:
-                //TODO: Logica do Checkin
-                break;
-            case R.id.btn_nav:
-                navigateToMap();
-                break;
-            case R.id.footer_layout:
-                break;
-        }
-    }
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @OnClick({R.id.btn_checkout, R.id.btn_checkin, R.id.btn_call, R.id.btn_confirm, R.id.btn_nav})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_checkout:
+                //TODO: Logica do Checkout
+                break;
+            case R.id.btn_checkin:
+                //TODO: Logica do Checkin
+                break;
+            case R.id.btn_call:
+                this.callPhone(this.os.getTelefoneCliente() + "");
+                break;
+            case R.id.btn_confirm:
+                navigateToEndOsActivity();
+                break;
+            case R.id.btn_nav:
+                navigateToMap();
+                break;
+        }
+    }
 }

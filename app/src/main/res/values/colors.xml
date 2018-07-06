@@ -9,13 +9,20 @@
     <color name="line_color_filter">#2E3191</color>
     <color name="text_btn">#202275</color>
     <color name="text_color_os_item">#202275</color>
+    <color name="text_color_os_details">#898989</color>
+    <color name="text_color_os_details_header">#222222</color>
     <color name="line_os_item">#707070</color>
     <color name="hint_search_toolbar">#8E8E93</color>
-    <color name="btn_call_transparent">#407DD61D</color>
-    <color name="btn_nav_transparent">#402E3191</color>
+    <color name="btn_call_transparent">#4094c083</color>
+    <color name="btn_nav_transparent">#4030538B</color>
     <color name="btn_negative_dialog">#FF3B30</color>
     <color name="btn_positive_dialog">#7DD61D</color>
     <color name="btn_filter_selected_background">#2E3191</color>
     <color name="btn_filter_text_color_selected">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
+    <color name="btn_checkin">#ffbd41</color>
+    <color name="btn_nav">#30538B</color>
+    <color name="btn_call">#94c083</color>
+    <color name="btn_confirm">#d44642</color>
+    
 </resources>

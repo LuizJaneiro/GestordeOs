@@ -18,340 +18,85 @@
             android:paddingBottom="8dp"
             android:paddingLeft="28dp"
             android:paddingRight="28dp"
-            android:paddingTop="8dp">
+            android:paddingTop="16dp">
 
             <RelativeLayout
-                android:id="@+id/os_layout_name"
+                android:id="@+id/os_layout_client_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/image_view_client_name"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_person" />
 
                 <TextView
-                    android:id="@+id/os_nome"
-                    fontPath="fonts/Lato-Bold.ttf"
+                    android:id="@+id/text_view_os_client_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Nome:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_nome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_nome"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:text="Maria Tereza Cristina"
-                    android:textColor="@color/text_color_os_item"
+                    android:layout_toRightOf="@+id/image_view_client_name"
+                    android:text="Daniela de souza pena"
+                    android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/os_layout_telefone"
+                android:id="@+id/os_layout_client_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/image_view_client_phone"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_phone_client" />
 
                 <TextView
-                    android:id="@+id/os_telefone"
-                    fontPath="fonts/Lato-Bold.ttf"
+                    android:id="@+id/text_view_os_client_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Telefone:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_telefone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_telefone"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:text="3135525492"
-                    android:textColor="@color/text_color_os_item"
+                    android:layout_toRightOf="@+id/image_view_client_phone"
+                    android:text="Daniela de souza pena"
+                    android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/os_layout_contato"
+                android:id="@+id/os_layout_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/image_view_os_address"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_address" />
 
                 <TextView
-                    android:id="@+id/os_contato"
-                    fontPath="fonts/Lato-Bold.ttf"
+                    android:id="@+id/text_view_os_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contato:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_contato"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_contato"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="2.5dp"
-                    android:text="7067"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_tp_logradouro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_tp_logradouro"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tipo Logradouro:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_tp_logradouro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_tp_logradouro"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="Rua"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_logradouro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_logradouro"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Logradouro:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_logradouro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_logradouro"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="Serra da brigida"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_numero"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_numero"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Número:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_numero"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_numero"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="32"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_complemento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_complemento"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Complemento:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_complemento"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_complemento"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="-"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_andar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_andar"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Andar:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_andar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_andar"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="-"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_bairro"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_bairro"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bairro:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_bairro"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_bairro"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="Morro Santana"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_cidade"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_cidade"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cidade:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_cidade"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_cidade"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="Ouro Preto"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_uf"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_uf"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Uf:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_uf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_uf"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="MG"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/os_layout_cep"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <TextView
-                    android:id="@+id/os_cep"
-                    fontPath="fonts/Lato-Bold.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cep:"
-                    android:textColor="@color/text_color_os_item"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/text_view_os_cep"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/os_cep"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginTop="2.5dp"
-                    android:text="35400-000"
-                    android:textColor="@color/text_color_os_item"
+                    android:layout_toRightOf="@+id/image_view_os_address"
+                    android:text="Rua Piraciaba, numero 79-B, 1 Andar, Morro São Sebastião"
+                    android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
 
             </RelativeLayout>

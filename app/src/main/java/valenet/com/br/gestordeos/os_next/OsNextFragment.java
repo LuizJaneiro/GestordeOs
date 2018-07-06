@@ -142,7 +142,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         this.osType = ((MainActivity) this.getActivity()).getOsType();
         this.osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
 
-        refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+/*        refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (myLocation != null)
@@ -169,7 +169,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             hideEmptyListView();
             showLoading();
             loadNextListOs(osList);
-        }
+        }*/
 
         return view;
     }
