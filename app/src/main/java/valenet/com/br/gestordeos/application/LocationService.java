@@ -87,10 +87,8 @@ public class LocationService extends Service {
                                 @Override
                                 public void onResponse(Call<Integer> call, Response<Integer> response) {
                                     if(response.isSuccessful() && response.body() != null){
-                                        Integer qtdSendPoints = response.body();
-                                        if(qtdSendPoints == finalOsLocationDataArray.length){
                                             osLocationDataListLocal.deleteOsLocationDataLists();
-                                        }
+                                            List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
                                     }
                                 }
 

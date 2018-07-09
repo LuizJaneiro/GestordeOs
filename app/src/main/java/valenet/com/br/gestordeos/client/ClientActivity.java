@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -155,12 +156,12 @@ public class ClientActivity extends AppCompatActivity {
 
         if (os.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
-            btnCall.setBackgroundColor(getResources().getColor(R.color.btn_call_transparent));
+            btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
         }
 
         if (os.getLatitude() == null || os.getLongitude() == null) {
             btnNav.setEnabled(false);
-            btnNav.setBackgroundColor(getResources().getColor(R.color.btn_nav_transparent));
+            btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_nav_transparent));
         }
 
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), os, tabLayout.getTabCount());
