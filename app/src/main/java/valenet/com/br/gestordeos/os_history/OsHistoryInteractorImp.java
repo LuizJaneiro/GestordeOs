@@ -25,7 +25,7 @@ public class OsHistoryInteractorImp implements OsHistory.OsHistoryInteractor {
 
     @Override
     public void loadHistoryUser(Integer coduser, final onFinishedLoadHistoryUser listener) {
-        application.API_INTERFACE.getUserHistory(coduser).enqueue(new Callback<List<Os>>() {
+        application.API_INTERFACE.getUserHistory(coduser, 1).enqueue(new Callback<List<Os>>() {
             @Override
             public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
                 if(response.isSuccessful() && response.body() != null) {

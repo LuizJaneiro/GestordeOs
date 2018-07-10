@@ -19,10 +19,9 @@ public class ClientInteractorImp implements Client.ClientInteractor {
 
     // region Methods
 
-
     @Override
-    public void checkin(Integer osId, final onCheckinListener listener) {
-        application.API_INTERFACE.putCheckin(osId).enqueue(new Callback<Void>() {
+    public void checkin(Integer osId, Integer codUser, Double latitude, Double longitude, final onCheckinListener listener) {
+        application.API_INTERFACE.putCheckin(osId, codUser, latitude, longitude).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful())
@@ -39,8 +38,8 @@ public class ClientInteractorImp implements Client.ClientInteractor {
     }
 
     @Override
-    public void checkout(Integer osId, final onCheckoutListener listener) {
-        application.API_INTERFACE.putCheckout(osId).enqueue(new Callback<Void>() {
+    public void checkout(Integer osId, Integer codUser, Double latitude, Double longitude, final onCheckoutListener listener) {
+        application.API_INTERFACE.putCheckout(osId, codUser, latitude, longitude).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if(response.isSuccessful())

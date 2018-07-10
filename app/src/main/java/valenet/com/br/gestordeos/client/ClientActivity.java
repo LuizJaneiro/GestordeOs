@@ -52,6 +52,7 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
+import valenet.com.br.gestordeos.login.Login;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
@@ -540,7 +541,14 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                presenter.checkin(os.getOsid());
+                LoginLocal loginLocal = LoginLocal.getInstance();
+                Integer codUser = null;
+                if(loginLocal != null)
+                    codUser = loginLocal.getCurrentUser().getCoduser();
+                if(myLocation == null)
+                    getLocationAndRequestCheck(true);
+                else
+                    presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
             }
         });
 
@@ -570,7 +578,15 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                presenter.checkout(os.getOsid());
+                LoginLocal loginLocal = LoginLocal.getInstance();
+                Integer codUser = null;
+                if(loginLocal != null)
+                    codUser = loginLocal.getCurrentUser().getCoduser();
+                if(myLocation == null)
+                    getLocationAndRequestCheck(false);
+                else
+                    if(codUser != null)
+                        presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
             }
         });
 
@@ -709,12 +725,19 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                                         @Override
                                         public Boolean call(Location location) {
                                             if (location != null) {
+                                                LoginLocal loginLocal = LoginLocal.getInstance();
+                                                Integer codUser = null;
+                                                if(loginLocal != null)
+                                                    codUser = loginLocal.getCurrentUser().getCoduser();
                                                 myLocation = location;
                                                 //TODO refazer checkin
-                                                if(isCheckin)
-                                                    presenter.checkin(os.getOsid());
-                                                else
-                                                    presenter.checkout(os.getOsid());
+                                                if(isCheckin) {
+                                                    if(codUser != null)
+                                                        presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                                                }else {
+                                                    if(codUser != null)
+                                                        presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                                                }
                                                 return true;
                                             } else {
                                                 Toasty.error(ClientActivity.this, "Ocorreu um problema ao tentar conseguir sua localização. Tente novamente!", Toast.LENGTH_LONG, true).show();

@@ -18,18 +18,19 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
 
     // region Methods
 
+
     @Override
-    public void checkin(Integer osId) {
+    public void checkin(Integer osId, Integer codUser, Double latitude, Double longitude) {
         hideAllViews();
         view.showProgress();
-        interactor.checkin(osId, this);
+        interactor.checkin(osId, codUser, latitude, longitude, this);
     }
 
     @Override
-    public void checkout(Integer osId) {
+    public void checkout(Integer osId, Integer codUser, Double latitude, Double longitude) {
         hideAllViews();
         view.showProgress();
-        interactor.checkout(osId, this);
+        interactor.checkout(osId, codUser, latitude, longitude, this);
     }
 
     @Override

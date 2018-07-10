@@ -24,16 +24,16 @@ public interface Client {
     }
 
     interface ClientPresenter {
-        void checkin(Integer osId);
+        void checkin(Integer osId, Integer codUser, Double latitude, Double longitude);
 
-        void checkout(Integer osId);
+        void checkout(Integer osId, Integer codUser, Double latitude, Double longitude);
     }
 
     interface ClientInteractor {
 
-        void checkin(Integer osId, onCheckinListener listener);
+        void checkin(Integer osId, Integer codUser, Double latitude, Double longitude, onCheckinListener listener);
 
-        void checkout(Integer osId, onCheckoutListener listener);
+        void checkout(Integer osId, Integer codUser, Double latitude, Double longitude, onCheckoutListener listener);
 
         interface onCheckinListener {
             void onSuccessCheckin();

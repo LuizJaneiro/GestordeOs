@@ -27,7 +27,7 @@ public interface ApiInterface {
     Call<List<OsTypeModel>> getOsTypeList();
 
     @GET("OrdemDeServico/{codUser}/historico")
-    Call<List<Os>> getUserHistory(@Path("codUser") Integer codUser);
+    Call<List<Os>> getUserHistory(@Path("codUser") Integer codUser, @Query("tipo") Integer tipo);
 
     @GET("OrdemDeServico/CancelamentoMotivos")
     Call<List<ReasonRefuseOs>> getReasonsToRefuseOs();
@@ -39,8 +39,10 @@ public interface ApiInterface {
     Call<Void> putRefuseOs(@Query("id") Integer agendamentoId, @Query("motcanId") Integer motCanId, @Query("motcanTx") String motcanTx);
 
     @PUT("OrdemDeServico/Checkin")
-    Call<Void> putCheckin(@Query("osid") Integer osId);
+    Call<Void> putCheckin(@Query("osid") Integer osId, @Query("coduser") Integer codUser, @Query("latitude") Double latitude,
+                          @Query("longitude") Double Longitude);
 
     @PUT("OrdemDeServico/Checkout")
-    Call<Void> putCheckout(@Query("osid") Integer osId);
+    Call<Void> putCheckout(@Query("osid") Integer osId, @Query("coduser") Integer codUser, @Query("latitude") Double latitude,
+                           @Query("longitude") Double Longitude);
 }
