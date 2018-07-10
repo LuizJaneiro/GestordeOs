@@ -107,6 +107,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     ReactiveLocationProvider locationProvider;
     private Subscription locationSubscription;
     private final static int REQUEST_CHECK_SETTINGS = 0;
+    private boolean cameFromSchedule;
 
     private Location myLocation = null;
 
@@ -118,6 +119,10 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         setSupportActionBar(toolbar);
 
         this.presenter = new ClientPresenterImp(this);
+
+        os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
+        cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
+        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
         if(!cameFromHistory) {
             RxPermissions.getInstance(ClientActivity.this)
@@ -195,9 +200,6 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                         }
                     }).subscribe();
         }
-
-        os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
-        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
         if(!cameFromHistory) {
             if (os.getDataCheckin() == null || os.getDataCheckin().length() == 0)
@@ -297,7 +299,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_nav_transparent));
         }
 
-        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), os, tabLayout.getTabCount());
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), os, cameFromSchedule, tabLayout.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

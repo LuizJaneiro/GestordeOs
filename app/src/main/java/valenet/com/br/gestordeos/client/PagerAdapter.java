@@ -15,17 +15,20 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     private int numOfTabs;
     private Os os;
+    private boolean cameFromSchedule;
 
-    public PagerAdapter(FragmentManager fm, Os os, int numOfTabs) {
+    public PagerAdapter(FragmentManager fm, Os os, boolean cameFromSchedule, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.os = os;
+        this.cameFromSchedule = cameFromSchedule;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(ValenetUtils.KEY_OS, os);
+        bundle.putBoolean(ValenetUtils.KEY_CAME_FROM_SCHEDULE, cameFromSchedule);
         switch (position) {
             case 0:
                 OsDataFragment tab1 = new OsDataFragment();

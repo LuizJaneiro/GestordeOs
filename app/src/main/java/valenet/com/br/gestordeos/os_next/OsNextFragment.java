@@ -142,7 +142,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
         this.osType = ((MainActivity) this.getActivity()).getOsType();
         this.osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
 
-/*        refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (myLocation != null)
@@ -169,7 +169,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             hideEmptyListView();
             showLoading();
             loadNextListOs(osList);
-        }*/
+        }
 
         return view;
     }
@@ -322,11 +322,11 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                 this.showEmptyListView();
             } else {
                 if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, false);
                 else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap, false);
                 else
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap, false);
 
                 if (recyclerViewScheduleOs != null) {
                     recyclerViewScheduleOs.setAdapter(adapter);
@@ -412,6 +412,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
             intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
             this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
         }
     }
@@ -474,8 +475,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                                     .map(new Func1<Location, Boolean>() {
                                         @Override
                                         public Boolean call(Location location) {
-                                            //TODO: retornar com nova função buscar OS proxima
-/*                                            if (location != null) {
+                                            if (location != null) {
                                                 myLocation = location;
                                                 presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
@@ -484,8 +484,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                                                 presenter.loadOsList(1.1, 1.1,
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                                                 return false;
-                                            }*/
-                                            return false;
+                                            }
                                         }
                                     })
                                     .subscribe(new Observer<Boolean>() {

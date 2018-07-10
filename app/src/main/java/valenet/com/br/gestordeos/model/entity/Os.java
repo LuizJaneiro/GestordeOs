@@ -95,7 +95,7 @@ public class Os extends RealmObject implements Parcelable {
     private String dataAgendamento;
     @SerializedName("agendadoPara")
     @Expose
-    private Integer agendadoPara;
+    private String agendadoPara;
     @SerializedName("mapeado")
     @Expose
     private Integer mapeado;
@@ -345,11 +345,11 @@ public class Os extends RealmObject implements Parcelable {
         this.dataAgendamento = dataAgendamento;
     }
 
-    public Integer getAgendadoPara() {
+    public String getAgendadoPara() {
         return agendadoPara;
     }
 
-    public void setAgendadoPara(Integer agendadoPara) {
+    public void setAgendadoPara(String agendadoPara) {
         this.agendadoPara = agendadoPara;
     }
 
@@ -413,7 +413,7 @@ public class Os extends RealmObject implements Parcelable {
         this.distance = ((Double) in.readValue((Double.class.getClassLoader())));
         this.statusOs = ((String) in.readValue((String.class.getClassLoader())));
         this.dataAgendamento = ((String) in.readValue((String.class.getClassLoader())));
-        this.agendadoPara = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.agendadoPara = ((String) in.readValue((String.class.getClassLoader())));
         this.mapeado = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.agendaEventoID = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));

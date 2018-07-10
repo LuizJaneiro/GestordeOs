@@ -76,8 +76,46 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_id"
-                    android:layout_toRightOf="@id/image_view_os_id"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_id"
+                    android:text="334601"
+                    android:textColor="@color/text_color_os_details"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/os_layout_agendado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp">
+
+                <ImageView
+                    android:id="@+id/image_view_os_agendado_para"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/ic_agendado_para" />
+
+                <TextView
+                    android:id="@+id/os_agendado_para"
+                    fontPath="fonts/Lato-Bold.ttf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_agendado_para"
+                    android:text="Agendado para"
+                    android:textColor="@color/text_color_os_details_header"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/text_view_os_agendado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/os_agendado_para"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_agendado_para"
                     android:text="334601"
                     android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
@@ -114,8 +152,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_solicitacao"
-                    android:layout_toRightOf="@id/image_view_os_solicitacao"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_solicitacao"
                     android:text="Instalação"
                     android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
@@ -152,8 +190,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_tp_rede"
-                    android:layout_toRightOf="@id/image_view_os_tp_rede"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_tp_rede"
                     android:text="GPON"
                     android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
@@ -190,8 +228,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_tp_designacao"
-                    android:layout_toRightOf="@id/image_view_tp_designacao"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_tp_designacao"
                     android:text="Host 33973: BERNADETE ESTAVAO DOS SANTOS"
                     android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />
@@ -228,8 +266,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/os_emissao"
-                    android:layout_toRightOf="@id/image_view_os_emissao"
                     android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/image_view_os_emissao"
                     android:text="02/06/2018"
                     android:textColor="@color/text_color_os_details"
                     android:textSize="16sp" />

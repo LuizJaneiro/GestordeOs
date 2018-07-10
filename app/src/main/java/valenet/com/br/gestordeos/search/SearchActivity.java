@@ -71,6 +71,7 @@ public class SearchActivity extends AppCompatActivity {
     private HashMap<String, Boolean> selectedFilters;
     private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
     private Boolean cameFromHistoryFragment;
+    private boolean cameFromSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,7 @@ public class SearchActivity extends AppCompatActivity {
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
         cameFromHistoryFragment = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
+        cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
 
         if(filtredList == null || osTypeModelArrayList == null) {
@@ -234,11 +236,11 @@ public class SearchActivity extends AppCompatActivity {
     public void setAdapter(ArrayList<Os> list) {
         if(!cameFromHistoryFragment) {
             if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, cameFromSchedule);
             else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap, cameFromSchedule);
             else
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap, cameFromSchedule);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);

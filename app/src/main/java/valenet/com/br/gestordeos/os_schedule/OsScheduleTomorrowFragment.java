@@ -322,11 +322,11 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
                 this.showEmptyListView();
             } else {
                 if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, true);
                 else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap, true);
                 else
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap, true);
 
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -410,6 +410,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
             intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, true);
             this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
         }
     }

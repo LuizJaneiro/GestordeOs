@@ -47,10 +47,16 @@ public class OsDataFragment extends Fragment {
     TextView textViewOsAddress;
     @BindView(R.id.os_layout_address)
     RelativeLayout osLayoutAddress;
+    @BindView(R.id.text_view_os_agendado)
+    TextView textViewOsAgendado;
+    @BindView(R.id.os_layout_agendado)
+    RelativeLayout osLayoutAgendado;
 
     Unbinder unbinder;
 
+
     private Os os;
+    private boolean cameFromSchedule;
 
     public OsDataFragment() {
         // Required empty public constructor
@@ -61,6 +67,7 @@ public class OsDataFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         os = getArguments().getParcelable(ValenetUtils.KEY_OS);
+        cameFromSchedule = getArguments().getBoolean(ValenetUtils.KEY_CAME_FROM_SCHEDULE);
 
         View view = inflater.inflate(R.layout.fragment_os_data, container, false);
         unbinder = ButterKnife.bind(this, view);
@@ -80,11 +87,21 @@ public class OsDataFragment extends Fragment {
         else
             textViewOsTpRede.setText(os.getTipoRede() + "");
 
+        if (cameFromSchedule) {
+            if (osLayoutAgendado != null)
+                osLayoutAgendado.setVisibility(View.GONE);
+        } else {
+            if (os.getAgendadoPara() == null)
+                osLayoutAgendado.setVisibility(View.GONE);
+            else
+                textViewOsAgendado.setText(os.getAgendadoPara() + "");
+        }
+
         if (os.getDesignacaoTipo() == null)
             osLayoutTpDesignacao.setVisibility(View.GONE);
         else {
             String designacao = os.getDesignacaoTipo() + " - ";
-            if(os.getDesignacaoDescricao() == null) {
+            if (os.getDesignacaoDescricao() == null) {
                 designacao += "Sem descrição";
             } else {
                 designacao += os.getDesignacaoDescricao();

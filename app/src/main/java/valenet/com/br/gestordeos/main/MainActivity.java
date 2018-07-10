@@ -557,12 +557,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             this.osScheduleArrayList = (ArrayList) osList;
         if (myLocation != null) {
             LoginLocal loginLocal = LoginLocal.getInstance();
-            //TODO: retornar busca por OS proxima
-/*            if (loginLocal != null)
+            if (loginLocal != null)
                 if (loginLocal.getCurrentUser().getCoduser() != null)
                     presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), loginLocal.getCurrentUser().getCoduser(),
-                            true, osType, false);*/
-            loadNextListOs(osScheduleArrayList); //TODO: REMOVER APOS A LOGICA DE OS PROXIMA
+                            true, osType, false);
         }
         if (navView != null && myLocation == null) {
             hideContainer();

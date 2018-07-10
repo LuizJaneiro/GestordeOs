@@ -38,6 +38,7 @@ public class ValenetUtils {
     public static final String KEY_FILTERS = "KEY_FILTERS";
     public static final String KEY_CAME_FROM_MAPS = "KEY_CAME_FROM_MAPS";
     public static final String KEY_OS_DISTANCE_HASHMAP = "KEY_OS_DISTANCE_HASHMAP";
+    public static final String KEY_CAME_FROM_SCHEDULE = "KEY_CAME_FROM_SCHEDULE";
     public static final String KEY_CAME_FROM_OS_HISTORY = "KEY_CAME_FROM_OS_HISTORY";
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
     public static final String SHARED_PREF_KEY_EMAIL_CLIENT = "SHARED_PREF_KEY_EMAIL_CLIENT";

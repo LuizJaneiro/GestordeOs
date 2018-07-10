@@ -40,14 +40,17 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap;
     private Location myLocation;
     private GestorDeOsApplication application;
+    private boolean cameFromSchedule;
 
-    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap) {
+    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap,
+                         boolean cameFromSchedule) {
         this.osList = osList;
         this.context = context;
         this.activity = activity;
         this.myLocation = myLocation;
         this.sortOsBy = sortOsBy;
         this.osDistanceHashmap = osDistanceHashmap;
+        this.cameFromSchedule = cameFromSchedule;
 
         if (this.osList != null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
             for (int i = 0; i < osList.size(); i++) {
@@ -148,7 +151,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         else
             clientName = ValenetUtils.firstAndLastWord(item.getCliente());
 
-        if(item.getCidade() == null)
+        if (item.getCidade() == null)
             city = "Cidade Indefinida";
         else
             city = item.getCidade();
@@ -209,6 +212,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             public void onClick(View v) {
                 Intent intent = new Intent(activity, ClientActivity.class);
                 intent.putExtra(ValenetUtils.KEY_OS, item);
+                intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, cameFromSchedule);
                 activity.startActivityForResult(intent, ValenetUtils.REQUEST_CODE_CLIENT);
             }
         });
