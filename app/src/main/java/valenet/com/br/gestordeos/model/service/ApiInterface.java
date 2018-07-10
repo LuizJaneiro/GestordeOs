@@ -37,4 +37,10 @@ public interface ApiInterface {
 
     @PUT("OrdemDeServico/AgendaCancelamento")
     Call<Void> putRefuseOs(@Query("id") Integer agendamentoId, @Query("motcanId") Integer motCanId, @Query("motcanTx") String motcanTx);
+
+    @PUT("OrdemDeServico/Checkin")
+    Call<Void> putCheckin(@Query("osid") Integer osId);
+
+    @PUT("OrdemDeServico/Checkout")
+    Call<Void> putCheckout(@Query("osid") Integer osId);
 }

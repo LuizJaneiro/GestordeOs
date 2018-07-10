@@ -162,7 +162,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
     public void showSuccessRefuseOs() {
         Toasty.success(this, "OS recusada com sucesso.", Toast.LENGTH_LONG).show();
         Intent resultIntent = new Intent();
-        setResult(Activity.RESULT_OK, resultIntent);
+        setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
     }
 

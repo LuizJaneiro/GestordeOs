@@ -31,7 +31,6 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void logout() {
         hideViews();
         view.showLoading();
-
         interactor.logout();
     }
 

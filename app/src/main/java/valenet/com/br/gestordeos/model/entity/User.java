@@ -9,16 +9,16 @@ import io.realm.RealmObject;
 
 public class User extends RealmObject{
 
-    @SerializedName("coduser")
+    @SerializedName("Coduser")
     @Expose
     private Integer coduser;
-    @SerializedName("login")
+    @SerializedName("Login")
     @Expose
     private String login;
-    @SerializedName("email")
+    @SerializedName("Email")
     @Expose
     private String email;
-    @SerializedName("nome")
+    @SerializedName("Nome")
     @Expose
     private String nome;
 

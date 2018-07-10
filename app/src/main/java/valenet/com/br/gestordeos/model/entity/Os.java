@@ -102,6 +102,13 @@ public class Os extends RealmObject implements Parcelable {
     @SerializedName("agendaEventoID")
     @Expose
     private Integer agendaEventoID;
+    @SerializedName("DataCheckin")
+    @Expose
+    private String dataCheckin;
+
+    @SerializedName("DataCheckout")
+    @Expose
+    private String dataCheckout;
 
     public final static Creator<Os> CREATOR = new Creator<Os>() {
 
@@ -362,6 +369,22 @@ public class Os extends RealmObject implements Parcelable {
         this.agendaEventoID = agendaEventoID;
     }
 
+    public String getDataCheckin() {
+        return dataCheckin;
+    }
+
+    public void setDataCheckin(String dataCheckin) {
+        this.dataCheckin = dataCheckin;
+    }
+
+    public String getDataCheckout() {
+        return dataCheckout;
+    }
+
+    public void setDataCheckout(String dataCheckout) {
+        this.dataCheckout = dataCheckout;
+    }
+
     protected Os(Parcel in) {
         this.osid = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.emissao = ((String) in.readValue((String.class.getClassLoader())));
@@ -393,6 +416,8 @@ public class Os extends RealmObject implements Parcelable {
         this.agendadoPara = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.mapeado = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.agendaEventoID = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));
+        this.dataCheckout = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     @Override
@@ -432,6 +457,8 @@ public class Os extends RealmObject implements Parcelable {
         dest.writeValue(agendadoPara);
         dest.writeValue(mapeado);
         dest.writeValue(agendaEventoID);
+        dest.writeValue(dataCheckin);
+        dest.writeValue(dataCheckout);
     }
 
 }

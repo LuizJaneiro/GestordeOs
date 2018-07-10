@@ -15,6 +15,7 @@
     <color name="hint_search_toolbar">#8E8E93</color>
     <color name="btn_call_transparent">#4094c083</color>
     <color name="btn_nav_transparent">#4030538B</color>
+    <color name="btn_checkout_transparent">#40ffbd41</color>
     <color name="btn_negative_dialog">#FF3B30</color>
     <color name="btn_positive_dialog">#7DD61D</color>
     <color name="btn_filter_selected_background">#2E3191</color>

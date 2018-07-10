@@ -474,7 +474,8 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                                     .map(new Func1<Location, Boolean>() {
                                         @Override
                                         public Boolean call(Location location) {
-                                            if (location != null) {
+                                            //TODO: retornar com nova função buscar OS proxima
+/*                                            if (location != null) {
                                                 myLocation = location;
                                                 presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
@@ -483,7 +484,8 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
                                                 presenter.loadOsList(1.1, 1.1,
                                                         LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                                                 return false;
-                                            }
+                                            }*/
+                                            return false;
                                         }
                                     })
                                     .subscribe(new Observer<Boolean>() {
