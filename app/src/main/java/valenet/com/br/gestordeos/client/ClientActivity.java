@@ -730,7 +730,6 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                                                 if(loginLocal != null)
                                                     codUser = loginLocal.getCurrentUser().getCoduser();
                                                 myLocation = location;
-                                                //TODO refazer checkin
                                                 if(isCheckin) {
                                                     if(codUser != null)
                                                         presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
