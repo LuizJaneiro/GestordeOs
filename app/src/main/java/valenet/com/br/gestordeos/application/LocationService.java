@@ -40,16 +40,17 @@ import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
 public class LocationService extends Service {
     private static final String TAG = "BOOMBOOMTESTGPS";
-    private LocationManager mLocationManager = null;
+    public static LocationManager mLocationManager = null;
     //milliseconds
-    private static final int LOCATION_INTERVAL = 10000;
+    public static int LOCATION_INTERVAL = 10;
     //meters
-    private static final float LOCATION_DISTANCE = 0;
+    public static float LOCATION_DISTANCE = 0;
+    public static int intervalSendPointsSeconds = 60;
+    public static LocationListener mLocationListerStatic;
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
         GestorDeOsApplication application;
-        private int intervalSendPointsMinutes = 1;
 
         public LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
@@ -99,7 +100,7 @@ public class LocationService extends Service {
                         }
                     }
                 }
-            }, intervalSendPointsMinutes * 60 * 1000);
+            }, intervalSendPointsSeconds * 1000);
         }
 
         @Override
@@ -118,7 +119,7 @@ public class LocationService extends Service {
         }
     }
 
-    LocationListener[] mLocationListeners = new LocationListener[]{
+    public LocationListener[] mLocationListeners = new LocationListener[]{
             new LocationListener(LocationManager.GPS_PROVIDER)
     };
 
@@ -134,14 +135,28 @@ public class LocationService extends Service {
         return START_STICKY;
     }
 
+
+    public static void setLocationListener() {
+        try {
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL * 1000, LOCATION_DISTANCE,
+                    mLocationListerStatic);
+        } catch (java.lang.SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+        }
+    }
+
     @Override
     public void onCreate() {
         Log.e(TAG, "onCreate");
         initializeLocationManager();
         try {
             mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL * 1000, LOCATION_DISTANCE,
                     mLocationListeners[0]);
+            mLocationListerStatic = mLocationListeners[0];
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {

@@ -55,5 +55,23 @@ public class ClientInteractorImp implements Client.ClientInteractor {
         });
     }
 
+    @Override
+    public void putScheduleFishEvent(Integer agendaEventoId, Integer coduser, final onFinshedListenerScheduleFish listener) {
+        application.API_INTERFACE.putAgendaPesca(agendaEventoId, coduser).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if(response.isSuccessful())
+                    listener.successPutScheduleFish();
+                else
+                    listener.errorNetworkPutScheduleFish();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                listener.errorNetworkPutScheduleFish();
+            }
+        });
+    }
+
     // endRegion Methods
 }

@@ -21,12 +21,20 @@ public interface Client {
         void showErrorCheckout();
 
         void showErrorInternetCheckout();
+
+        void showSuccessFishing();
+
+        void showErrorFishing();
+
+        void showErrorInternetFishing();
     }
 
     interface ClientPresenter {
         void checkin(Integer osId, Integer codUser, Double latitude, Double longitude);
 
         void checkout(Integer osId, Integer codUser, Double latitude, Double longitude);
+
+        void putScheduleFishEvent(Integer agendaEventoId, Integer coduser);
     }
 
     interface ClientInteractor {
@@ -34,6 +42,8 @@ public interface Client {
         void checkin(Integer osId, Integer codUser, Double latitude, Double longitude, onCheckinListener listener);
 
         void checkout(Integer osId, Integer codUser, Double latitude, Double longitude, onCheckoutListener listener);
+
+        void putScheduleFishEvent(Integer agendaEventoId, Integer coduser, onFinshedListenerScheduleFish listener);
 
         interface onCheckinListener {
             void onSuccessCheckin();
@@ -49,6 +59,14 @@ public interface Client {
             void onErrorCheckout();
 
             void onErrorInternetCheckout();
+        }
+
+        interface onFinshedListenerScheduleFish {
+            void successPutScheduleFish();
+
+            void errorServicePutScheduleFish();
+
+            void errorNetworkPutScheduleFish();
         }
     }
 }

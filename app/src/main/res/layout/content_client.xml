@@ -30,12 +30,14 @@
             android:background="@color/line_os_item" />
 
         <RelativeLayout
+            android:id="@+id/layout_buttons_schedule"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
             android:paddingLeft="42dp"
             android:paddingRight="42dp"
-            android:paddingTop="4dp">
+            android:paddingTop="4dp"
+            android:visibility="gone">
 
             <ImageButton
                 android:id="@+id/btn_checkout"
@@ -107,6 +109,25 @@
                 android:paddingTop="14dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_nav" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_buttons_fishing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingTop="4dp"
+            android:visibility="visible">
+
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_pescar"
+                style="@style/Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:text="Pescar OS" />
 
         </RelativeLayout>
 

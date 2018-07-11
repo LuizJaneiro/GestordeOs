@@ -9,6 +9,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.ReasonRefuseOs;
@@ -32,6 +33,9 @@ public interface ApiInterface {
     @GET("OrdemDeServico/CancelamentoMotivos")
     Call<List<ReasonRefuseOs>> getReasonsToRefuseOs();
 
+    @GET("OrdemDeServico/APPConfiguracoes")
+    Call<List<AppConfig>> getAppConfigs();
+
     @POST("/localizacaoapp")
     Call<Integer> sendUserPostions(@Body OsLocationData[] posicoes);
 
@@ -45,4 +49,7 @@ public interface ApiInterface {
     @PUT("OrdemDeServico/Checkout")
     Call<Void> putCheckout(@Query("osid") Integer osId, @Query("coduser") Integer codUser, @Query("latitude") Double latitude,
                            @Query("longitude") Double Longitude);
+
+    @PUT("OrdemDeServico/AgendaPesca")
+    Call<Void> putAgendaPesca(@Query("idEvento") Integer agendaEventoId, @Query("coduser") Integer coduser);
 }

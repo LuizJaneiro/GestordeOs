@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 
 public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor.onFinishedListenerOsTypes, Main.MainInteractor.onFinishedListenerOsList,
-        Main.MainInteractor.onFinishedListenerOsDistance {
+        Main.MainInteractor.onFinishedListenerOsDistance, Main.MainInteractor.onFinishedListenerAppConfig {
     // region Members
     private Main.MainView view;
     private Main.MainInteractor interactor;
@@ -63,6 +64,37 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     public void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast) {
         view.showLoading();
         interactor.loadOsDistance(myLatitude, myLongitude, os, isLast, this);
+    }
+
+    @Override
+    public void getAppConfig() {
+        hideViews();
+        view.showLoading();
+        interactor.getAppConfig(this);
+    }
+
+    @Override
+    public void successLoadingAppConfig(List<AppConfig> appConfigs) {
+        if(appConfigs != null) {
+            if(appConfigs.size() == 0) {
+                hideViews();
+                view.showErrorServerView();
+            } else {
+                view.loadAppConfig(appConfigs);
+            }
+        }
+    }
+
+    @Override
+    public void errorLoadingAppConfig() {
+        hideViews();
+        view.showErrorServerView();
+    }
+
+    @Override
+    public void errorInternetAppConfig() {
+        hideViews();
+        view.showErrorServerView();
     }
 
     @Override

@@ -8,6 +8,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
@@ -196,6 +197,28 @@ public class MainInteractorImp implements Main.MainInteractor {
                 });
             }
         }
+    }
+
+    @Override
+    public void getAppConfig(final onFinishedListenerAppConfig listener) {
+        application.API_INTERFACE.getAppConfigs().enqueue(new Callback<List<AppConfig>>() {
+            @Override
+            public void onResponse(Call<List<AppConfig>> call, Response<List<AppConfig>> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    List<AppConfig> appConfigs = response.body();
+                    if(appConfigs != null){
+                        listener.successLoadingAppConfig(appConfigs);
+                    }
+                } else {
+                    listener.errorLoadingAppConfig();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<AppConfig>> call, Throwable t) {
+                listener.errorInternetAppConfig();
+            }
+        });
     }
 
     // endRegion Methods

@@ -1,6 +1,7 @@
 package valenet.com.br.gestordeos.client;
 
-public class ClientPresenterImp implements Client.ClientPresenter, Client.ClientInteractor.onCheckoutListener, Client.ClientInteractor.onCheckinListener {
+public class ClientPresenterImp implements Client.ClientPresenter, Client.ClientInteractor.onCheckoutListener, Client.ClientInteractor.onCheckinListener,
+            Client.ClientInteractor.onFinshedListenerScheduleFish {
 
     // region Members
     private Client.ClientView view;
@@ -31,6 +32,13 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
         hideAllViews();
         view.showProgress();
         interactor.checkout(osId, codUser, latitude, longitude, this);
+    }
+
+    @Override
+    public void putScheduleFishEvent(Integer agendaEventoId, Integer coduser) {
+        hideAllViews();
+        view.showProgress();
+        interactor.putScheduleFishEvent(agendaEventoId, coduser, this);
     }
 
     @Override
@@ -73,6 +81,26 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
         hideAllViews();
         view.showLayoutClient();
         view.showErrorInternetCheckout();
+    }
+
+    @Override
+    public void successPutScheduleFish() {
+        hideAllViews();
+        view.showSuccessFishing();
+    }
+
+    @Override
+    public void errorServicePutScheduleFish() {
+        hideAllViews();
+        view.showLayoutClient();
+        view.showErrorFishing();
+    }
+
+    @Override
+    public void errorNetworkPutScheduleFish() {
+        hideAllViews();
+        view.showLayoutClient();
+        view.showErrorInternetFishing();
     }
 
     private void hideAllViews() {

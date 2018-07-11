@@ -56,6 +56,7 @@ import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.main.MainPresenterImp;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.map.MapsActivity;
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -341,6 +342,12 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     }
 
     // region useless functions interface
+
+    @Override
+    public void loadAppConfig(List<AppConfig> appConfigs) {
+
+    }
+
     @Override
     public void navigateToLogin() {
 
@@ -425,6 +432,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
             intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
+            intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
             this.getActivity().startActivityForResult(intent, CODE_MAP);
         }
     }

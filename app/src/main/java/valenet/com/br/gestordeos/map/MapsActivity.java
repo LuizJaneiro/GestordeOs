@@ -120,6 +120,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     private HashMap<String, Boolean> filters;
     private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
+    private boolean cameFromSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +146,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
+        cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
         if (osArrayList == null || osArrayList.size() == 0)
             loadOsArrayList = true;
@@ -221,7 +223,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                     public void onInfoWindowClick(Marker marker) {
                         Intent i = new Intent(MapsActivity.this, ClientActivity.class);
                         i.putExtra(ValenetUtils.KEY_OS, (Os) marker.getTag());
-                        startActivity(i);
+                        i.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, cameFromSchedule);
+                        startActivityForResult(i, CODE_MAP);
                     }
                 });
 
@@ -354,13 +357,12 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
 
         if (requestCode == CODE_MAP) {
+            Intent resultIntent = new Intent();
             if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    boolean result = data.getBooleanExtra("result", false);
-                    if (result) {
-                        finish();
-                    }
-                }
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            } else {
+                setResult(RESULT_CANCELED, resultIntent);
             }
         }
     }

@@ -48,6 +48,10 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
     public static final String SHARED_PREF_KEY_OS_TIME = "SHARED_PREF_KEY_OS_TIME";
     public static final String SHARED_PREF_KEY_OS_NEXT = "SHARED_PREF_KEY_OS_NEXT";
+    public static final String SHARED_PREF_KEY_APP_CONFIG = "SHARED_PREF_KEY_APP_CONFIG";
+    public static final String SHARED_PREF_KEY_APP_CONFIG_INTERVALO = "SHARED_PREF_KEY_APP_CONFIG_INTERVALO";
+    public static final String SHARED_PREF_KEY_APP_CONFIG_MIN_DISTANCE = "SHARED_PREF_KEY_APP_CONFIG_MIN_DISTANCE";
+    public static final String SHARED_PREF_KEY_APP_CONFIG_MIN_TIME = "SHARED_PREF_KEY_APP_CONFIG_MIN_TIME";
     public static final int REQUEST_CODE_CLIENT = 3000;
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;

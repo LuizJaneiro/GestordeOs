@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -52,7 +53,6 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
-import valenet.com.br.gestordeos.login.Login;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
@@ -96,6 +96,12 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     TextView textViewLoading;
     @BindView(R.id.loading_view)
     RelativeLayout loadingView;
+    @BindView(R.id.layout_buttons_schedule)
+    RelativeLayout layoutButtonsSchedule;
+    @BindView(R.id.btn_pescar)
+    AppCompatButton btnPescar;
+    @BindView(R.id.layout_buttons_fishing)
+    RelativeLayout layoutButtonsFishing;
 
     private PagerAdapter pagerAdapter;
     private Os os;
@@ -125,7 +131,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
         cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
-        if(!cameFromHistory) {
+        if (!cameFromHistory) {
             RxPermissions.getInstance(ClientActivity.this)
                     .request(Manifest.permission.ACCESS_FINE_LOCATION)
                     .map(new Func1<Boolean, Object>() {
@@ -202,7 +208,19 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     }).subscribe();
         }
 
-        if(!cameFromHistory) {
+        if(cameFromSchedule || cameFromHistory) {
+            if(layoutButtonsSchedule != null && layoutButtonsFishing != null) {
+                layoutButtonsFishing.setVisibility(View.GONE);
+                layoutButtonsSchedule.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if(layoutButtonsSchedule != null && layoutButtonsFishing != null) {
+                layoutButtonsSchedule.setVisibility(View.GONE);
+                layoutButtonsFishing.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (!cameFromHistory) {
             if (os.getDataCheckin() == null || os.getDataCheckin().length() == 0)
                 this.showLayoutOsCanCheckin();
             else
@@ -273,15 +291,15 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 textViewOsStatusToolbar.setText(os.getStatusOs());
                 textViewOsStatusToolbar.setVisibility(View.VISIBLE);
             }
-            if(btnCheckin != null)
+            if (btnCheckin != null)
                 btnCheckin.setVisibility(View.GONE);
-            if(btnCheckout != null) {
+            if (btnCheckout != null) {
                 btnCheckout.setVisibility(View.VISIBLE);
                 btnCheckout.setEnabled(false);
                 btnCheckout.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_checkout_transparent));
             }
 
-            if(btnConfirm != null)
+            if (btnConfirm != null)
                 btnConfirm.setVisibility(View.GONE);
         }
 
@@ -356,7 +374,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
-        if(reloadOs)
+        if (reloadOs)
             setResult(Activity.RESULT_OK, resultIntent);
         else
             setResult(Activity.RESULT_CANCELED, resultIntent);
@@ -442,6 +460,26 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     public void showErrorInternetCheckout() {
         if (getApplicationContext() != null)
             Toasty.error(getApplicationContext(), "Ocorreu um problema ao realizar o Check-out, verifique sua conexão com a internet e tente novamente!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSuccessFishing() {
+        if (getApplicationContext() != null)
+            Toasty.success(getApplicationContext(), "Pesca realizada com sucesso. Por favor verifique sua agenda.", Toast.LENGTH_LONG).show();
+        reloadOs = true;
+        onBackPressed();
+    }
+
+    @Override
+    public void showErrorFishing() {
+        if (getApplicationContext() != null)
+            Toasty.error(getApplicationContext(), "Ocorreu um problema ao realizar a pesca, tente novamente!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showErrorInternetFishing() {
+        if (getApplicationContext() != null)
+            Toasty.error(getApplicationContext(), "Ocorreu um problema ao realizar a pesca, verifique sua conexão com a internet e tente novamente!", Toast.LENGTH_LONG).show();
     }
 
     public void callPhone(final String phone) {
@@ -543,9 +581,9 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 dialog.dismiss();
                 LoginLocal loginLocal = LoginLocal.getInstance();
                 Integer codUser = null;
-                if(loginLocal != null)
+                if (loginLocal != null)
                     codUser = loginLocal.getCurrentUser().getCoduser();
-                if(myLocation == null)
+                if (myLocation == null)
                     getLocationAndRequestCheck(true);
                 else
                     presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
@@ -580,13 +618,12 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 dialog.dismiss();
                 LoginLocal loginLocal = LoginLocal.getInstance();
                 Integer codUser = null;
-                if(loginLocal != null)
+                if (loginLocal != null)
                     codUser = loginLocal.getCurrentUser().getCoduser();
-                if(myLocation == null)
+                if (myLocation == null)
                     getLocationAndRequestCheck(false);
-                else
-                    if(codUser != null)
-                        presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                else if (codUser != null)
+                    presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
             }
         });
 
@@ -607,17 +644,17 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         dialog.show();
     }
 
-    @OnClick({R.id.btn_checkout, R.id.btn_checkin, R.id.btn_call, R.id.btn_confirm, R.id.btn_nav})
+    @OnClick({R.id.btn_checkout, R.id.btn_checkin, R.id.btn_call, R.id.btn_confirm, R.id.btn_nav, R.id.btn_pescar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_checkout:
-                if(myLocation != null)
+                if (myLocation != null)
                     this.checkout();
                 else
                     this.getLocationAndRequestCheck(false);
                 break;
             case R.id.btn_checkin:
-                if(myLocation != null)
+                if (myLocation != null)
                     this.checkin();
                 else
                     this.getLocationAndRequestCheck(true);
@@ -630,6 +667,11 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 break;
             case R.id.btn_nav:
                 navigateToMap();
+                break;
+            case R.id.btn_pescar:
+                LoginLocal loginLocal = LoginLocal.getInstance();
+                if(loginLocal != null)
+                    presenter.putScheduleFishEvent(os.getAgendaEventoID(), loginLocal.getCurrentUser().getCoduser());
                 break;
         }
     }
@@ -727,14 +769,14 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                                             if (location != null) {
                                                 LoginLocal loginLocal = LoginLocal.getInstance();
                                                 Integer codUser = null;
-                                                if(loginLocal != null)
+                                                if (loginLocal != null)
                                                     codUser = loginLocal.getCurrentUser().getCoduser();
                                                 myLocation = location;
-                                                if(isCheckin) {
-                                                    if(codUser != null)
+                                                if (isCheckin) {
+                                                    if (codUser != null)
                                                         presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
-                                                }else {
-                                                    if(codUser != null)
+                                                } else {
+                                                    if (codUser != null)
                                                         presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                                                 }
                                                 return true;

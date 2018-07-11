@@ -3,6 +3,7 @@ package valenet.com.br.gestordeos.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -59,7 +61,9 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.LocationService;
 import valenet.com.br.gestordeos.login.LoginActivity;
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -170,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         //this.presenter.sendUserPoint();
 
         this.showLoading();
+        this.presenter.getAppConfig();
         RxPermissions.getInstance(MainActivity.this)
                 .request(Manifest.permission.ACCESS_FINE_LOCATION)
                 .map(new Func1<Boolean, Object>() {
@@ -289,16 +294,12 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             }
         }
 
-/*        if (requestCode == CODE_MAP) {
+        if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
-                if (data != null) {
-                    boolean result = data.getBooleanExtra("result", false);
-                    if (result) {
-                        finish();
-                    }
-                }
+                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        false, osType, false);
             }
-        }*/
+        }
     }
 
     @Override
@@ -676,6 +677,26 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                         sharedPref.getBoolean(model.getDescricao(), true));
             }
         }
+    }
+
+    @Override
+    public void loadAppConfig(List<AppConfig> appConfigs) {
+        for (AppConfig appConfig : appConfigs) {
+            if (appConfig.getChave() != null && appConfig.getValor() != null) {
+                String appConfigKey = appConfig.getChave();
+                Integer appConfigValue = Integer.parseInt(appConfig.getValor());
+                if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
+                    LocationService.intervalSendPointsSeconds = appConfigValue;
+                }
+                if (appConfigKey.equals("MinDistance")) {
+                    LocationService.LOCATION_DISTANCE = appConfigValue;
+                }
+                if (appConfigKey.equals("MinTime")) {
+                    LocationService.LOCATION_INTERVAL = appConfigValue;
+                }
+            }
+        }
+        LocationService.setLocationListener();
     }
 
     private void setupScheduleToolbar() {

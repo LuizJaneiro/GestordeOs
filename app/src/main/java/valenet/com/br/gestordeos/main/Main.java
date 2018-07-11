@@ -5,6 +5,7 @@ import android.location.Location;
 import java.util.ArrayList;
 import java.util.List;
 
+import valenet.com.br.gestordeos.model.entity.AppConfig;
 import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -56,6 +57,8 @@ public interface Main {
         void showErrorServerView(ArrayList<OsTypeModel> osTypeModels);
 
         void showErrorConnectionView(ArrayList<OsTypeModel> osTypeModels);
+
+        void loadAppConfig(List<AppConfig> appConfigs);
     }
 
     interface MainPresenter {
@@ -71,6 +74,8 @@ public interface Main {
 
         void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast);
 
+        void getAppConfig();
+
         void sendUserPoint();
     }
 
@@ -84,6 +89,8 @@ public interface Main {
         void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
 
         void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast, onFinishedListenerOsDistance listener);
+
+        void getAppConfig(onFinishedListenerAppConfig listener);
 
         void sendUserPoints();
 
@@ -119,6 +126,14 @@ public interface Main {
             void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
 
             void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
+        }
+
+        interface onFinishedListenerAppConfig {
+            void successLoadingAppConfig(List<AppConfig> appConfigs);
+
+            void errorLoadingAppConfig();
+
+            void errorInternetAppConfig();
         }
     }
 }
