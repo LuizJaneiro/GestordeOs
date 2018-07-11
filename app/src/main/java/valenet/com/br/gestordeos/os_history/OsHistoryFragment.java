@@ -25,7 +25,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.main.MainActivity;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.search.SearchActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -69,7 +69,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
 
     private OsItemHistoryAdapter adapter;
     private OsHistory.OsHistoryPresenter presenter;
-    private List<Os> osHistoryList;
+    private List<OrdemDeServico> ordemDeServicoHistoryList;
 
     public OsHistoryFragment() {
         // Required empty public constructor
@@ -90,7 +90,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
         unbinder = ButterKnife.bind(this, view);
 
         this.presenter = new OsHistoryPresenterImp(this);
-        this.osHistoryList = null;
+        this.ordemDeServicoHistoryList = null;
 
         if (LoginLocal.getInstance() != null) {
             presenter.loadHistoryUser(LoginLocal.getInstance().getCurrentUser().getCoduser(), false);
@@ -181,10 +181,10 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     }
 
     @Override
-    public void loadOsHistoryList(List<Os> osHistoryList) {
+    public void loadOsHistoryList(List<OrdemDeServico> ordemDeServicoHistoryList) {
         if (this.getActivity() != null) {
-            this.osHistoryList = osHistoryList;
-            this.adapter = new OsItemHistoryAdapter(osHistoryList, this.getActivity().getApplicationContext(), this.getActivity());
+            this.ordemDeServicoHistoryList = ordemDeServicoHistoryList;
+            this.adapter = new OsItemHistoryAdapter(ordemDeServicoHistoryList, this.getActivity().getApplicationContext(), this.getActivity());
             if (recyclerViewHistoryOs != null) {
                 recyclerViewHistoryOs.setAdapter(adapter);
                 recyclerViewHistoryOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -200,7 +200,7 @@ public class OsHistoryFragment extends Fragment implements OsHistory.OsHistoryVi
     public void navigateToOsSearch() {
         if (this.getActivity() != null) {
             Intent intent = new Intent(this.getActivity(), SearchActivity.class);
-            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, (ArrayList) osHistoryList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, (ArrayList) ordemDeServicoHistoryList);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, null);
             intent.putExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, true);
             this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);

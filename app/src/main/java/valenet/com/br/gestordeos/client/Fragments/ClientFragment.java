@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class ClientFragment extends Fragment {
@@ -33,7 +33,7 @@ public class ClientFragment extends Fragment {
 
     Unbinder unbinder;
 
-    private Os os;
+    private OrdemDeServico ordemDeServico;
 
     public ClientFragment() {
         // Required empty public constructor
@@ -42,22 +42,22 @@ public class ClientFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        os = getArguments().getParcelable(ValenetUtils.KEY_OS);
+        ordemDeServico = getArguments().getParcelable(ValenetUtils.KEY_OS);
 
         View view = inflater.inflate(R.layout.fragment_client, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if (os.getCliente() == null)
+        if (ordemDeServico.getCliente() == null)
             osLayoutClientName.setVisibility(View.GONE);
         else
-            textViewOsClientName.setText(os.getCliente());
+            textViewOsClientName.setText(ordemDeServico.getCliente());
 
-        if (os.getTelefoneCliente() == null)
+        if (ordemDeServico.getTelefoneCliente() == null)
             osLayoutClientPhone.setVisibility(View.GONE);
         else
-            textViewOsClientPhone.setText(os.getTelefoneCliente());
+            textViewOsClientPhone.setText(ordemDeServico.getTelefoneCliente());
 
-        String address = ValenetUtils.buildOsAddress(os.getTpLogradouro(), os.getLogradouro(), os.getComplemento(), os.getNumero(), os.getAndar(), os.getBairro());
+        String address = ValenetUtils.buildOsAddress(ordemDeServico.getTpLogradouro(), ordemDeServico.getLogradouro(), ordemDeServico.getComplemento(), ordemDeServico.getNumero(), ordemDeServico.getAndar(), ordemDeServico.getBairro());
 
         textViewOsAddress.setText(address);
 

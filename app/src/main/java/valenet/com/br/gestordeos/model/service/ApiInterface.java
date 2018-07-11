@@ -10,7 +10,7 @@ import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.ReasonRefuseOs;
 import valenet.com.br.gestordeos.model.entity.User;
@@ -21,14 +21,14 @@ public interface ApiInterface {
     Call<User> getUser(@Query("userName") String userName, @Query("password") String password);
 
     @GET("OrdemDeServico?")
-    Call<List<Os>> getOsList(@Query("lat") Double latitude, @Query("lng") Double longitude, @Query("coduser") Integer codUser,
-                           @Query("proximidade") Boolean isSearchingByCloseOs, @Query("grupo") Integer group);
+    Call<List<OrdemDeServico>> getOsList(@Query("lat") Double latitude, @Query("lng") Double longitude, @Query("coduser") Integer codUser,
+                                         @Query("proximidade") Boolean isSearchingByCloseOs, @Query("grupo") Integer group);
 
     @GET("TipoAtividade")
     Call<List<OsTypeModel>> getOsTypeList();
 
     @GET("OrdemDeServico/{codUser}/historico")
-    Call<List<Os>> getUserHistory(@Path("codUser") Integer codUser, @Query("tipo") Integer tipo);
+    Call<List<OrdemDeServico>> getUserHistory(@Path("codUser") Integer codUser, @Query("tipo") Integer tipo);
 
     @GET("OrdemDeServico/CancelamentoMotivos")
     Call<List<ReasonRefuseOs>> getReasonsToRefuseOs();

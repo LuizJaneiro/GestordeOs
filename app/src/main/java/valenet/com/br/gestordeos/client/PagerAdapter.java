@@ -8,26 +8,26 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import valenet.com.br.gestordeos.client.Fragments.ObservationFragment;
 import valenet.com.br.gestordeos.client.Fragments.ClientFragment;
 import valenet.com.br.gestordeos.client.Fragments.OsDataFragment;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {
 
     private int numOfTabs;
-    private Os os;
+    private OrdemDeServico ordemDeServico;
     private boolean cameFromSchedule;
 
-    public PagerAdapter(FragmentManager fm, Os os, boolean cameFromSchedule, int numOfTabs) {
+    public PagerAdapter(FragmentManager fm, OrdemDeServico ordemDeServico, boolean cameFromSchedule, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
-        this.os = os;
+        this.ordemDeServico = ordemDeServico;
         this.cameFromSchedule = cameFromSchedule;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ValenetUtils.KEY_OS, os);
+        bundle.putParcelable(ValenetUtils.KEY_OS, ordemDeServico);
         bundle.putBoolean(ValenetUtils.KEY_CAME_FROM_SCHEDULE, cameFromSchedule);
         switch (position) {
             case 0:

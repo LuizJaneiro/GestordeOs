@@ -59,7 +59,7 @@ import rx.functions.Func1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.client.ClientActivity;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -111,8 +111,8 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
     private Maps.MapsPresenter presenter;
 
-    private ArrayList<Os> osArrayList;
-    private ArrayList<Os> filtredOsArrayList;
+    private ArrayList<OrdemDeServico> ordemDeServicoArrayList;
+    private ArrayList<OrdemDeServico> filtredOrdemDeServicoArrayList;
     private ArrayList<OsTypeModel> osTypeModelArrayList;
     private boolean loadUserLocation = false;
     private boolean loadOsArrayList = false;
@@ -142,13 +142,13 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         toolbarSearchableWithoutTabsContainer.setVisibility(View.VISIBLE);
         textViewToolbarTitle.setText(getString(R.string.title_activity_map));
 
-        osArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
+        ordemDeServicoArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
         osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
         cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
-        if (osArrayList == null || osArrayList.size() == 0)
+        if (ordemDeServicoArrayList == null || ordemDeServicoArrayList.size() == 0)
             loadOsArrayList = true;
 
         if (osTypeModelArrayList == null || osTypeModelArrayList.size() == 0)
@@ -222,7 +222,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                     @Override
                     public void onInfoWindowClick(Marker marker) {
                         Intent i = new Intent(MapsActivity.this, ClientActivity.class);
-                        i.putExtra(ValenetUtils.KEY_OS, (Os) marker.getTag());
+                        i.putExtra(ValenetUtils.KEY_OS, (OrdemDeServico) marker.getTag());
                         i.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, cameFromSchedule);
                         startActivityForResult(i, CODE_MAP);
                     }
@@ -284,7 +284,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                             presenter.loadScheduleOsList(location.getLatitude(), location.getLongitude(),
                                                                     LoginLocal.getInstance().getCurrentUser().getCoduser(), osType);
                                                         } else {
-                                                            filterList(osArrayList);
+                                                            filterList(ordemDeServicoArrayList);
                                                         }
                                                         return true;
                                                     } else {
@@ -350,7 +350,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
 
         if (requestCode == REQ_CODE_FILTER) {
             if (resultCode == REQ_CODE_BACK_FILTER) {
-                filterList(this.osArrayList);
+                filterList(this.ordemDeServicoArrayList);
                 Toasty.success(getApplicationContext(), "Filtros aplicados com sucesso", Toast.LENGTH_SHORT).show();
             }
         }
@@ -370,7 +370,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     @Override
     public void navigateToSearch() {
         Intent intent = new Intent(this, SearchActivity.class);
-        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredOsArrayList);
+        intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredOrdemDeServicoArrayList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
         intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
@@ -439,17 +439,17 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     }
 
     @Override
-    public void loadOsList(ArrayList<Os> osArrayList) {
-        this.osArrayList = new ArrayList<>();
-        this.osArrayList = osArrayList;
-        filterList(osArrayList);
+    public void loadOsList(ArrayList<OrdemDeServico> ordemDeServicoArrayList) {
+        this.ordemDeServicoArrayList = new ArrayList<>();
+        this.ordemDeServicoArrayList = ordemDeServicoArrayList;
+        filterList(ordemDeServicoArrayList);
     }
 
     @Override
-    public void loadScheduleOsList(ArrayList<Os> osArrayList) {
-        this.osArrayList = new ArrayList<>();
-        this.osArrayList = osArrayList;
-        filterList(osArrayList);
+    public void loadScheduleOsList(ArrayList<OrdemDeServico> ordemDeServicoArrayList) {
+        this.ordemDeServicoArrayList = new ArrayList<>();
+        this.ordemDeServicoArrayList = ordemDeServicoArrayList;
+        filterList(ordemDeServicoArrayList);
     }
 
     @Override
@@ -468,30 +468,30 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     }
 
     @Override
-    public void addedOsMarkers(ArrayList<Os> osArrayList) {
+    public void addedOsMarkers(ArrayList<OrdemDeServico> ordemDeServicoArrayList) {
         if (mMap != null)
             mMap.clear();
         loadOsArrayList = false;
         BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.drawable.ic_marker);
-        if (osArrayList != null && osArrayList.size() > 0) {
-            for (int i = 0; i < osArrayList.size(); i++) {
-                Os os = osArrayList.get(i);
+        if (ordemDeServicoArrayList != null && ordemDeServicoArrayList.size() > 0) {
+            for (int i = 0; i < ordemDeServicoArrayList.size(); i++) {
+                OrdemDeServico ordemDeServico = ordemDeServicoArrayList.get(i);
                 Location location = new Location("");
-                if (os.getLongitude() != null && os.getLatitude() != null) {
-                    location.setLatitude(os.getLatitude());
-                    location.setLongitude(os.getLongitude());
+                if (ordemDeServico.getLongitude() != null && ordemDeServico.getLatitude() != null) {
+                    location.setLatitude(ordemDeServico.getLatitude());
+                    location.setLongitude(ordemDeServico.getLongitude());
                     MarkerOptions markerOptions = new MarkerOptions();
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     markerOptions.position(latLng);
                     markerOptions.icon(icon);
                     Marker marker = mMap.addMarker(markerOptions);
-                    marker.setTag(os);
+                    marker.setTag(ordemDeServico);
                 }
             }
         }
     }
 
-    public void filterList(ArrayList<Os> osArrayList) {
+    public void filterList(ArrayList<OrdemDeServico> ordemDeServicoArrayList) {
         SharedPreferences sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
         if (this.osTypeModelArrayList != null && osTypeModelArrayList.size() > 0) {
@@ -501,24 +501,24 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
             }
         }
 
-        this.filtredOsArrayList = new ArrayList<>();
-        if (this.filters != null && osArrayList != null && osArrayList.size() > 0) {
+        this.filtredOrdemDeServicoArrayList = new ArrayList<>();
+        if (this.filters != null && ordemDeServicoArrayList != null && ordemDeServicoArrayList.size() > 0) {
             Set<String> keys = this.filters.keySet();
             for (String key : keys) {
                 boolean isSelected = this.filters.get(key);
                 if (isSelected) {
-                    for (Os os : osArrayList) {
-                        String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
+                    for (OrdemDeServico ordemDeServico : ordemDeServicoArrayList) {
+                        String osTipoAtividade = ValenetUtils.removeAccent(ordemDeServico.getTipoAtividade()).toUpperCase();
                         String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
                         if (osTipoAtividade.equals(keyTratada)) {
-                            this.filtredOsArrayList.add(os);
+                            this.filtredOrdemDeServicoArrayList.add(ordemDeServico);
                         }
                     }
                 }
             }
         }
 
-        addedOsMarkers(this.filtredOsArrayList);
+        addedOsMarkers(this.filtredOrdemDeServicoArrayList);
         showMapsView();
     }
 

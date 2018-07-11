@@ -3,7 +3,6 @@ package valenet.com.br.gestordeos.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -11,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -64,7 +62,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.application.LocationService;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -131,8 +129,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private HashMap<String, Boolean> filters;
 
     private ArrayList<OsTypeModel> osTypeModelList;
-    private ArrayList<Os> osScheduleArrayList = null;
-    private ArrayList<Os> osNextArrayList = null;
+    private ArrayList<OrdemDeServico> ordemDeServicoScheduleArrayList = null;
+    private ArrayList<OrdemDeServico> ordemDeServicoNextArrayList = null;
 
     private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
 
@@ -497,21 +495,21 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
-        if (osSchedule != null)
-            this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
+    public void showErrorServerView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext) {
+        if (ordemDeServicoSchedule != null)
+            this.ordemDeServicoScheduleArrayList = (ArrayList<OrdemDeServico>) ordemDeServicoSchedule;
 
-        if (osNext != null)
-            this.osNextArrayList = (ArrayList) osNext;
+        if (ordemDeServicoNext != null)
+            this.ordemDeServicoNextArrayList = (ArrayList) ordemDeServicoNext;
     }
 
     @Override
-    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
-        if (osSchedule != null)
-            this.osScheduleArrayList = (ArrayList<Os>) osSchedule;
+    public void showErrorConnectionView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext) {
+        if (ordemDeServicoSchedule != null)
+            this.ordemDeServicoScheduleArrayList = (ArrayList<OrdemDeServico>) ordemDeServicoSchedule;
 
-        if (osNext != null)
-            this.osNextArrayList = (ArrayList) osNext;
+        if (ordemDeServicoNext != null)
+            this.ordemDeServicoNextArrayList = (ArrayList) ordemDeServicoNext;
     }
 
     @Override
@@ -553,9 +551,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void loadScheduleListOs(List<Os> osList) {
-        if (osList != null)
-            this.osScheduleArrayList = (ArrayList) osList;
+    public void loadScheduleListOs(List<OrdemDeServico> ordemDeServicoList) {
+        if (ordemDeServicoList != null)
+            this.ordemDeServicoScheduleArrayList = (ArrayList) ordemDeServicoList;
         if (myLocation != null) {
             LoginLocal loginLocal = LoginLocal.getInstance();
             if (loginLocal != null)
@@ -575,31 +573,31 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void loadNextListOs(List<Os> osList) {
-        if (osList != null) {
+    public void loadNextListOs(List<OrdemDeServico> ordemDeServicoList) {
+        if (ordemDeServicoList != null) {
             if (osDistanceHashMap == null)
                 osDistanceHashMap = new HashMap<>();
-            this.osNextArrayList = (ArrayList) osList;
-            if (this.osNextArrayList.size() > 0) {
+            this.ordemDeServicoNextArrayList = (ArrayList) ordemDeServicoList;
+            if (this.ordemDeServicoNextArrayList.size() > 0) {
                 boolean isLast = false;
-                for (int i = 0; i < osNextArrayList.size(); i++) {
-                    if ((this.osScheduleArrayList == null || this.osScheduleArrayList.size() == 0) && i == osNextArrayList.size() - 1)
+                for (int i = 0; i < ordemDeServicoNextArrayList.size(); i++) {
+                    if ((this.ordemDeServicoScheduleArrayList == null || this.ordemDeServicoScheduleArrayList.size() == 0) && i == ordemDeServicoNextArrayList.size() - 1)
                         isLast = true;
                     if (myLocation == null)
-                        presenter.loadOsDistance(null, null, osNextArrayList.get(i), isLast);
+                        presenter.loadOsDistance(null, null, ordemDeServicoNextArrayList.get(i), isLast);
                     else
-                        presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osNextArrayList.get(i), isLast);
+                        presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), ordemDeServicoNextArrayList.get(i), isLast);
                 }
 
-                if (osScheduleArrayList != null && osScheduleArrayList.size() > 0) {
+                if (ordemDeServicoScheduleArrayList != null && ordemDeServicoScheduleArrayList.size() > 0) {
                     isLast = false;
-                    for (int i = 0; i < this.osScheduleArrayList.size(); i++) {
-                        if (i == osScheduleArrayList.size() - 1)
+                    for (int i = 0; i < this.ordemDeServicoScheduleArrayList.size(); i++) {
+                        if (i == ordemDeServicoScheduleArrayList.size() - 1)
                             isLast = true;
                         if (myLocation == null)
-                            presenter.loadOsDistance(null, null, osScheduleArrayList.get(i), isLast);
+                            presenter.loadOsDistance(null, null, ordemDeServicoScheduleArrayList.get(i), isLast);
                         else
-                            presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), osScheduleArrayList.get(i), isLast);
+                            presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), ordemDeServicoScheduleArrayList.get(i), isLast);
                     }
                 }
             }
@@ -640,11 +638,11 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     @Override
-    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
         if (osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
+        osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
 
         if (isLast)
             if (navView != null)
@@ -834,7 +832,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
-                orderFilters, filters, osTypeModelList, osScheduleArrayList, osType, osDistanceHashMap, tabLayoutToolbarSearchable.getTabCount());
+                orderFilters, filters, osTypeModelList, ordemDeServicoScheduleArrayList, osType, osDistanceHashMap, tabLayoutToolbarSearchable.getTabCount());
         pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());
         pager.setAdapter(osSchedulePagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
@@ -879,20 +877,20 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         this.navigateInterface = navigateInterface;
     }
 
-    public void setOsScheduleArrayList(ArrayList<Os> osScheduleArrayList) {
-        this.osScheduleArrayList = osScheduleArrayList;
+    public void setOrdemDeServicoScheduleArrayList(ArrayList<OrdemDeServico> ordemDeServicoScheduleArrayList) {
+        this.ordemDeServicoScheduleArrayList = ordemDeServicoScheduleArrayList;
     }
 
-    public void setOsNextArrayList(ArrayList<Os> osNextArrayList) {
-        this.osNextArrayList = osNextArrayList;
+    public void setOrdemDeServicoNextArrayList(ArrayList<OrdemDeServico> ordemDeServicoNextArrayList) {
+        this.ordemDeServicoNextArrayList = ordemDeServicoNextArrayList;
     }
 
     public Integer getOsType() {
         return osType;
     }
 
-    public ArrayList<Os> getOsNextArrayList() {
-        return osNextArrayList;
+    public ArrayList<OrdemDeServico> getOrdemDeServicoNextArrayList() {
+        return ordemDeServicoNextArrayList;
     }
 
     public Location getMyLocation() {

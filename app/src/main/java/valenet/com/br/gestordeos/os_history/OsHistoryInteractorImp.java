@@ -6,7 +6,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 
 public class OsHistoryInteractorImp implements OsHistory.OsHistoryInteractor {
     // region Members
@@ -25,11 +25,11 @@ public class OsHistoryInteractorImp implements OsHistory.OsHistoryInteractor {
 
     @Override
     public void loadHistoryUser(Integer coduser, final onFinishedLoadHistoryUser listener) {
-        application.API_INTERFACE.getUserHistory(coduser, 1).enqueue(new Callback<List<Os>>() {
+        application.API_INTERFACE.getUserHistory(coduser, 1).enqueue(new Callback<List<OrdemDeServico>>() {
             @Override
-            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+            public void onResponse(Call<List<OrdemDeServico>> call, Response<List<OrdemDeServico>> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    List<Os> historyList = response.body();
+                    List<OrdemDeServico> historyList = response.body();
                     listener.onSuccessLoadingHistory(historyList);
                 } else {
                     listener.onErrorServerLoadingHistory();
@@ -37,7 +37,7 @@ public class OsHistoryInteractorImp implements OsHistory.OsHistoryInteractor {
             }
 
             @Override
-            public void onFailure(Call<List<Os>> call, Throwable t) {
+            public void onFailure(Call<List<OrdemDeServico>> call, Throwable t) {
                 listener.onErrorConnectionLoadingHistory();
             }
         });

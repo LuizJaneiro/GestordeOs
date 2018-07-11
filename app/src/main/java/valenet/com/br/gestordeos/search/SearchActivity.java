@@ -26,7 +26,6 @@ import android.widget.Toast;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -35,7 +34,7 @@ import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.os_history.OsItemHistoryAdapter;
@@ -59,8 +58,8 @@ public class SearchActivity extends AppCompatActivity {
 
     private ImageButton searchBackBtn;
     private EditText searchEditText;
-    private ArrayList<Os> filtredList;
-    private ArrayList<Os> searchList;
+    private ArrayList<OrdemDeServico> filtredList;
+    private ArrayList<OrdemDeServico> searchList;
     private ArrayList<OsTypeModel> osTypeModelArrayList;
     private OsItemAdapter adapter;
     private OsItemHistoryAdapter adapterHistory;
@@ -233,7 +232,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    public void setAdapter(ArrayList<Os> list) {
+    public void setAdapter(ArrayList<OrdemDeServico> list) {
         if(!cameFromHistoryFragment) {
             if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
                 adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, cameFromSchedule);
@@ -253,29 +252,29 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void filter(String s, boolean submit) {
-        ArrayList<Os> filteredList = new ArrayList<>();
-        ArrayList<Os> osListArray = new ArrayList<>();
+        ArrayList<OrdemDeServico> filteredList = new ArrayList<>();
+        ArrayList<OrdemDeServico> ordemDeServicoListArray = new ArrayList<>();
         if(searchList != null && searchList.size() > 0)
-            osListArray = searchList;
+            ordemDeServicoListArray = searchList;
         else
-            osListArray = filtredList;
+            ordemDeServicoListArray = filtredList;
 
-        if (osListArray != null) {
-            for (int i = 0; i < osListArray.size(); i++) {
-                Os os = osListArray.get(i);
+        if (ordemDeServicoListArray != null) {
+            for (int i = 0; i < ordemDeServicoListArray.size(); i++) {
+                OrdemDeServico ordemDeServico = ordemDeServicoListArray.get(i);
                 if(s.matches("[0-9]+")){
-                    Integer id = os.getOsid();
+                    Integer id = ordemDeServico.getOsid();
                     String idString = id.toString();
                     if(idString.contains(s))
-                        filteredList.add(os);
+                        filteredList.add(ordemDeServico);
                 } else {
-                    String name = ValenetUtils.firstAndLastWord(os.getCliente()).toUpperCase();
-                    String type = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
+                    String name = ValenetUtils.firstAndLastWord(ordemDeServico.getCliente()).toUpperCase();
+                    String type = ValenetUtils.removeAccent(ordemDeServico.getTipoAtividade()).toUpperCase();
 
                     name = ValenetUtils.removeAccent(name).toUpperCase();
                     s = ValenetUtils.removeAccent(s).toUpperCase();
                     if (name.contains(s.toUpperCase()) || type.contains(s.toUpperCase()))
-                        filteredList.add(os);
+                        filteredList.add(ordemDeServico);
                 }
             }
         }
@@ -283,7 +282,7 @@ public class SearchActivity extends AppCompatActivity {
         if (filteredList.isEmpty()) {
             if (submit)
                 Toasty.error(this, "Não há resultados para o termo pesquisado.", Toast.LENGTH_LONG, true).show();
-            setAdapter(osListArray);
+            setAdapter(ordemDeServicoListArray);
         } else {
             setAdapter(filteredList);
         }

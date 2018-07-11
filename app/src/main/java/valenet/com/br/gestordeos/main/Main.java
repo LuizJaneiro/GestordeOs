@@ -1,12 +1,10 @@
 package valenet.com.br.gestordeos.main;
 
-import android.location.Location;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 
@@ -22,13 +20,13 @@ public interface Main {
 
         void showErrorServerView();
 
-        void showErrorServerView(List<Os> osSchedule, List<Os> osNext);
+        void showErrorServerView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext);
 
         void hideErrorServerView();
 
         void showErrorConnectionView();
 
-        void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext);
+        void showErrorConnectionView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext);
 
         void hideErrorConnectionView();
 
@@ -46,11 +44,11 @@ public interface Main {
 
         void loadOsTypes(List<OsTypeModel> osList);
 
-        void loadScheduleListOs(List<Os> osList);
+        void loadScheduleListOs(List<OrdemDeServico> ordemDeServicoList);
 
-        void loadNextListOs(List<Os> osList);
+        void loadNextListOs(List<OrdemDeServico> ordemDeServicoList);
 
-        void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
+        void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast);
 
         void showErrorMainService();
 
@@ -72,7 +70,7 @@ public interface Main {
 
         void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, boolean isSwipeRefresh);
 
-        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast);
+        void loadOsDistance(Double myLatitude, Double myLongitude, OrdemDeServico ordemDeServico, boolean isLast);
 
         void getAppConfig();
 
@@ -88,7 +86,7 @@ public interface Main {
 
         void loadMainOsList(Double latitude, Double longitude, Integer codUser, Boolean isSearchingByCloseOs, Integer group, onFinishedListenerOsList listener);
 
-        void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast, onFinishedListenerOsDistance listener);
+        void loadOsDistance(Double myLatitude, Double myLongitude, OrdemDeServico ordemDeServico, boolean isLast, onFinishedListenerOsDistance listener);
 
         void getAppConfig(onFinishedListenerAppConfig listener);
 
@@ -103,13 +101,13 @@ public interface Main {
         }
 
         interface onFinishedListenerOsList{
-            void successLoadingOsScheduleList(List<Os> osList);
+            void successLoadingOsScheduleList(List<OrdemDeServico> ordemDeServicoList);
 
-            void successLoadingOsNextList(List<Os> osList);
+            void successLoadingOsNextList(List<OrdemDeServico> ordemDeServicoList);
 
-            void successLoadingMainOsScheduleList(List<Os> osList);
+            void successLoadingMainOsScheduleList(List<OrdemDeServico> ordemDeServicoList);
 
-            void successLoadingMainOsNextList(List<Os> osList);
+            void successLoadingMainOsNextList(List<OrdemDeServico> ordemDeServicoList);
 
             void errorServiceOsList(String error);
 
@@ -121,11 +119,11 @@ public interface Main {
         }
 
         interface  onFinishedListenerOsDistance {
-            void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
+            void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast);
 
-            void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
+            void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast);
 
-            void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast);
+            void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast);
         }
 
         interface onFinishedListenerAppConfig {

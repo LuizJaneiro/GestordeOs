@@ -3,7 +3,7 @@ package valenet.com.br.gestordeos.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public interface Maps {
@@ -24,13 +24,13 @@ public interface Maps {
 
         void hideErrorServerView();
 
-        void loadOsList(ArrayList<Os> osArrayList);
+        void loadOsList(ArrayList<OrdemDeServico> ordemDeServicoArrayList);
 
-        void loadScheduleOsList(ArrayList<Os> osArrayList);
+        void loadScheduleOsList(ArrayList<OrdemDeServico> ordemDeServicoArrayList);
 
         void loadOsTypesList(ArrayList<OsTypeModel> osTypeModels);
 
-        void addedOsMarkers(ArrayList<Os> osArrayList);
+        void addedOsMarkers(ArrayList<OrdemDeServico> ordemDeServicoArrayList);
 
         void navigateToFilter();
 
@@ -49,9 +49,9 @@ public interface Maps {
         void loadScheduleOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, Integer group, final onFinishedListenerOsList listener);
 
         interface onFinishedListenerOsList {
-            void successLoading(List<Os> osList, List<OsTypeModel> osTypes);
+            void successLoading(List<OrdemDeServico> ordemDeServicoList, List<OsTypeModel> osTypes);
 
-            void successLoadingScheduleOsList(List<Os> osList, List<OsTypeModel> osTypes);
+            void successLoadingScheduleOsList(List<OrdemDeServico> ordemDeServicoList, List<OsTypeModel> osTypes);
 
             void errorService(String error);
 

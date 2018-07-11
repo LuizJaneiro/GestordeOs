@@ -9,7 +9,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
@@ -43,26 +43,26 @@ public class MainInteractorImp implements Main.MainInteractor {
     @Override
     public void loadOsList(Double latitude, Double longitude, Integer codUser, final Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
         application.API_INTERFACE.getOsList(latitude, longitude, codUser, isSearchingByCloseOs,
-                group).enqueue(new Callback<List<Os>>() {
+                group).enqueue(new Callback<List<OrdemDeServico>>() {
             @Override
-            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+            public void onResponse(Call<List<OrdemDeServico>> call, Response<List<OrdemDeServico>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Os> osList = response.body();
-                    final List<Os> finalOsList = osList;
+                    List<OrdemDeServico> ordemDeServicoList = response.body();
+                    final List<OrdemDeServico> finalOrdemDeServicoList = ordemDeServicoList;
                     if (!isSearchingByCloseOs) {
                         OsListLocal osListLocal = OsListLocal.getInstance();
                         if (osListLocal != null) {
                             osListLocal.deleteScheduleOsListLocal();
-                            osListLocal.saveOsScheduleListLocal(finalOsList);
+                            osListLocal.saveOsScheduleListLocal(finalOrdemDeServicoList);
                         }
-                        listener.successLoadingOsScheduleList(finalOsList);
+                        listener.successLoadingOsScheduleList(finalOrdemDeServicoList);
                     } else {
                         OsListLocal osListLocal = OsListLocal.getInstance();
                         if (osListLocal != null) {
                             osListLocal.deleteNextOsListLocal();
-                            osListLocal.saveOsNextListLocal(finalOsList);
+                            osListLocal.saveOsNextListLocal(finalOrdemDeServicoList);
                         }
-                        listener.successLoadingOsNextList(finalOsList);
+                        listener.successLoadingOsNextList(finalOrdemDeServicoList);
                     }
                 } else {
                     listener.errorServiceOsList("Ocorreu um problema no carregamento da lista de OS!");
@@ -70,7 +70,7 @@ public class MainInteractorImp implements Main.MainInteractor {
             }
 
             @Override
-            public void onFailure(Call<List<Os>> call, Throwable t) {
+            public void onFailure(Call<List<OrdemDeServico>> call, Throwable t) {
                 listener.errorNetworkOsList();
                 Log.d("OsListInteractor", "error loading from API");
             }
@@ -80,26 +80,26 @@ public class MainInteractorImp implements Main.MainInteractor {
     @Override
     public void loadMainOsList(Double latitude, Double longitude, Integer codUser, final Boolean isSearchingByCloseOs, Integer group, final onFinishedListenerOsList listener) {
         application.API_INTERFACE.getOsList(latitude, longitude, codUser, isSearchingByCloseOs,
-                group).enqueue(new Callback<List<Os>>() {
+                group).enqueue(new Callback<List<OrdemDeServico>>() {
             @Override
-            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+            public void onResponse(Call<List<OrdemDeServico>> call, Response<List<OrdemDeServico>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Os> osList = response.body();
-                    final List<Os> finalOsList = osList;
+                    List<OrdemDeServico> ordemDeServicoList = response.body();
+                    final List<OrdemDeServico> finalOrdemDeServicoList = ordemDeServicoList;
                     if (!isSearchingByCloseOs) {
                         OsListLocal osListLocal = OsListLocal.getInstance();
                         if (osListLocal != null) {
                             osListLocal.deleteScheduleOsListLocal();
-                            osListLocal.saveOsScheduleListLocal(finalOsList);
+                            osListLocal.saveOsScheduleListLocal(finalOrdemDeServicoList);
                         }
-                        listener.successLoadingMainOsScheduleList(finalOsList);
+                        listener.successLoadingMainOsScheduleList(finalOrdemDeServicoList);
                     } else {
                         OsListLocal osListLocal = OsListLocal.getInstance();
                         if (osListLocal != null) {
                             osListLocal.deleteNextOsListLocal();
-                            osListLocal.saveOsNextListLocal(finalOsList);
+                            osListLocal.saveOsNextListLocal(finalOrdemDeServicoList);
                         }
-                        listener.successLoadingMainOsNextList(finalOsList);
+                        listener.successLoadingMainOsNextList(finalOrdemDeServicoList);
                     }
                 } else {
                     listener.errorMainNetworkOsList();
@@ -107,7 +107,7 @@ public class MainInteractorImp implements Main.MainInteractor {
             }
 
             @Override
-            public void onFailure(Call<List<Os>> call, Throwable t) {
+            public void onFailure(Call<List<OrdemDeServico>> call, Throwable t) {
                 listener.errorMainNetworkOsList();
                 Log.d("OsListInteractor", "error loading from API");
             }
@@ -141,13 +141,13 @@ public class MainInteractorImp implements Main.MainInteractor {
     }
 
     @Override
-    public void loadOsDistance(Double myLatitude, Double myLongitude, final Os os, final boolean isFalse, final onFinishedListenerOsDistance listener) {
+    public void loadOsDistance(Double myLatitude, Double myLongitude, final OrdemDeServico ordemDeServico, final boolean isFalse, final onFinishedListenerOsDistance listener) {
         if(myLatitude == null || myLongitude == null){
-            listener.errorServiceOsDistance(null, os, isFalse);
+            listener.errorServiceOsDistance(null, ordemDeServico, isFalse);
             return;
         }
         application.API_INTERFACE_GOOGLE_DISTANCE.getDistanceDuration("metric", myLatitude + "," + myLongitude,
-                os.getLatitude() + "," + os.getLongitude(), "driving").enqueue(new Callback<Example>() {
+                ordemDeServico.getLatitude() + "," + ordemDeServico.getLongitude(), "driving").enqueue(new Callback<Example>() {
             @Override
             public void onResponse(Call<Example> call, Response<Example> response) {
                 if (response.isSuccessful()) {
@@ -155,18 +155,18 @@ public class MainInteractorImp implements Main.MainInteractor {
                         Integer distance = response.body().getRoutes().get(0).getLegs().get(0).getDistance().getValue();
                         String points = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
                         OsDistanceAndPoints osDistanceAndPoints = new OsDistanceAndPoints(distance, points);
-                        listener.successLoadingOsDistance(osDistanceAndPoints, os, isFalse);
+                        listener.successLoadingOsDistance(osDistanceAndPoints, ordemDeServico, isFalse);
                     } else {
-                        listener.errorServiceOsDistance(null, os, isFalse);
+                        listener.errorServiceOsDistance(null, ordemDeServico, isFalse);
                     }
                 } else {
-                    listener.errorServiceOsDistance(null, os, isFalse);
+                    listener.errorServiceOsDistance(null, ordemDeServico, isFalse);
                 }
             }
 
             @Override
             public void onFailure(Call<Example> call, Throwable t) {
-                listener.errorNetworkOsDistance(null, os, isFalse);
+                listener.errorNetworkOsDistance(null, ordemDeServico, isFalse);
             }
         });
     }

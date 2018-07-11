@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 /**
@@ -24,7 +24,7 @@ public class ObservationFragment extends Fragment {
     @BindView(R.id.text_view_os_observacao)
     TextView textViewOsObservacao;
     Unbinder unbinder;
-    private Os os;
+    private OrdemDeServico ordemDeServico;
 
     public ObservationFragment() {
         // Required empty public constructor
@@ -34,14 +34,14 @@ public class ObservationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        os = getArguments().getParcelable(ValenetUtils.KEY_OS);
+        ordemDeServico = getArguments().getParcelable(ValenetUtils.KEY_OS);
         View view = inflater.inflate(R.layout.fragment_observation, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if(os.getOBSERVACAO() == null)
+        if(ordemDeServico.getOBSERVACAO() == null)
             textViewOsObservacao.setText("Não há observações para esta OS.");
         else
-            textViewOsObservacao.setText(os.getOBSERVACAO()+"");
+            textViewOsObservacao.setText(ordemDeServico.getOBSERVACAO()+"");
 
         return view;
     }

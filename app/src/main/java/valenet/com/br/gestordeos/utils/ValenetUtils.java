@@ -2,7 +2,6 @@ package valenet.com.br.gestordeos.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,9 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
-import valenet.com.br.gestordeos.main.Main;
-import valenet.com.br.gestordeos.model.entity.Os;
-import valenet.com.br.gestordeos.model.entity.OsTypeModel;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 
 public class ValenetUtils {
 
@@ -141,28 +138,28 @@ public class ValenetUtils {
         return date;
     }
 
-    public static ArrayList<Os> filterList(ArrayList<Os> osArrayList, HashMap<String, Boolean> filters, Context context) {
-        if (osArrayList == null || osArrayList.size() == 0 || filters == null || filters.size() == 0)
+    public static ArrayList<OrdemDeServico> filterList(ArrayList<OrdemDeServico> ordemDeServicoArrayList, HashMap<String, Boolean> filters, Context context) {
+        if (ordemDeServicoArrayList == null || ordemDeServicoArrayList.size() == 0 || filters == null || filters.size() == 0)
             return null;
 
         SharedPreferences sharedPref = context.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_OS_FILTER, Context.MODE_PRIVATE);
 
 
-        ArrayList<Os> filtredOsArrayList = new ArrayList<>();
+        ArrayList<OrdemDeServico> filtredOrdemDeServicoArrayList = new ArrayList<>();
         Set<String> keys = filters.keySet();
         for (String key : keys) {
             boolean isSelected = filters.get(key);
             if (isSelected) {
-                for (Os os : osArrayList) {
-                    String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
+                for (OrdemDeServico ordemDeServico : ordemDeServicoArrayList) {
+                    String osTipoAtividade = ValenetUtils.removeAccent(ordemDeServico.getTipoAtividade()).toUpperCase();
                     String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
                     if (osTipoAtividade.equals(keyTratada)) {
-                        filtredOsArrayList.add(os);
+                        filtredOrdemDeServicoArrayList.add(ordemDeServico);
                     }
                 }
             }
         }
-        return filtredOsArrayList;
+        return filtredOrdemDeServicoArrayList;
     }
 
     public static String buildOsAddress(String tipoLogradouro, String logradouro, String complemento, String numero, Integer andar, String bairro) {

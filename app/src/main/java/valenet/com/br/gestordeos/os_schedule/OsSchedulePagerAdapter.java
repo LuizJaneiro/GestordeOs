@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -20,7 +20,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
     private int numOfTabs;
     private Location myLocation;
     private ArrayList<OsTypeModel> modelArrayList;
-    private ArrayList<Os> osScheduleArrayList;
+    private ArrayList<OrdemDeServico> ordemDeServicoScheduleArrayList;
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
     private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
@@ -29,14 +29,14 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
 
     public OsSchedulePagerAdapter(FragmentManager fm, Location myLocation,
                                   HashMap<String, Boolean> orderFilters, HashMap<String, Boolean> selectedFilters,
-                                  ArrayList<OsTypeModel> modelArrayList, ArrayList<Os> osScheduleArrayList, Integer osType,
+                                  ArrayList<OsTypeModel> modelArrayList, ArrayList<OrdemDeServico> ordemDeServicoScheduleArrayList, Integer osType,
                                   HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap, int numOfTabs) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.myLocation = myLocation;
         this.orderFilters = orderFilters;
         this.selectedFilters = selectedFilters;
-        this.osScheduleArrayList = osScheduleArrayList;
+        this.ordemDeServicoScheduleArrayList = ordemDeServicoScheduleArrayList;
         this.modelArrayList = modelArrayList;
         this.osDistanceHashMap = osDistanceHashMap;
         this.osType = osType;
@@ -60,7 +60,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
         bundle.putSerializable(ValenetUtils.KEY_ORDER_FILTERS, orderFilters);
         bundle.putSerializable(ValenetUtils.KEY_FILTERS, selectedFilters);
         bundle.putSerializable(ValenetUtils.KEY_OS_TYPE_LIST, modelArrayList);
-        bundle.putSerializable(ValenetUtils.KEY_OS_LIST, osScheduleArrayList);
+        bundle.putSerializable(ValenetUtils.KEY_OS_LIST, ordemDeServicoScheduleArrayList);
         bundle.putSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         bundle.putInt(ValenetUtils.KEY_OS_TYPE, osType);
         switch (position) {

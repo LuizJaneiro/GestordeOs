@@ -3,7 +3,6 @@ package valenet.com.br.gestordeos.map;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -55,7 +54,7 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         TextView infoMarkerAddress = myContentsView.findViewById(R.id.info_marker_text_view_os_address);
         ImageView infoMarkerImageViewStatusOs = myContentsView.findViewById(R.id.info_marker_image_view_status_os);
         ViewGroup layout = myContentsView.findViewById(R.id.info_marker_layout);
-        final Os item = (Os) marker.getTag();
+        final OrdemDeServico item = (OrdemDeServico) marker.getTag();
 
         String clientName;
         String osType;

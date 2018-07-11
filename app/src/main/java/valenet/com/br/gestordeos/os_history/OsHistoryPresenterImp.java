@@ -2,7 +2,7 @@ package valenet.com.br.gestordeos.os_history;
 
 import java.util.List;
 
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 
 public class OsHistoryPresenterImp implements OsHistory.OsHistoryPresenter, OsHistory.OsHistoryInteractor.onFinishedLoadHistoryUser {
     // region Members
@@ -33,13 +33,13 @@ public class OsHistoryPresenterImp implements OsHistory.OsHistoryPresenter, OsHi
     }
 
     @Override
-    public void onSuccessLoadingHistory(List<Os> osHistoryList) {
+    public void onSuccessLoadingHistory(List<OrdemDeServico> ordemDeServicoHistoryList) {
         hideViews();
-        if(osHistoryList != null) {
-            if(osHistoryList.size() == 0)
+        if(ordemDeServicoHistoryList != null) {
+            if(ordemDeServicoHistoryList.size() == 0)
                 view.showEmptyListView();
             else
-                view.loadOsHistoryList(osHistoryList);
+                view.loadOsHistoryList(ordemDeServicoHistoryList);
         }
     }
 

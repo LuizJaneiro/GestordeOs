@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 /**
@@ -55,7 +55,7 @@ public class OsDataFragment extends Fragment {
     Unbinder unbinder;
 
 
-    private Os os;
+    private OrdemDeServico ordemDeServico;
     private boolean cameFromSchedule;
 
     public OsDataFragment() {
@@ -66,50 +66,50 @@ public class OsDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        os = getArguments().getParcelable(ValenetUtils.KEY_OS);
+        ordemDeServico = getArguments().getParcelable(ValenetUtils.KEY_OS);
         cameFromSchedule = getArguments().getBoolean(ValenetUtils.KEY_CAME_FROM_SCHEDULE);
 
         View view = inflater.inflate(R.layout.fragment_os_data, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        if (os.getOsid() == null)
+        if (ordemDeServico.getOsid() == null)
             osLayoutId.setVisibility(View.GONE);
         else
-            textViewOsId.setText(os.getOsid() + "");
+            textViewOsId.setText(ordemDeServico.getOsid() + "");
 
-        if (os.getEmissao() == null)
+        if (ordemDeServico.getEmissao() == null)
             osLayoutEmissao.setVisibility(View.GONE);
         else
-            textViewOsEmissao.setText(ValenetUtils.convertJsonToStringDate(os.getEmissao()));
+            textViewOsEmissao.setText(ValenetUtils.convertJsonToStringDate(ordemDeServico.getEmissao()));
 
-        if (os.getTipoRede() == null)
+        if (ordemDeServico.getTipoRede() == null)
             osLayoutTpRede.setVisibility(View.GONE);
         else
-            textViewOsTpRede.setText(os.getTipoRede() + "");
+            textViewOsTpRede.setText(ordemDeServico.getTipoRede() + "");
 
         if (cameFromSchedule) {
             if (osLayoutAgendado != null)
                 osLayoutAgendado.setVisibility(View.GONE);
         } else {
-            if (os.getAgendadoPara() == null)
+            if (ordemDeServico.getAgendadoPara() == null)
                 osLayoutAgendado.setVisibility(View.GONE);
             else
-                textViewOsAgendado.setText(os.getAgendadoPara() + "");
+                textViewOsAgendado.setText(ordemDeServico.getAgendadoPara() + "");
         }
 
-        if (os.getDesignacaoTipo() == null)
+        if (ordemDeServico.getDesignacaoTipo() == null)
             osLayoutTpDesignacao.setVisibility(View.GONE);
         else {
-            String designacao = os.getDesignacaoTipo() + " - ";
-            if (os.getDesignacaoDescricao() == null) {
+            String designacao = ordemDeServico.getDesignacaoTipo() + " - ";
+            if (ordemDeServico.getDesignacaoDescricao() == null) {
                 designacao += "Sem descrição";
             } else {
-                designacao += os.getDesignacaoDescricao();
+                designacao += ordemDeServico.getDesignacaoDescricao();
             }
             textViewOsTpDesignacao.setText(designacao);
         }
 
-        String address = ValenetUtils.buildOsAddress(os.getTpLogradouro(), os.getLogradouro(), os.getComplemento(), os.getNumero(), os.getAndar(), os.getBairro());
+        String address = ValenetUtils.buildOsAddress(ordemDeServico.getTpLogradouro(), ordemDeServico.getLogradouro(), ordemDeServico.getComplemento(), ordemDeServico.getNumero(), ordemDeServico.getAndar(), ordemDeServico.getBairro());
 
         textViewOsAddress.setText(address);
 

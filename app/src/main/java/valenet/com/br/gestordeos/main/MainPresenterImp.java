@@ -1,11 +1,10 @@
 package valenet.com.br.gestordeos.main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
@@ -61,9 +60,9 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void loadOsDistance(Double myLatitude, Double myLongitude, Os os, boolean isLast) {
+    public void loadOsDistance(Double myLatitude, Double myLongitude, OrdemDeServico ordemDeServico, boolean isLast) {
         view.showLoading();
-        interactor.loadOsDistance(myLatitude, myLongitude, os, isLast, this);
+        interactor.loadOsDistance(myLatitude, myLongitude, ordemDeServico, isLast, this);
     }
 
     @Override
@@ -139,40 +138,40 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
     }
 
     @Override
-    public void successLoadingOsScheduleList(List<Os> osList) {
+    public void successLoadingOsScheduleList(List<OrdemDeServico> ordemDeServicoList) {
         hideViews();
-        if (osList != null) {
-            if (osList.size() == 0)
+        if (ordemDeServicoList != null) {
+            if (ordemDeServicoList.size() == 0)
                 view.showEmptyListView();
             else {
-                view.loadScheduleListOs(osList);
+                view.loadScheduleListOs(ordemDeServicoList);
             }
         }
     }
 
     @Override
-    public void successLoadingOsNextList(List<Os> osList) {
+    public void successLoadingOsNextList(List<OrdemDeServico> ordemDeServicoList) {
         hideViews();
-        if (osList != null) {
-            if (osList.size() == 0)
+        if (ordemDeServicoList != null) {
+            if (ordemDeServicoList.size() == 0)
                 view.showEmptyListView();
             else {
-                view.loadNextListOs(osList);
+                view.loadNextListOs(ordemDeServicoList);
             }
         }
     }
 
     @Override
-    public void successLoadingMainOsScheduleList(List<Os> osList) {
-        if (osList != null) {
-            view.loadScheduleListOs(osList);
+    public void successLoadingMainOsScheduleList(List<OrdemDeServico> ordemDeServicoList) {
+        if (ordemDeServicoList != null) {
+            view.loadScheduleListOs(ordemDeServicoList);
         }
     }
 
     @Override
-    public void successLoadingMainOsNextList(List<Os> osList) {
-        if (osList != null)
-            view.loadNextListOs(osList);
+    public void successLoadingMainOsNextList(List<OrdemDeServico> ordemDeServicoList) {
+        if (ordemDeServicoList != null)
+            view.loadNextListOs(ordemDeServicoList);
     }
 
     @Override
@@ -182,9 +181,9 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
         if (osListLocal == null)
             view.showErrorServerView();
         else {
-            ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
-            ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
-            view.showErrorServerView(scheduleOsList, nextOsList);
+            ArrayList<OrdemDeServico> scheduleOrdemDeServicoList = (ArrayList) osListLocal.getScheduleOsList();
+            ArrayList<OrdemDeServico> nextOrdemDeServicoList = (ArrayList) osListLocal.getNextOsList();
+            view.showErrorServerView(scheduleOrdemDeServicoList, nextOrdemDeServicoList);
         }
     }
 
@@ -195,31 +194,31 @@ public class MainPresenterImp implements Main.MainPresenter, Main.MainInteractor
         if (osListLocal == null)
             view.showErrorConnectionView();
         else {
-            ArrayList<Os> scheduleOsList = (ArrayList) osListLocal.getScheduleOsList();
-            ArrayList<Os> nextOsList = (ArrayList) osListLocal.getNextOsList();
-            view.showErrorConnectionView(scheduleOsList, nextOsList);
+            ArrayList<OrdemDeServico> scheduleOrdemDeServicoList = (ArrayList) osListLocal.getScheduleOsList();
+            ArrayList<OrdemDeServico> nextOrdemDeServicoList = (ArrayList) osListLocal.getNextOsList();
+            view.showErrorConnectionView(scheduleOrdemDeServicoList, nextOrdemDeServicoList);
         }
     }
 
     @Override
-    public void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+    public void successLoadingOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(osDistanceAndPoints, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, ordemDeServico, isLast);
     }
 
     @Override
-    public void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+    public void errorServiceOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(osDistanceAndPoints, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, ordemDeServico, isLast);
     }
 
     @Override
-    public void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+    public void errorNetworkOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
         if (isLast)
             hideViews();
-        view.setOsDistance(osDistanceAndPoints, os, isLast);
+        view.setOsDistance(osDistanceAndPoints, ordemDeServico, isLast);
     }
 
     @Override

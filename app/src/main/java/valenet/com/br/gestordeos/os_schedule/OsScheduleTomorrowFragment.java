@@ -55,7 +55,7 @@ import valenet.com.br.gestordeos.main.MainPresenterImp;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.map.MapsActivity;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
@@ -100,8 +100,8 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     private final int REQ_CODE_FILTER = 202;
     private final int REQ_CODE_BACK_FILTER = 203;
     private final int CODE_MAP = 1000;
-    private ArrayList<Os> osList;
-    private ArrayList<Os> filtredList;
+    private ArrayList<OrdemDeServico> ordemDeServicoList;
+    private ArrayList<OrdemDeServico> filtredList;
     private ArrayList<OsTypeModel> osTypeModelArrayList;
 
     ReactiveLocationProvider locationProvider;
@@ -133,7 +133,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
         this.osTypeModelArrayList = (ArrayList<OsTypeModel>) getArguments().getSerializable(ValenetUtils.KEY_OS_TYPE_LIST);
         this.orderFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_ORDER_FILTERS);
         this.selectedFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_FILTERS);
-        this.osList = (ArrayList<Os>) getArguments().getSerializable(ValenetUtils.KEY_OS_LIST);
+        this.ordemDeServicoList = (ArrayList<OrdemDeServico>) getArguments().getSerializable(ValenetUtils.KEY_OS_LIST);
         this.osType = getArguments().getInt(ValenetUtils.KEY_OS_TYPE);
         this.osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getArguments().getSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
@@ -149,7 +149,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             }
         });
 
-        if (this.osList == null || this.osList.size() == 0) {
+        if (this.ordemDeServicoList == null || this.ordemDeServicoList.size() == 0) {
             if (myLocation == null)
                 loadOsListWithoutLocation();
             else
@@ -163,7 +163,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             hidePager();
             hideEmptyListView();
             showLoading();
-            loadMainScheduleOs(osList);
+            loadMainScheduleOs(ordemDeServicoList);
         }
 
         return view;
@@ -253,33 +253,33 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void showErrorServerView(List<Os> osSchedule, List<Os> osNext) {
-        if (osSchedule == null) {
+    public void showErrorServerView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext) {
+        if (ordemDeServicoSchedule == null) {
             showErrorServerView();
         } else {
-            loadScheduleListOs(osSchedule);
+            loadScheduleListOs(ordemDeServicoSchedule);
             if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
-    public void showErrorConnectionView(List<Os> osSchedule, List<Os> osNext) {
-        if (osSchedule == null) {
+    public void showErrorConnectionView(List<OrdemDeServico> ordemDeServicoSchedule, List<OrdemDeServico> ordemDeServicoNext) {
+        if (ordemDeServicoSchedule == null) {
             showErrorConnectionView();
         } else {
-            loadScheduleListOs(osSchedule);
+            loadScheduleListOs(ordemDeServicoSchedule);
             if (this.getActivity() != null)
                 Toasty.error(this.getActivity(), "Não foi possível carregar a lista de OSs agendadas, verifique sua conexão e tente novamente!", Toast.LENGTH_LONG, true).show();
         }
     }
 
     @Override
-    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, Os os, boolean isLast) {
+    public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
         if (osDistanceHashMap == null)
             osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(os.getOsid(), osDistanceAndPoints);
+        osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
 
         if (isLast) {
             if (this.getActivity() != null) {
@@ -290,32 +290,32 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void loadScheduleListOs(List<Os> osList) {
-        if (this.getActivity() != null && osList != null) {
-            ((MainActivity) this.getActivity()).setOsScheduleArrayList((ArrayList) osList);
+    public void loadScheduleListOs(List<OrdemDeServico> ordemDeServicoList) {
+        if (this.getActivity() != null && ordemDeServicoList != null) {
+            ((MainActivity) this.getActivity()).setOrdemDeServicoScheduleArrayList((ArrayList) ordemDeServicoList);
 
             if (((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
                 osDistanceHashMap = new HashMap<>();
             else
                 osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
             boolean isLast = false;
-            for (int i = 0; i < osList.size(); i++) {
-                if (i == osList.size() - 1)
+            for (int i = 0; i < ordemDeServicoList.size(); i++) {
+                if (i == ordemDeServicoList.size() - 1)
                     isLast = true;
-                Os os = osList.get(i);
-                if (os.getLatitude() == null || os.getLongitude() == null || myLocation == null)
-                    presenter.loadOsDistance(null, null, os, isLast);
+                OrdemDeServico ordemDeServico = ordemDeServicoList.get(i);
+                if (ordemDeServico.getLatitude() == null || ordemDeServico.getLongitude() == null || myLocation == null)
+                    presenter.loadOsDistance(null, null, ordemDeServico, isLast);
                 else
-                    presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), os, isLast);
+                    presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), ordemDeServico, isLast);
             }
         }
     }
 
-    private void loadMainScheduleOs(List<Os> osList) {
+    private void loadMainScheduleOs(List<OrdemDeServico> ordemDeServicoList) {
         if (this.getActivity() != null) {
-            this.osList = selectTodayOs((ArrayList) osList);
+            this.ordemDeServicoList = selectTodayOs((ArrayList) ordemDeServicoList);
 
-            this.filtredList = ValenetUtils.filterList(this.osList, selectedFilters, this.getContext());
+            this.filtredList = ValenetUtils.filterList(this.ordemDeServicoList, selectedFilters, this.getContext());
 
             if (this.filtredList == null || this.filtredList.size() == 0) {
                 this.hideLoading();
@@ -371,7 +371,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void loadNextListOs(List<Os> osList) {
+    public void loadNextListOs(List<OrdemDeServico> ordemDeServicoList) {
 
     }
 
@@ -427,7 +427,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
         if (this.getActivity() != null) {
             Intent intent = new Intent(this.getActivity(), MapsActivity.class);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
-            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.osList);
+            intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.ordemDeServicoList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
             intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
             intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, true);
@@ -517,19 +517,19 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
                 }).subscribe();
     }
 
-    private ArrayList<Os> selectTodayOs(ArrayList<Os> osArrayList) {
-        if (osArrayList != null && osArrayList.size() > 0) {
-            ArrayList<Os> todayOsList = new ArrayList<>();
+    private ArrayList<OrdemDeServico> selectTodayOs(ArrayList<OrdemDeServico> ordemDeServicoArrayList) {
+        if (ordemDeServicoArrayList != null && ordemDeServicoArrayList.size() > 0) {
+            ArrayList<OrdemDeServico> todayOrdemDeServicoList = new ArrayList<>();
             Date currentDate = Calendar.getInstance().getTime();
-            for (int i = 0; i < osArrayList.size(); i++) {
-                Os os = osArrayList.get(i);
-                if (os.getDataAgendamento() != null) {
-                    Date osDate = DateUtils.parseDate(os.getDataAgendamento());
+            for (int i = 0; i < ordemDeServicoArrayList.size(); i++) {
+                OrdemDeServico ordemDeServico = ordemDeServicoArrayList.get(i);
+                if (ordemDeServico.getDataAgendamento() != null) {
+                    Date osDate = DateUtils.parseDate(ordemDeServico.getDataAgendamento());
                     if (DateUtils.isDateTomorrow(currentDate, osDate))
-                        todayOsList.add(os);
+                        todayOrdemDeServicoList.add(ordemDeServico);
                 }
             }
-            return todayOsList;
+            return todayOrdemDeServicoList;
         } else
             return null;
     }

@@ -5,35 +5,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
-import valenet.com.br.gestordeos.model.entity.Os;
-import valenet.com.br.gestordeos.model.entity.google_distance.Example;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<Os> osList;
+    private final List<OrdemDeServico> ordemDeServicoList;
     private final Context context;
     private final Activity activity;
     private final String sortOsBy;
@@ -42,9 +36,9 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private GestorDeOsApplication application;
     private boolean cameFromSchedule;
 
-    public OsItemAdapter(List<Os> osList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap,
+    public OsItemAdapter(List<OrdemDeServico> ordemDeServicoList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap,
                          boolean cameFromSchedule) {
-        this.osList = osList;
+        this.ordemDeServicoList = ordemDeServicoList;
         this.context = context;
         this.activity = activity;
         this.myLocation = myLocation;
@@ -52,12 +46,12 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.osDistanceHashmap = osDistanceHashmap;
         this.cameFromSchedule = cameFromSchedule;
 
-        if (this.osList != null && this.osList.size() > 0 && this.osDistanceHashmap != null) {
-            for (int i = 0; i < osList.size(); i++) {
-                if (this.osDistanceHashmap.get(this.osList.get(i).getOsid()) == null || this.osDistanceHashmap.get(this.osList.get(i).getOsid()).getDistance() == null)
-                    this.osList.get(i).setDistance(null);
+        if (this.ordemDeServicoList != null && this.ordemDeServicoList.size() > 0 && this.osDistanceHashmap != null) {
+            for (int i = 0; i < ordemDeServicoList.size(); i++) {
+                if (this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()) == null || this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance() == null)
+                    this.ordemDeServicoList.get(i).setDistance(null);
                 else
-                    this.osList.get(i).setDistance(this.osDistanceHashmap.get(this.osList.get(i).getOsid()).getDistance().doubleValue());
+                    this.ordemDeServicoList.get(i).setDistance(this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance());
             }
         }
         if (sortOsBy != null)
@@ -65,20 +59,20 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     private void sortOsList(String sortOsBy) {
-        if (osList != null) {
+        if (ordemDeServicoList != null) {
             if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_NAME)) {
-                Collections.sort(osList, new Comparator<Os>() {
+                Collections.sort(ordemDeServicoList, new Comparator<OrdemDeServico>() {
                     @Override
-                    public int compare(Os o1, Os o2) {
+                    public int compare(OrdemDeServico o1, OrdemDeServico o2) {
                         return o1.getCliente().compareTo(o2.getCliente());
                     }
                 });
             }
 
             if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE)) {
-                Collections.sort(osList, new Comparator<Os>() {
+                Collections.sort(ordemDeServicoList, new Comparator<OrdemDeServico>() {
                     @Override
-                    public int compare(Os o1, Os o2) {
+                    public int compare(OrdemDeServico o1, OrdemDeServico o2) {
                         Double distance1, distance2;
                         if (o1.getLongitude() == null || o1.getLatitude() == null || osDistanceHashmap == null
                                 || osDistanceHashmap.get(o1.getOsid()) == null || osDistanceHashmap.get(o1.getOsid()).getDistance() == null)
@@ -100,9 +94,9 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             }
 
             if (sortOsBy.equals(ValenetUtils.SHARED_PREF_KEY_OS_TIME)) {
-                Collections.sort(osList, new Comparator<Os>() {
+                Collections.sort(ordemDeServicoList, new Comparator<OrdemDeServico>() {
                     @Override
-                    public int compare(Os o1, Os o2) {
+                    public int compare(OrdemDeServico o1, OrdemDeServico o2) {
                         Date date1, date2;
                         if (o1.getDataAgendamento() == null)
                             date1 = new Date(Long.MAX_VALUE);
@@ -138,7 +132,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final Os item = osList.get(position);
+        final OrdemDeServico item = ordemDeServicoList.get(position);
         String clientName;
         String osType;
         String distance;
@@ -221,8 +215,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        if (osList != null) {
-            return osList.size();
+        if (ordemDeServicoList != null) {
+            return ordemDeServicoList.size();
         }
         return 0;
     }

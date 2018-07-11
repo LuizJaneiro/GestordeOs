@@ -1,16 +1,17 @@
 package valenet.com.br.gestordeos.model.entity;
 
+import java.io.Serializable;
+
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Parcelable.Creator;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 
-public class Os extends RealmObject implements Parcelable {
+public class OrdemDeServico extends RealmObject implements Parcelable {
 
     @SerializedName("osid")
     @Expose
@@ -86,7 +87,7 @@ public class Os extends RealmObject implements Parcelable {
     private String rede;
     @SerializedName("distance")
     @Expose
-    private Double distance;
+    private Integer distance;
     @SerializedName("statusOs")
     @Expose
     private String statusOs;
@@ -96,37 +97,68 @@ public class Os extends RealmObject implements Parcelable {
     @SerializedName("agendadoPara")
     @Expose
     private String agendadoPara;
-    @SerializedName("mapeado")
-    @Expose
-    private Integer mapeado;
     @SerializedName("agendaEventoID")
     @Expose
     private Integer agendaEventoID;
     @SerializedName("DataCheckin")
     @Expose
     private String dataCheckin;
-
     @SerializedName("DataCheckout")
     @Expose
     private String dataCheckout;
 
-    public final static Creator<Os> CREATOR = new Creator<Os>() {
+    public final static Parcelable.Creator<OrdemDeServico> CREATOR = new Creator<OrdemDeServico>() {
+
 
         @SuppressWarnings({
                 "unchecked"
         })
-        public Os createFromParcel(Parcel in) {
-            return new Os(in);
+        public OrdemDeServico createFromParcel(Parcel in) {
+            return new OrdemDeServico(in);
         }
 
-        public Os[] newArray(int size) {
-            return (new Os[size]);
+        public OrdemDeServico[] newArray(int size) {
+            return (new OrdemDeServico[size]);
         }
 
     };
+    private final static long serialVersionUID = -2920073099637885002L;
 
-    public Os() {
+    protected OrdemDeServico(Parcel in) {
+        this.osid = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.emissao = ((String) in.readValue((String.class.getClassLoader())));
+        this.solicitacao = ((String) in.readValue((String.class.getClassLoader())));
+        this.tipoAtividade = ((String) in.readValue((String.class.getClassLoader())));
+        this.tipoAtividadeAtributosJson = ((String) in.readValue((String.class.getClassLoader())));
+        this.cliente = ((String) in.readValue((String.class.getClassLoader())));
+        this.telefoneCliente = ((String) in.readValue((String.class.getClassLoader())));
+        this.contato = ((String) in.readValue((String.class.getClassLoader())));
+        this.tpLogradouro = ((String) in.readValue((String.class.getClassLoader())));
+        this.logradouro = ((String) in.readValue((String.class.getClassLoader())));
+        this.numero = ((String) in.readValue((String.class.getClassLoader())));
+        this.complemento = ((String) in.readValue((String.class.getClassLoader())));
+        this.andar = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.bairro = ((String) in.readValue((String.class.getClassLoader())));
+        this.cidade = ((String) in.readValue((String.class.getClassLoader())));
+        this.uf = ((String) in.readValue((String.class.getClassLoader())));
+        this.cep = ((String) in.readValue((String.class.getClassLoader())));
+        this.latitude = ((Double) in.readValue((Double.class.getClassLoader())));
+        this.longitude = ((Double) in.readValue((Double.class.getClassLoader())));
+        this.oBSERVACAO = ((String) in.readValue((String.class.getClassLoader())));
+        this.tipoRede = ((String) in.readValue((String.class.getClassLoader())));
+        this.designacaoTipo = ((String) in.readValue((String.class.getClassLoader())));
+        this.designacaoDescricao = ((String) in.readValue((String.class.getClassLoader())));
+        this.rede = ((String) in.readValue((Object.class.getClassLoader())));
+        this.distance = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.statusOs = ((String) in.readValue((String.class.getClassLoader())));
+        this.dataAgendamento = ((String) in.readValue((String.class.getClassLoader())));
+        this.agendadoPara = ((String) in.readValue((String.class.getClassLoader())));
+        this.agendaEventoID = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));
+        this.dataCheckout = ((String) in.readValue((String.class.getClassLoader())));
+    }
 
+    public OrdemDeServico() {
     }
 
     public Integer getOsid() {
@@ -321,11 +353,11 @@ public class Os extends RealmObject implements Parcelable {
         this.rede = rede;
     }
 
-    public Double getDistance() {
+    public Integer getDistance() {
         return distance;
     }
 
-    public void setDistance(Double distance) {
+    public void setDistance(Integer distance) {
         this.distance = distance;
     }
 
@@ -353,20 +385,20 @@ public class Os extends RealmObject implements Parcelable {
         this.agendadoPara = agendadoPara;
     }
 
-    public Integer getMapeado() {
-        return mapeado;
-    }
-
-    public void setMapeado(Integer mapeado) {
-        this.mapeado = mapeado;
-    }
-
     public Integer getAgendaEventoID() {
         return agendaEventoID;
     }
 
     public void setAgendaEventoID(Integer agendaEventoID) {
         this.agendaEventoID = agendaEventoID;
+    }
+
+    public String getoBSERVACAO() {
+        return oBSERVACAO;
+    }
+
+    public void setoBSERVACAO(String oBSERVACAO) {
+        this.oBSERVACAO = oBSERVACAO;
     }
 
     public String getDataCheckin() {
@@ -385,47 +417,6 @@ public class Os extends RealmObject implements Parcelable {
         this.dataCheckout = dataCheckout;
     }
 
-    protected Os(Parcel in) {
-        this.osid = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.emissao = ((String) in.readValue((String.class.getClassLoader())));
-        this.solicitacao = ((String) in.readValue((String.class.getClassLoader())));
-        this.tipoAtividade = ((String) in.readValue((String.class.getClassLoader())));
-        this.tipoAtividadeAtributosJson = ((String) in.readValue((String.class.getClassLoader())));
-        this.cliente = ((String) in.readValue((String.class.getClassLoader())));
-        this.telefoneCliente = ((String) in.readValue((String.class.getClassLoader())));
-        this.contato = ((String) in.readValue((String.class.getClassLoader())));
-        this.tpLogradouro = ((String) in.readValue((String.class.getClassLoader())));
-        this.logradouro = ((String) in.readValue((String.class.getClassLoader())));
-        this.numero = ((String) in.readValue((String.class.getClassLoader())));
-        this.complemento = ((String) in.readValue((String.class.getClassLoader())));
-        this.andar = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.bairro = ((String) in.readValue((String.class.getClassLoader())));
-        this.cidade = ((String) in.readValue((String.class.getClassLoader())));
-        this.uf = ((String) in.readValue((String.class.getClassLoader())));
-        this.cep = ((String) in.readValue((String.class.getClassLoader())));
-        this.latitude = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.longitude = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.oBSERVACAO = ((String) in.readValue((String.class.getClassLoader())));
-        this.tipoRede = ((String) in.readValue((String.class.getClassLoader())));
-        this.designacaoTipo = ((String) in.readValue((String.class.getClassLoader())));
-        this.designacaoDescricao = ((String) in.readValue((String.class.getClassLoader())));
-        this.rede = ((String) in.readValue((String.class.getClassLoader())));
-        this.distance = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.statusOs = ((String) in.readValue((String.class.getClassLoader())));
-        this.dataAgendamento = ((String) in.readValue((String.class.getClassLoader())));
-        this.agendadoPara = ((String) in.readValue((String.class.getClassLoader())));
-        this.mapeado = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.agendaEventoID = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));
-        this.dataCheckout = ((String) in.readValue((String.class.getClassLoader())));
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(osid);
         dest.writeValue(emissao);
@@ -455,10 +446,14 @@ public class Os extends RealmObject implements Parcelable {
         dest.writeValue(statusOs);
         dest.writeValue(dataAgendamento);
         dest.writeValue(agendadoPara);
-        dest.writeValue(mapeado);
         dest.writeValue(agendaEventoID);
         dest.writeValue(dataCheckin);
         dest.writeValue(dataCheckout);
     }
 
+    public int describeContents() {
+        return 0;
+    }
+
 }
+

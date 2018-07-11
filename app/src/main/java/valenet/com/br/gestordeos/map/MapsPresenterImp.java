@@ -3,7 +3,7 @@ package valenet.com.br.gestordeos.map;
 import java.util.ArrayList;
 import java.util.List;
 
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class MapsPresenterImp implements Maps.MapsPresenter, Maps.MapsInteractor.onFinishedListenerOsList {
@@ -42,18 +42,18 @@ public class MapsPresenterImp implements Maps.MapsPresenter, Maps.MapsInteractor
     }
 
     @Override
-    public void successLoading(List<Os> osList, List<OsTypeModel> osTypes) {
-        if(osList != null && osTypes != null) {
+    public void successLoading(List<OrdemDeServico> ordemDeServicoList, List<OsTypeModel> osTypes) {
+        if(ordemDeServicoList != null && osTypes != null) {
             view.loadOsTypesList((ArrayList) osTypes);
-            view.loadOsList((ArrayList) osList);
+            view.loadOsList((ArrayList) ordemDeServicoList);
         }
     }
 
     @Override
-    public void successLoadingScheduleOsList(List<Os> osList, List<OsTypeModel> osTypes) {
-        if(osList != null && osTypes != null) {
+    public void successLoadingScheduleOsList(List<OrdemDeServico> ordemDeServicoList, List<OsTypeModel> osTypes) {
+        if(ordemDeServicoList != null && osTypes != null) {
             view.loadOsTypesList((ArrayList) osTypes);
-            view.loadScheduleOsList((ArrayList) osList);
+            view.loadScheduleOsList((ArrayList) ordemDeServicoList);
         }
     }
 

@@ -1,9 +1,7 @@
 package valenet.com.br.gestordeos.os_filter;
 
-import java.util.HashMap;
 import java.util.List;
 
-import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 
 public class OsFilter {

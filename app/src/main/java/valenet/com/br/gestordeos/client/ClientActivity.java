@@ -53,7 +53,7 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
@@ -104,7 +104,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     RelativeLayout layoutButtonsFishing;
 
     private PagerAdapter pagerAdapter;
-    private Os os;
+    private OrdemDeServico ordemDeServico;
     private Boolean cameFromHistory;
 
     private Client.ClientPresenter presenter;
@@ -127,9 +127,12 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
 
         this.presenter = new ClientPresenterImp(this);
 
-        os = getIntent().getParcelableExtra(ValenetUtils.KEY_OS);
-        cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
-        cameFromHistory = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
+        Intent intent = getIntent();
+        intent.setExtrasClassLoader(OrdemDeServico.class.getClassLoader());
+
+        ordemDeServico = (OrdemDeServico) intent.getParcelableExtra(ValenetUtils.KEY_OS);
+        cameFromSchedule = intent.getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
+        cameFromHistory = intent.getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
         if (!cameFromHistory) {
             RxPermissions.getInstance(ClientActivity.this)
@@ -221,13 +224,13 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         }
 
         if (!cameFromHistory) {
-            if (os.getDataCheckin() == null || os.getDataCheckin().length() == 0)
+            if (ordemDeServico.getDataCheckin() == null || ordemDeServico.getDataCheckin().length() == 0)
                 this.showLayoutOsCanCheckin();
             else
                 this.showLayoutOsCheckedIn();
         }
 
-        Integer codigoOs = os.getOsid();
+        Integer codigoOs = ordemDeServico.getOsid();
 
         if (codigoOs == null)
             textViewToolbarTitle.setText(getResources().getString(R.string.title_activity_client));
@@ -244,27 +247,27 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         String city;
         String address;
 
-        if (os.getCliente() == null)
+        if (ordemDeServico.getCliente() == null)
             clientName = "Nome Indefinido";
         else
-            clientName = ValenetUtils.firstAndLastWord(os.getCliente());
+            clientName = ValenetUtils.firstAndLastWord(ordemDeServico.getCliente());
 
-        if (os.getCidade() == null)
+        if (ordemDeServico.getCidade() == null)
             city = "Cidade Indefinida";
         else
-            city = os.getCidade();
+            city = ordemDeServico.getCidade();
 
-        address = ValenetUtils.buildOsAddress(os.getTpLogradouro(), os.getLogradouro(), os.getComplemento(), os.getNumero(), os.getAndar(), os.getBairro());
+        address = ValenetUtils.buildOsAddress(ordemDeServico.getTpLogradouro(), ordemDeServico.getLogradouro(), ordemDeServico.getComplemento(), ordemDeServico.getNumero(), ordemDeServico.getAndar(), ordemDeServico.getBairro());
 
-        if (os.getTipoAtividade() == null)
+        if (ordemDeServico.getTipoAtividade() == null)
             osType = "Tipo Indefinido";
         else
-            osType = os.getTipoAtividade();
+            osType = ordemDeServico.getTipoAtividade();
 
-        if (os.getDistance() == null)
+        if (ordemDeServico.getDistance() == null)
             distance = "?";
         else {
-            double distanceDouble = os.getDistance() / 1000.0;
+            double distanceDouble = ordemDeServico.getDistance() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
             if (distanceDouble >= 100)
                 distance = ">100";
@@ -272,10 +275,10 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 distance = String.valueOf(distanceDouble);
         }
 
-        if (os.getDataAgendamento() == null)
+        if (ordemDeServico.getDataAgendamento() == null)
             dateString = "Data Indefinida";
         else {
-            dateString = ValenetUtils.convertJsonToStringDate(os.getDataAgendamento()) + " - " + ValenetUtils.convertJsonToStringHour(os.getDataAgendamento());
+            dateString = ValenetUtils.convertJsonToStringDate(ordemDeServico.getDataAgendamento()) + " - " + ValenetUtils.convertJsonToStringHour(ordemDeServico.getDataAgendamento());
         }
 
         textViewClientNameToolbar.setText(clientName);
@@ -287,8 +290,8 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
 
         if (cameFromHistory) {
             textViewDistanceToolbar.setVisibility(View.GONE);
-            if (os.getStatusOs() != null) {
-                textViewOsStatusToolbar.setText(os.getStatusOs());
+            if (ordemDeServico.getStatusOs() != null) {
+                textViewOsStatusToolbar.setText(ordemDeServico.getStatusOs());
                 textViewOsStatusToolbar.setVisibility(View.VISIBLE);
             }
             if (btnCheckin != null)
@@ -308,17 +311,17 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        if (os.getTelefoneCliente() == null) {
+        if (ordemDeServico.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
             btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
         }
 
-        if (os.getLatitude() == null || os.getLongitude() == null) {
+        if (ordemDeServico.getLatitude() == null || ordemDeServico.getLongitude() == null) {
             btnNav.setEnabled(false);
             btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_nav_transparent));
         }
 
-        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), os, cameFromSchedule, tabLayout.getTabCount());
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), ordemDeServico, cameFromSchedule, tabLayout.getTabCount());
         pager.setAdapter(pagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -383,13 +386,13 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
 
     public void navigateToRefuseOsActivity() {
         Intent intent = new Intent(this, RefuseOsActivity.class);
-        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getAgendaEventoID());
+        intent.putExtra(ValenetUtils.KEY_OS_ID, ordemDeServico.getAgendaEventoID());
         startActivityForResult(intent, ValenetUtils.REQUEST_CODE_CLIENT);
     }
 
     public void navigateToEndOsActivity() {
         Intent intent = new Intent(this, EndOsActivity.class);
-        intent.putExtra(ValenetUtils.KEY_OS_ID, os.getOsid());
+        intent.putExtra(ValenetUtils.KEY_OS_ID, ordemDeServico.getOsid());
         startActivity(intent);
     }
 
@@ -424,7 +427,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     public void showSuccessCheckin() {
         if (getApplicationContext() != null)
             Toasty.success(getApplicationContext(), "Check-in realizado com sucesso.", Toast.LENGTH_LONG).show();
-        os.setDataCheckin("Checkin Realizado");
+        ordemDeServico.setDataCheckin("Checkin Realizado");
         this.showLayoutOsCheckedIn();
         reloadOs = true;
     }
@@ -445,7 +448,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     public void showSuccessCheckout() {
         if (getApplicationContext() != null)
             Toasty.success(getApplicationContext(), "Check-out realizado com sucesso.", Toast.LENGTH_LONG).show();
-        os.setDataCheckout("Checkout realizado");
+        ordemDeServico.setDataCheckout("Checkout realizado");
         this.showLayoutOsCheckedIn();
         reloadOs = true;
     }
@@ -535,10 +538,10 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 Intent intent;
-                Uri gmmIntentUri = Uri.parse("geo:" + os.getLatitude()
-                        + "," + os.getLongitude()
-                        + "?q=" + os.getLatitude()
-                        + "," + os.getLongitude() + "(" + os.getCliente() + ")");
+                Uri gmmIntentUri = Uri.parse("geo:" + ordemDeServico.getLatitude()
+                        + "," + ordemDeServico.getLongitude()
+                        + "?q=" + ordemDeServico.getLatitude()
+                        + "," + ordemDeServico.getLongitude() + "(" + ordemDeServico.getCliente() + ")");
                 intent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -586,7 +589,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 if (myLocation == null)
                     getLocationAndRequestCheck(true);
                 else
-                    presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                    presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
             }
         });
 
@@ -623,7 +626,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 if (myLocation == null)
                     getLocationAndRequestCheck(false);
                 else if (codUser != null)
-                    presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                    presenter.checkout(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
             }
         });
 
@@ -660,7 +663,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     this.getLocationAndRequestCheck(true);
                 break;
             case R.id.btn_call:
-                this.callPhone(this.os.getTelefoneCliente() + "");
+                this.callPhone(this.ordemDeServico.getTelefoneCliente() + "");
                 break;
             case R.id.btn_confirm:
                 navigateToEndOsActivity();
@@ -671,7 +674,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             case R.id.btn_pescar:
                 LoginLocal loginLocal = LoginLocal.getInstance();
                 if(loginLocal != null)
-                    presenter.putScheduleFishEvent(os.getAgendaEventoID(), loginLocal.getCurrentUser().getCoduser());
+                    presenter.putScheduleFishEvent(ordemDeServico.getAgendaEventoID(), loginLocal.getCurrentUser().getCoduser());
                 break;
         }
     }
@@ -689,7 +692,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     }
 
     private void showLayoutOsCheckedIn() {
-        if (os.getDataCheckout() == null || os.getDataCheckout().length() == 0)
+        if (ordemDeServico.getDataCheckout() == null || ordemDeServico.getDataCheckout().length() == 0)
             showLayoutOsCanCheckOut();
         else
             showLayoutOsCheckedOut();
@@ -774,10 +777,10 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                                                 myLocation = location;
                                                 if (isCheckin) {
                                                     if (codUser != null)
-                                                        presenter.checkin(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                                                        presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                                                 } else {
                                                     if (codUser != null)
-                                                        presenter.checkout(os.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                                                        presenter.checkout(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                                                 }
                                                 return true;
                                             } else {

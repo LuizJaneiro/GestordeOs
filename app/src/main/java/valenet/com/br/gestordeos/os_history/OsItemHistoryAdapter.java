@@ -3,7 +3,6 @@ package valenet.com.br.gestordeos.os_history;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,27 +16,26 @@ import java.util.Date;
 import java.util.List;
 
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<Os> osList;
+    private final List<OrdemDeServico> ordemDeServicoList;
     private final Context context;
     private final Activity activity;
 
-    public OsItemHistoryAdapter(List<Os> osList, Context context, Activity activity) {
-        this.osList = osList;
+    public OsItemHistoryAdapter(List<OrdemDeServico> ordemDeServicoList, Context context, Activity activity) {
+        this.ordemDeServicoList = ordemDeServicoList;
         this.context = context;
         this.activity = activity;
 
-        if (this.osList != null && this.osList.size() > 0) {
-            Collections.sort(osList, new Comparator<Os>() {
+        if (this.ordemDeServicoList != null && this.ordemDeServicoList.size() > 0) {
+            Collections.sort(ordemDeServicoList, new Comparator<OrdemDeServico>() {
                 @Override
-                public int compare(Os o1, Os o2) {
+                public int compare(OrdemDeServico o1, OrdemDeServico o2) {
                     Date date1, date2;
                     if (o1.getDataAgendamento() == null)
                         date1 = new Date(Long.MAX_VALUE);
@@ -72,7 +70,7 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        final Os item = osList.get(position);
+        final OrdemDeServico item = ordemDeServicoList.get(position);
         String clientName;
         String osType;
         String dateString = "";
@@ -126,8 +124,8 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        if (osList != null) {
-            return osList.size();
+        if (ordemDeServicoList != null) {
+            return ordemDeServicoList.size();
         }
         return 0;
     }

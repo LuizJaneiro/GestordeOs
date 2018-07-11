@@ -2,7 +2,7 @@ package valenet.com.br.gestordeos.os_history;
 
 import java.util.List;
 
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 
 public interface OsHistory {
     interface OsHistoryView {
@@ -26,7 +26,7 @@ public interface OsHistory {
 
         void hideEmptyListView();
 
-        void loadOsHistoryList(List<Os> osHistoryList);
+        void loadOsHistoryList(List<OrdemDeServico> ordemDeServicoHistoryList);
     }
 
     interface OsHistoryPresenter {
@@ -37,7 +37,7 @@ public interface OsHistory {
         void loadHistoryUser(Integer coduser, onFinishedLoadHistoryUser listener);
 
         interface onFinishedLoadHistoryUser {
-            void onSuccessLoadingHistory(List<Os> osHistoryList);
+            void onSuccessLoadingHistory(List<OrdemDeServico> ordemDeServicoHistoryList);
 
             void onErrorServerLoadingHistory();
 

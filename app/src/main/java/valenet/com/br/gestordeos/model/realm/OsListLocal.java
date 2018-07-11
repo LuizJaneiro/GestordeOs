@@ -1,12 +1,11 @@
 package valenet.com.br.gestordeos.model.realm;
 
-import java.util.Arrays;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsNextList;
 import valenet.com.br.gestordeos.model.entity.OsScheduleList;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
@@ -24,13 +23,13 @@ public class OsListLocal {
         return repository;
     }
 
-    public List<Os> getNextOsList() {
+    public List<OrdemDeServico> getNextOsList() {
         RealmResults<OsNextList> osLists = realm.where(OsNextList.class).findAll();
         OsNextList osNextList = null;
-        List<Os> arrayListOfUnmanagedObjects = null;
+        List<OrdemDeServico> arrayListOfUnmanagedObjects = null;
         if (osLists != null && osLists.size() > 0){
             osNextList = osLists.first();
-            arrayListOfUnmanagedObjects = realm.copyFromRealm(osNextList.getOsListNext());
+            arrayListOfUnmanagedObjects = realm.copyFromRealm(osNextList.getOrdemDeServicoListNext());
         }
 
 
@@ -41,13 +40,13 @@ public class OsListLocal {
     }
 
 
-    public List<Os> getScheduleOsList() {
+    public List<OrdemDeServico> getScheduleOsList() {
         RealmResults<OsScheduleList> osLists = realm.where(OsScheduleList.class).findAll();
         OsScheduleList osScheduleList = null;
-        List<Os> arrayListOfUnmanagedObjects = null;
+        List<OrdemDeServico> arrayListOfUnmanagedObjects = null;
         if (osLists != null && osLists.size() > 0){
             osScheduleList = osLists.first();
-            arrayListOfUnmanagedObjects = realm.copyFromRealm(osScheduleList.getOsListSchedule());
+            arrayListOfUnmanagedObjects = realm.copyFromRealm(osScheduleList.getOrdemDeServicoListSchedule());
         }
 
 
@@ -72,27 +71,27 @@ public class OsListLocal {
         return arrayListOfUnmanagedObjects;
     }
 
-    public void saveOsScheduleListLocal(final List<Os> osScheduleList) {
+    public void saveOsScheduleListLocal(final List<OrdemDeServico> ordemDeServicoScheduleList) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 OsScheduleList osScheduleList1 = new OsScheduleList();
-                RealmList<Os> osList = new RealmList<>();
-                osList.addAll(osScheduleList);
-                osScheduleList1.setOsListSchedule(osList);
+                RealmList<OrdemDeServico> ordemDeServicoList = new RealmList<>();
+                ordemDeServicoList.addAll(ordemDeServicoScheduleList);
+                osScheduleList1.setOrdemDeServicoListSchedule(ordemDeServicoList);
                 realm.insertOrUpdate(osScheduleList1);
             }
         });
     }
 
-    public void saveOsNextListLocal(final List<Os> osNextList) {
+    public void saveOsNextListLocal(final List<OrdemDeServico> ordemDeServicoNextList) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
                 OsNextList osNextList1 = new OsNextList();
-                RealmList<Os> osList = new RealmList<>();
-                osList.addAll(osNextList);
-                osNextList1.setOsListNext(osList);
+                RealmList<OrdemDeServico> ordemDeServicoList = new RealmList<>();
+                ordemDeServicoList.addAll(ordemDeServicoNextList);
+                osNextList1.setOrdemDeServicoListNext(ordemDeServicoList);
                 realm.insertOrUpdate(osNextList1);
             }
         });
@@ -111,9 +110,9 @@ public class OsListLocal {
         });
     }
 
-    public void deleteOsLocal(Os os) {
-        if (os != null) {
-            final RealmResults<Os> results = realm.where(Os.class).equalTo("osid", os.getOsid()).findAll();
+    public void deleteOsLocal(OrdemDeServico ordemDeServico) {
+        if (ordemDeServico != null) {
+            final RealmResults<OrdemDeServico> results = realm.where(OrdemDeServico.class).equalTo("osid", ordemDeServico.getOsid()).findAll();
             realm.executeTransaction(new Realm.Transaction() {
                 @Override
                 public void execute(Realm realm) {

@@ -3,8 +3,6 @@ package valenet.com.br.gestordeos.os_filter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,9 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.model.entity.Os;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -137,8 +133,8 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
 /*    @Override
-    public List<Os> filterNextOsList() {
-        List<Os> newOsList = null;
+    public List<OrdemDeServico> filterNextOsList() {
+        List<OrdemDeServico> newOsList = null;
 
         if (isSelectedFilterList != null && nextOsList != null) {
             newOsList = new ArrayList<>();
@@ -147,7 +143,7 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             for (String key : keys) {
                 boolean isSelected = isSelectedFilterList.get(key);
                 if (isSelected) {
-                    for (Os os : nextOsList) {
+                    for (OrdemDeServico os : nextOsList) {
                         String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
                         String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
                         if (osTipoAtividade.equals(keyTratada)) {
@@ -161,8 +157,8 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public List<Os> filterScheduleOsList() {
-        List<Os> newOsList = null;
+    public List<OrdemDeServico> filterScheduleOsList() {
+        List<OrdemDeServico> newOsList = null;
 
         if (isSelectedFilterList != null && scheduleOsList != null) {
             newOsList = new ArrayList<>();
@@ -171,7 +167,7 @@ public class OsTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             for (String key : keys) {
                 boolean isSelected = isSelectedFilterList.get(key);
                 if (isSelected) {
-                    for (Os os : scheduleOsList) {
+                    for (OrdemDeServico os : scheduleOsList) {
                         String osTipoAtividade = ValenetUtils.removeAccent(os.getTipoAtividade()).toUpperCase();
                         String keyTratada = ValenetUtils.removeAccent(key).toUpperCase();
                         if (osTipoAtividade.equals(keyTratada)) {

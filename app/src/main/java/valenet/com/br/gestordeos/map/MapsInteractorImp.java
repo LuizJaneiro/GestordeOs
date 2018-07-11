@@ -9,7 +9,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
-import valenet.com.br.gestordeos.model.entity.Os;
+import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -32,13 +32,13 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
     @Override
     public void loadOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, final Integer group, final onFinishedListenerOsList listener) {
         application.API_INTERFACE.getOsList(latitude, longitude, codUser, true,
-                group).enqueue(new Callback<List<Os>>() {
+                group).enqueue(new Callback<List<OrdemDeServico>>() {
             @Override
-            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+            public void onResponse(Call<List<OrdemDeServico>> call, Response<List<OrdemDeServico>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Os> osList = new ArrayList<>();
-                    osList = response.body();
-                    final List<Os> finalOsList = osList;
+                    List<OrdemDeServico> ordemDeServicoList = new ArrayList<>();
+                    ordemDeServicoList = response.body();
+                    final List<OrdemDeServico> finalOrdemDeServicoList = ordemDeServicoList;
                     application.API_INTERFACE.getOsTypeList().enqueue(new Callback<List<OsTypeModel>>() {
                         @Override
                         public void onResponse(Call<List<OsTypeModel>> call, Response<List<OsTypeModel>> response) {
@@ -57,7 +57,7 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
                                     }
                                 }
 
-                                listener.successLoading(finalOsList, osTypeModelListReturn);
+                                listener.successLoading(finalOrdemDeServicoList, osTypeModelListReturn);
                             } else {
                                 listener.errorService("Ocorreu um problema no carregamento dos tipos de OS!");
                             }
@@ -75,7 +75,7 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
             }
 
             @Override
-            public void onFailure(Call<List<Os>> call, Throwable t) {
+            public void onFailure(Call<List<OrdemDeServico>> call, Throwable t) {
                 listener.errorNetwork();
                 Log.d("OsListInteractor", "error loading from API");
             }
@@ -85,13 +85,13 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
     @Override
     public void loadScheduleOsListAndOsTypes(Double latitude, Double longitude, Integer codUser, final Integer group, final onFinishedListenerOsList listener) {
         application.API_INTERFACE.getOsList(latitude, longitude, codUser, false,
-                group).enqueue(new Callback<List<Os>>() {
+                group).enqueue(new Callback<List<OrdemDeServico>>() {
             @Override
-            public void onResponse(Call<List<Os>> call, Response<List<Os>> response) {
+            public void onResponse(Call<List<OrdemDeServico>> call, Response<List<OrdemDeServico>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<Os> osList = new ArrayList<>();
-                    osList = response.body();
-                    final List<Os> finalOsList = osList;
+                    List<OrdemDeServico> ordemDeServicoList = new ArrayList<>();
+                    ordemDeServicoList = response.body();
+                    final List<OrdemDeServico> finalOrdemDeServicoList = ordemDeServicoList;
                     application.API_INTERFACE.getOsTypeList().enqueue(new Callback<List<OsTypeModel>>() {
                         @Override
                         public void onResponse(Call<List<OsTypeModel>> call, Response<List<OsTypeModel>> response) {
@@ -110,7 +110,7 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
                                     }
                                 }
 
-                                listener.successLoadingScheduleOsList(finalOsList, osTypeModelListReturn);
+                                listener.successLoadingScheduleOsList(finalOrdemDeServicoList, osTypeModelListReturn);
                             } else {
                                 listener.errorService("Ocorreu um problema no carregamento dos tipos de OS!");
                             }
@@ -128,7 +128,7 @@ public class MapsInteractorImp implements Maps.MapsInteractor {
             }
 
             @Override
-            public void onFailure(Call<List<Os>> call, Throwable t) {
+            public void onFailure(Call<List<OrdemDeServico>> call, Throwable t) {
                 listener.errorNetwork();
                 Log.d("OsListInteractor", "error loading from API");
             }
