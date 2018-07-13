@@ -236,7 +236,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
     @Override
     public void showEmptyListView() {
         if (layoutEmptyList != null) {
-            textViewErrorEmptyList.setText("Não há OSs agendadas para amanhã!");
+            textViewErrorEmptyList.setText("Não há OSs para serem pescadas no momento!");
             layoutEmptyList.setVisibility(View.VISIBLE);
         }
     }

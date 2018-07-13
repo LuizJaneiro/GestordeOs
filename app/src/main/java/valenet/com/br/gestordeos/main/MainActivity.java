@@ -600,6 +600,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                             presenter.loadOsDistance(myLocation.getLatitude(), myLocation.getLongitude(), ordemDeServicoScheduleArrayList.get(i), isLast);
                     }
                 }
+            } else {
+                if (navView != null)
+                    selectDrawerItem(getCheckedItem(navView));
             }
         }
         if (navView != null && myLocation == null) {
