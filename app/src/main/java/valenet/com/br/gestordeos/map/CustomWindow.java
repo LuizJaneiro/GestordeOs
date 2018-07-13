@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ClickGuard;
@@ -32,16 +33,14 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
     private Location myLocation;
     private int osType;
     private Polyline line;
-    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
     private GoogleMap map;
+    private GestorDeOsApplication application;
 
-    public CustomWindow(Context context, Location myLocation, HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap, GoogleMap map) {
+    public CustomWindow(Context context, Location myLocation, GoogleMap map) {
         this.context = context;
         this.myLocation = myLocation;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         myContentsView = inflater.inflate(R.layout.custom_info_marker, null);
-        if (osDistanceHashMap != null)
-            this.osDistanceHashMap = osDistanceHashMap;
         if(map != null)
             this.map = map;
     }
@@ -72,11 +71,11 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         else
             osType = item.getTipoAtividade();
 
-        if (item.getLatitude() == null || item.getLongitude() == null || myLocation == null || osDistanceHashMap == null || osDistanceHashMap.get(item.getOsid()) == null
-                || osDistanceHashMap.get(item.getOsid()).getDistance() == null)
+        if (item.getLatitude() == null || item.getLongitude() == null || myLocation == null || application.osDistanceHashMap == null || application.osDistanceHashMap.get(item.getOsid()) == null
+                || application.osDistanceHashMap.get(item.getOsid()).getDistance() == null)
             distance = "-";
         else {
-            double distanceDouble = osDistanceHashMap.get(item.getOsid()).getDistance().doubleValue() / 1000.0;
+            double distanceDouble = application.osDistanceHashMap.get(item.getOsid()).getDistance().doubleValue() / 1000.0;
             distanceDouble = ValenetUtils.round(distanceDouble, 1);
             if (distanceDouble >= 100)
                 distance = ">100";
@@ -116,8 +115,8 @@ public class CustomWindow implements GoogleMap.InfoWindowAdapter {
         }
 
         if (map != null) {
-            if(this.osDistanceHashMap != null && this.osDistanceHashMap.get(item.getOsid()) != null){
-                String encodedPoints = this.osDistanceHashMap.get(item.getOsid()).getEncodedStringPoints();
+            if(this.application.osDistanceHashMap != null && this.application.osDistanceHashMap.get(item.getOsid()) != null){
+                String encodedPoints = this.application.osDistanceHashMap.get(item.getOsid()).getEncodedStringPoints();
                 if(encodedPoints != null){
                     List<LatLng> list = decodePoly(encodedPoints);
                     line = map.addPolyline(new PolylineOptions()

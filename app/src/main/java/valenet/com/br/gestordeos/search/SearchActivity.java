@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
@@ -68,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
+
     private Boolean cameFromHistoryFragment;
     private boolean cameFromSchedule;
 
@@ -103,7 +104,6 @@ public class SearchActivity extends AppCompatActivity {
         filtredList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
-        osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
         cameFromHistoryFragment = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
         cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
@@ -235,11 +235,11 @@ public class SearchActivity extends AppCompatActivity {
     public void setAdapter(ArrayList<OrdemDeServico> list) {
         if(!cameFromHistoryFragment) {
             if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, cameFromSchedule);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, cameFromSchedule);
             else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap, cameFromSchedule);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, cameFromSchedule);
             else
-                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap, cameFromSchedule);
+                adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, cameFromSchedule);
             this.recyclerViewSearch.setLayoutManager(new LinearLayoutManager(this));
             this.recyclerViewSearch.setItemAnimator(new DefaultItemAnimator());
             this.recyclerViewSearch.setAdapter(adapter);

@@ -17,12 +17,14 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Locale;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
@@ -45,6 +47,8 @@ public class GestorDeOsApplication extends android.app.Application {
     private static Context appContext;
 
     public static int batteryLevel = 0;
+
+    public static HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = new HashMap<>();
 
     private BroadcastReceiver mBatInfoReceiver = new BroadcastReceiver() {
         @Override

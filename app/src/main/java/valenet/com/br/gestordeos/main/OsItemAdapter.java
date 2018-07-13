@@ -31,27 +31,24 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private final Context context;
     private final Activity activity;
     private final String sortOsBy;
-    private final HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap;
     private Location myLocation;
     private GestorDeOsApplication application;
     private boolean cameFromSchedule;
 
-    public OsItemAdapter(List<OrdemDeServico> ordemDeServicoList, Context context, Activity activity, Location myLocation, String sortOsBy, HashMap<Integer, OsDistanceAndPoints> osDistanceHashmap,
-                         boolean cameFromSchedule) {
+    public OsItemAdapter(List<OrdemDeServico> ordemDeServicoList, Context context, Activity activity, Location myLocation, String sortOsBy, boolean cameFromSchedule) {
         this.ordemDeServicoList = ordemDeServicoList;
         this.context = context;
         this.activity = activity;
         this.myLocation = myLocation;
         this.sortOsBy = sortOsBy;
-        this.osDistanceHashmap = osDistanceHashmap;
         this.cameFromSchedule = cameFromSchedule;
 
-        if (this.ordemDeServicoList != null && this.ordemDeServicoList.size() > 0 && this.osDistanceHashmap != null) {
+        if (this.ordemDeServicoList != null && this.ordemDeServicoList.size() > 0 && application.osDistanceHashMap != null) {
             for (int i = 0; i < ordemDeServicoList.size(); i++) {
-                if (this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()) == null || this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance() == null)
+                if (application.osDistanceHashMap.get(this.ordemDeServicoList.get(i).getOsid()) == null || application.osDistanceHashMap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance() == null)
                     this.ordemDeServicoList.get(i).setDistance(null);
                 else
-                    this.ordemDeServicoList.get(i).setDistance(this.osDistanceHashmap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance());
+                    this.ordemDeServicoList.get(i).setDistance(application.osDistanceHashMap.get(this.ordemDeServicoList.get(i).getOsid()).getDistance());
             }
         }
         if (sortOsBy != null)
@@ -74,18 +71,18 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     @Override
                     public int compare(OrdemDeServico o1, OrdemDeServico o2) {
                         Double distance1, distance2;
-                        if (o1.getLongitude() == null || o1.getLatitude() == null || osDistanceHashmap == null
-                                || osDistanceHashmap.get(o1.getOsid()) == null || osDistanceHashmap.get(o1.getOsid()).getDistance() == null)
+                        if (o1.getLongitude() == null || o1.getLatitude() == null || application.osDistanceHashMap == null
+                                || application.osDistanceHashMap.get(o1.getOsid()) == null || application.osDistanceHashMap.get(o1.getOsid()).getDistance() == null)
                             distance1 = Double.MAX_VALUE;
                         else {
-                            distance1 = (double) osDistanceHashmap.get(o1.getOsid()).getDistance();
+                            distance1 = (double) application.osDistanceHashMap.get(o1.getOsid()).getDistance();
                         }
 
-                        if (o2.getLongitude() == null || o2.getLatitude() == null || osDistanceHashmap == null
-                                || osDistanceHashmap.get(o2.getOsid()) == null || osDistanceHashmap.get(o2.getOsid()).getDistance() == null)
+                        if (o2.getLongitude() == null || o2.getLatitude() == null || application.osDistanceHashMap== null
+                                || application.osDistanceHashMap.get(o2.getOsid()) == null || application.osDistanceHashMap.get(o2.getOsid()).getDistance() == null)
                             distance2 = Double.MAX_VALUE;
                         else {
-                            distance2 = (double) osDistanceHashmap.get(o2.getOsid()).getDistance();
+                            distance2 = (double) application.osDistanceHashMap.get(o2.getOsid()).getDistance();
                         }
 
                         return distance1.compareTo(distance2);
@@ -156,8 +153,8 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             osType = item.getTipoAtividade();
 
         Integer osDistance = null;
-        if (osDistanceHashmap != null && osDistanceHashmap.get(item.getOsid()) != null)
-            osDistance = osDistanceHashmap.get(item.getOsid()).getDistance();
+        if (application.osDistanceHashMap != null && application.osDistanceHashMap.get(item.getOsid()) != null)
+            osDistance = application.osDistanceHashMap.get(item.getOsid()).getDistance();
 
         address = ValenetUtils.buildOsAddress(item.getTpLogradouro(), item.getLogradouro(), item.getComplemento(), item.getNumero(), item.getAndar(), item.getBairro());
 

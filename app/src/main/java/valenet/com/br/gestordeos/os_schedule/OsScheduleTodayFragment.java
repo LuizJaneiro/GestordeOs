@@ -50,6 +50,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.main.Main;
 import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.main.MainPresenterImp;
@@ -112,7 +113,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     private HashMap<String, Boolean> orderFilters;
     private HashMap<String, Boolean> selectedFilters;
-    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
+    private GestorDeOsApplication application;
 
     private OsItemAdapter adapter;
     Integer osType = null;
@@ -141,7 +142,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
         this.selectedFilters = (HashMap<String, Boolean>) getArguments().getSerializable(ValenetUtils.KEY_FILTERS);
         this.ordemDeServicoList = (ArrayList<OrdemDeServico>) getArguments().getSerializable(ValenetUtils.KEY_OS_LIST);
         this.osType = getArguments().getInt(ValenetUtils.KEY_OS_TYPE);
-        this.osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getArguments().getSerializable(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
 
         refreshLayoutScheduleOs.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -259,14 +259,10 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
 
     @Override
     public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
-        if (osDistanceHashMap == null)
-            osDistanceHashMap = new HashMap<>();
-
-        osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
+        application.osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
 
         if (isLast) {
             if (this.getActivity() != null) {
-                ((MainActivity) this.getActivity()).setOsDistanceHashMap(osDistanceHashMap);
                 ((MainActivity) this.getActivity()).showPager();
             }
         }
@@ -299,10 +295,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
         if (this.getActivity() != null && ordemDeServicoList != null) {
             ((MainActivity) this.getActivity()).setOrdemDeServicoScheduleArrayList((ArrayList) ordemDeServicoList);
 
-            if (((MainActivity) this.getActivity()).getOsDistanceHashMap() == null)
-                osDistanceHashMap = new HashMap<>();
-            else
-                osDistanceHashMap = ((MainActivity) this.getActivity()).getOsDistanceHashMap();
             boolean isLast = false;
             for (int i = 0; i < ordemDeServicoList.size(); i++) {
                 if (i == ordemDeServicoList.size() - 1)
@@ -328,11 +320,11 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
                 this.showEmptyListView();
             } else {
                 if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, osDistanceHashMap, true);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, true);
                 else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, osDistanceHashMap, true);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_NAME, true);
                 else
-                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, osDistanceHashMap, true);
+                    adapter = new OsItemAdapter(filtredList, this.getContext(), this.getActivity(), myLocation, ValenetUtils.SHARED_PREF_KEY_OS_TIME, true);
 
                 recyclerViewScheduleOs.setAdapter(adapter);
                 recyclerViewScheduleOs.setLayoutManager(new LinearLayoutManager(this.getContext()));
@@ -421,7 +413,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredList);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
             intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, true);
             this.getActivity().startActivityForResult(intent, REQ_CODE_SEARCH);
         }
@@ -434,7 +425,6 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, this.osTypeModelArrayList);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST, this.ordemDeServicoList);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
             intent.putExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, true);
             this.getActivity().startActivityForResult(intent, CODE_MAP);
         }

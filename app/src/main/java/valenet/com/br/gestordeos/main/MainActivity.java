@@ -59,6 +59,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.application.LocationService;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private ArrayList<OrdemDeServico> ordemDeServicoScheduleArrayList = null;
     private ArrayList<OrdemDeServico> ordemDeServicoNextArrayList = null;
 
-    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
+    private GestorDeOsApplication application;
 
 
     //Location
@@ -456,7 +457,6 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, null);
             intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, null);
             intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-            intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
             startActivityForResult(intent, REQ_CODE_SEARCH);
         }
     }
@@ -575,8 +575,6 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     @Override
     public void loadNextListOs(List<OrdemDeServico> ordemDeServicoList) {
         if (ordemDeServicoList != null) {
-            if (osDistanceHashMap == null)
-                osDistanceHashMap = new HashMap<>();
             this.ordemDeServicoNextArrayList = (ArrayList) ordemDeServicoList;
             if (this.ordemDeServicoNextArrayList.size() > 0) {
                 boolean isLast = false;
@@ -642,10 +640,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void setOsDistance(OsDistanceAndPoints osDistanceAndPoints, OrdemDeServico ordemDeServico, boolean isLast) {
-        if (osDistanceHashMap == null)
-            osDistanceHashMap = new HashMap<>();
 
-        osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
+        application.osDistanceHashMap.put(ordemDeServico.getOsid(), osDistanceAndPoints);
 
         if (isLast)
             if (navView != null)
@@ -835,7 +831,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public void setOsSchedulePagerAdapter() {
         osSchedulePagerAdapter = new OsSchedulePagerAdapter(getSupportFragmentManager(), myLocation,
-                orderFilters, filters, osTypeModelList, ordemDeServicoScheduleArrayList, osType, osDistanceHashMap, tabLayoutToolbarSearchable.getTabCount());
+                orderFilters, filters, osTypeModelList, ordemDeServicoScheduleArrayList, osType, tabLayoutToolbarSearchable.getTabCount());
         pager.setOffscreenPageLimit(tabLayoutToolbarSearchable.getTabCount());
         pager.setAdapter(osSchedulePagerAdapter);
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayoutToolbarSearchable) {
@@ -910,14 +906,6 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     public HashMap<String, Boolean> getFilters() {
         return filters;
-    }
-
-    public HashMap<Integer, OsDistanceAndPoints> getOsDistanceHashMap() {
-        return osDistanceHashMap;
-    }
-
-    public void setOsDistanceHashMap(HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap) {
-        this.osDistanceHashMap = osDistanceHashMap;
     }
 
     @Override

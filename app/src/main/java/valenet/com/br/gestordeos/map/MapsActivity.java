@@ -58,6 +58,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
@@ -119,7 +120,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
     private boolean loadOsTypeModel = false;
 
     private HashMap<String, Boolean> filters;
-    private HashMap<Integer, OsDistanceAndPoints> osDistanceHashMap = null;
     private boolean cameFromSchedule;
 
     @Override
@@ -145,7 +145,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         ordemDeServicoArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_LIST);
         osTypeModelArrayList = getIntent().getParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST);
         myLocation = getIntent().getParcelableExtra(ValenetUtils.KEY_USER_LOCATION);
-        osDistanceHashMap = (HashMap<Integer, OsDistanceAndPoints>) getIntent().getSerializableExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP);
         cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
         if (ordemDeServicoArrayList == null || ordemDeServicoArrayList.size() == 0)
@@ -277,7 +276,7 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
                                                 public Boolean call(Location location) {
                                                     if (location != null) {
                                                         myLocation = new Location(location);
-                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation, osDistanceHashMap, mMap));
+                                                        mMap.setInfoWindowAdapter(new CustomWindow(MapsActivity.this, myLocation, mMap));
                                                         LatLng point = new LatLng(location.getLatitude(), location.getLongitude());
                                                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, zoom));
                                                         if (loadOsArrayList) {
@@ -373,7 +372,6 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_FILTERED_LIST, filtredOrdemDeServicoArrayList);
         intent.putParcelableArrayListExtra(ValenetUtils.KEY_OS_TYPE_LIST, osTypeModelArrayList);
         intent.putExtra(ValenetUtils.KEY_USER_LOCATION, myLocation);
-        intent.putExtra(ValenetUtils.KEY_OS_DISTANCE_HASHMAP, osDistanceHashMap);
         startActivityForResult(intent, REQ_CODE_SEARCH);
     }
 
