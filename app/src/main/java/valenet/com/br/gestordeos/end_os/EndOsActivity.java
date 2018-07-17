@@ -1,9 +1,11 @@
 package valenet.com.br.gestordeos.end_os;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -49,7 +51,7 @@ public class EndOsActivity extends AppCompatActivity {
 
         osId = getIntent().getIntExtra(ValenetUtils.KEY_OS_ID, 0);
 
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -81,8 +83,34 @@ public class EndOsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                android.app.AlertDialog.Builder builderCad;
+                builderCad = new android.app.AlertDialog.Builder(EndOsActivity.this);
+                builderCad.setTitle("Atenção");
+                builderCad.setMessage("Navegação insegura, deseja continuar?");
+                builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        handler.proceed();
+                    }
+                });
+                builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        handler.cancel();
+                    }
+                });
+                final android.app.AlertDialog dialog = builderCad.create();
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface arg0) {
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+                    }
+                });
+                dialog.show();
             }
         });
     }

@@ -681,15 +681,17 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         for (AppConfig appConfig : appConfigs) {
             if (appConfig.getChave() != null && appConfig.getValor() != null) {
                 String appConfigKey = appConfig.getChave();
-                Integer appConfigValue = Integer.parseInt(appConfig.getValor());
-                if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
-                    LocationService.intervalSendPointsSeconds = appConfigValue;
-                }
-                if (appConfigKey.equals("MinDistance")) {
-                    LocationService.LOCATION_DISTANCE = appConfigValue;
-                }
-                if (appConfigKey.equals("MinTime")) {
-                    LocationService.LOCATION_INTERVAL = appConfigValue;
+                if(!appConfigKey.equals("APIKey")) {
+                    Integer appConfigValue = Integer.parseInt(appConfig.getValor());
+                    if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
+                        LocationService.intervalSendPointsSeconds = appConfigValue;
+                    }
+                    if (appConfigKey.equals("MinDistance")) {
+                        LocationService.LOCATION_DISTANCE = appConfigValue;
+                    }
+                    if (appConfigKey.equals("MinTime")) {
+                        LocationService.LOCATION_INTERVAL = appConfigValue;
+                    }
                 }
             }
         }
