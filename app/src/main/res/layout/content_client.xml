@@ -117,17 +117,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="4dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="4dp"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:gravity="center">
 
+            <ImageButton
+                android:id="@+id/btn_call_pesca"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_toLeftOf="@id/btn_pescar"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_call"
+                android:padding="18dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_call" />
 
-            <android.support.v7.widget.AppCompatButton
+            <ImageButton
                 android:id="@+id/btn_pescar"
-                style="@style/Button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:text="Pescar OS" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="40dp"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:background="@drawable/background_btn_rounded"
+                android:backgroundTint="@color/btn_pesca"
+                android:paddingBottom="14dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="12dp"
+                android:paddingTop="14dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_fish" />
 
         </RelativeLayout>
 

@@ -25,5 +25,7 @@
     <color name="btn_nav">#30538B</color>
     <color name="btn_call">#94c083</color>
     <color name="btn_confirm">#d44642</color>
-    
+    <color name="btn_pesca">#438eb9</color>
+    <color name="background_screen_list">#e0dcdb</color>
+
 </resources>

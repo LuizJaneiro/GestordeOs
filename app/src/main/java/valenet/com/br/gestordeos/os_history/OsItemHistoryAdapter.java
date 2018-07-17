@@ -74,6 +74,8 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         String clientName;
         String osType;
         String dateString = "";
+        String city;
+        String osId;
 
         if (item.getCliente() == null)
             clientName = "Nome Indefinido";
@@ -92,21 +94,37 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
-        if (item.getStatusOs() == null)
-            ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
-        else {
-            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
-                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_awaiting_os));
-            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
-                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_closed_os));
-            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
-                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_refused_os));
-            if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
-                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_blocked_os));
+        if(item.getOsid() == null) {
+            osId = "-";
+        } else {
+            osId = item.getOsid() + "";
+        }
+
+        if (item.getCidade() == null)
+            city = "Cidade Indefinida";
+        else
+            city = item.getCidade();
+
+        if(item.getCancelado() != null && item.getCancelado()) {
+                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_canceled_os));
+        } else {
+            if (item.getStatusOs() == null)
+                ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
+            else {
+                if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("AGUARDANDO"))
+                    ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_awaiting_os));
+                if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CONCLUIDO"))
+                    ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_closed_os));
+                if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("CANCELADO"))
+                    ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_refused_os));
+                if (ValenetUtils.removeAccent(item.getStatusOs().toUpperCase()).equals("BLOQUEADA"))
+                    ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_blocked_os));
+            }
         }
 
         ((MViewHolder) holder).textViewClientName.setText(clientName);
-
+        ((MViewHolder) holder).textViewOsCity.setText(city);
+        ((MViewHolder) holder).textViewOsId.setText(osId);
         ((MViewHolder) holder).textViewType.setText(osType);
         ((MViewHolder) holder).textViewDate.setText(dateString);
 
@@ -134,6 +152,8 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         final TextView textViewClientName;
         final TextView textViewType;
         final TextView textViewDate;
+        final TextView textViewOsId;
+        final TextView textViewOsCity;
         final ImageView imageViewStatusOs;
         final ViewGroup osItemView;
 
@@ -142,6 +162,8 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             this.textViewClientName = container.findViewById(R.id.text_view_client_name_toolbar);
             this.textViewType = container.findViewById(R.id.text_view_os_type_toolbar);
             this.textViewDate = container.findViewById(R.id.text_view_os_date_toolbar);
+            this.textViewOsId = container.findViewById(R.id.text_view_os_id);
+            this.textViewOsCity = container.findViewById(R.id.text_view_os_city_toolbar);
             this.imageViewStatusOs = container.findViewById(R.id.image_view_status_os);
             this.osItemView = container.findViewById(R.id.os_item_view);
         }

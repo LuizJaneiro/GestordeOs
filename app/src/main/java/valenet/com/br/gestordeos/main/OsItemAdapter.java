@@ -136,6 +136,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         String dateString = "";
         String city;
         String address;
+        String osId;
 
         if (item.getCliente() == null)
             clientName = "Nome Indefinido";
@@ -177,6 +178,12 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
+        if(item.getOsid() == null) {
+            osId = "-";
+        } else {
+            osId = item.getOsid() + "";
+        }
+
         if (item.getStatusOs() == null)
             ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
         else {
@@ -192,6 +199,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         ((MViewHolder) holder).textViewClientName.setText(clientName);
         ((MViewHolder) holder).textViewDistance.setText(distance + " KM");
+        ((MViewHolder) holder).textViewOsId.setText(osId);
 
         ((MViewHolder) holder).textViewType.setText(osType);
         ((MViewHolder) holder).textViewDate.setText(dateString);
@@ -225,6 +233,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final TextView textViewDistance;
         final TextView textViewCity;
         final TextView textViewAddress;
+        final TextView textViewOsId;
         final ImageView imageViewStatusOs;
         final ViewGroup osItemView;
 
@@ -237,6 +246,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.imageViewStatusOs = container.findViewById(R.id.image_view_status_os);
             this.textViewCity = container.findViewById(R.id.text_view_os_city_toolbar);
             this.textViewAddress = container.findViewById(R.id.text_view_os_address_toolbar);
+            this.textViewOsId = container.findViewById(R.id.text_view_os_id);
             this.osItemView = container.findViewById(R.id.os_item_view);
         }
     }

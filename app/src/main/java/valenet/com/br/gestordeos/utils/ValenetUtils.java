@@ -21,8 +21,10 @@ public class ValenetUtils {
 
     // homologacao
     //public static final String BASE_URL = "https://api.valenet.com.br/api/";
-    // marcelo
-    public static final String BASE_URL = "http://192.168.32.243/";
+    // local
+    //public static final String BASE_URL = "http://192.168.32.243/";
+    //server testes
+    public static final String BASE_URL = "http://api3.valenet.com.br/";
     public static final String BASE_URL_GOOGLE_DISTANCE = "https://maps.googleapis.com/maps/";
     public static final String KEY_FILTERED_LIST = "KEY_FILTERED_LIST";
     public static final String KEY_OS_LIST = "KEY_OS_LIST";

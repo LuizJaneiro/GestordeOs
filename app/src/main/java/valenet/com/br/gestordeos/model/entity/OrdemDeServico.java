@@ -10,6 +10,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
+import retrofit2.http.Body;
 
 public class OrdemDeServico extends RealmObject implements Parcelable {
 
@@ -106,6 +107,10 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
     @SerializedName("DataCheckout")
     @Expose
     private String dataCheckout;
+    @SerializedName("cancelado")
+    @Expose
+    private Boolean cancelado;
+
 
     public final static Parcelable.Creator<OrdemDeServico> CREATOR = new Creator<OrdemDeServico>() {
 
@@ -156,6 +161,7 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         this.agendaEventoID = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));
         this.dataCheckout = ((String) in.readValue((String.class.getClassLoader())));
+        this.cancelado = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
     }
 
     public OrdemDeServico() {
@@ -417,6 +423,15 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         this.dataCheckout = dataCheckout;
     }
 
+    public Boolean getCancelado() {
+        return cancelado;
+    }
+
+    public void setCancelado(Boolean cancelado) {
+        this.cancelado = cancelado;
+    }
+
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(osid);
         dest.writeValue(emissao);
@@ -449,6 +464,7 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         dest.writeValue(agendaEventoID);
         dest.writeValue(dataCheckin);
         dest.writeValue(dataCheckout);
+        dest.writeValue(cancelado);
     }
 
     public int describeContents() {

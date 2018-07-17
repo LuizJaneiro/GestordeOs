@@ -99,9 +99,11 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     @BindView(R.id.layout_buttons_schedule)
     RelativeLayout layoutButtonsSchedule;
     @BindView(R.id.btn_pescar)
-    AppCompatButton btnPescar;
+    ImageButton btnPescar;
     @BindView(R.id.layout_buttons_fishing)
     RelativeLayout layoutButtonsFishing;
+    @BindView(R.id.btn_call_pesca)
+    ImageButton btnCallPesca;
 
     private PagerAdapter pagerAdapter;
     private OrdemDeServico ordemDeServico;
@@ -211,13 +213,13 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     }).subscribe();
         }
 
-        if(cameFromSchedule || cameFromHistory) {
-            if(layoutButtonsSchedule != null && layoutButtonsFishing != null) {
+        if (cameFromSchedule || cameFromHistory) {
+            if (layoutButtonsSchedule != null && layoutButtonsFishing != null) {
                 layoutButtonsFishing.setVisibility(View.GONE);
                 layoutButtonsSchedule.setVisibility(View.VISIBLE);
             }
         } else {
-            if(layoutButtonsSchedule != null && layoutButtonsFishing != null) {
+            if (layoutButtonsSchedule != null && layoutButtonsFishing != null) {
                 layoutButtonsSchedule.setVisibility(View.GONE);
                 layoutButtonsFishing.setVisibility(View.VISIBLE);
             }
@@ -313,7 +315,8 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
 
         if (ordemDeServico.getTelefoneCliente() == null) {
             btnCall.setEnabled(false);
-            btnNav.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
+            btnCall.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
+            btnCallPesca.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
         }
 
         if (ordemDeServico.getLatitude() == null || ordemDeServico.getLongitude() == null) {
@@ -647,7 +650,39 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         dialog.show();
     }
 
-    @OnClick({R.id.btn_checkout, R.id.btn_checkin, R.id.btn_call, R.id.btn_confirm, R.id.btn_nav, R.id.btn_pescar})
+    public void pescar() {
+        android.app.AlertDialog.Builder builderCad;
+        builderCad = new android.app.AlertDialog.Builder(this);
+        builderCad.setTitle("Atenção");
+        builderCad.setMessage("Deseja pescar a OS?");
+        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                LoginLocal loginLocal = LoginLocal.getInstance();
+                if (loginLocal != null)
+                    presenter.putScheduleFishEvent(ordemDeServico.getAgendaEventoID(), loginLocal.getCurrentUser().getCoduser());
+            }
+        });
+
+        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        final android.app.AlertDialog dialog = builderCad.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
+        });
+        dialog.show();
+    }
+
+    @OnClick({R.id.btn_checkout, R.id.btn_checkin, R.id.btn_call, R.id.btn_confirm, R.id.btn_nav, R.id.btn_pescar, R.id.btn_call_pesca})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_checkout:
@@ -663,6 +698,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     this.getLocationAndRequestCheck(true);
                 break;
             case R.id.btn_call:
+            case R.id.btn_call_pesca:
                 this.callPhone(this.ordemDeServico.getTelefoneCliente() + "");
                 break;
             case R.id.btn_confirm:
@@ -672,9 +708,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 navigateToMap();
                 break;
             case R.id.btn_pescar:
-                LoginLocal loginLocal = LoginLocal.getInstance();
-                if(loginLocal != null)
-                    presenter.putScheduleFishEvent(ordemDeServico.getAgendaEventoID(), loginLocal.getCurrentUser().getCoduser());
+                pescar();
                 break;
         }
     }
