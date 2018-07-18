@@ -94,7 +94,7 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
                     ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
-        if(item.getOsid() == null) {
+        if (item.getOsid() == null) {
             osId = "-";
         } else {
             osId = item.getOsid() + "";
@@ -105,8 +105,11 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         else
             city = item.getCidade();
 
-        if(item.getCancelado() != null && item.getCancelado()) {
-                ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_canceled_os));
+        if (item.getOsPescada() != null && item.getOsPescada())
+            ((MViewHolder) holder).imageViewFishedOs.setVisibility(View.VISIBLE);
+
+        if (item.getCancelado() != null && item.getCancelado()) {
+            ((MViewHolder) holder).imageViewStatusOs.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_canceled_os));
         } else {
             if (item.getStatusOs() == null)
                 ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
@@ -155,6 +158,7 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         final TextView textViewOsId;
         final TextView textViewOsCity;
         final ImageView imageViewStatusOs;
+        final ImageView imageViewFishedOs;
         final ViewGroup osItemView;
 
         MViewHolder(View container) {
@@ -165,6 +169,7 @@ public class OsItemHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
             this.textViewOsId = container.findViewById(R.id.text_view_os_id);
             this.textViewOsCity = container.findViewById(R.id.text_view_os_city_toolbar);
             this.imageViewStatusOs = container.findViewById(R.id.image_view_status_os);
+            this.imageViewFishedOs = container.findViewById(R.id.image_view_fished_os);
             this.osItemView = container.findViewById(R.id.os_item_view);
         }
     }

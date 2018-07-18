@@ -78,7 +78,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                             distance1 = (double) application.osDistanceHashMap.get(o1.getOsid()).getDistance();
                         }
 
-                        if (o2.getLongitude() == null || o2.getLatitude() == null || application.osDistanceHashMap== null
+                        if (o2.getLongitude() == null || o2.getLatitude() == null || application.osDistanceHashMap == null
                                 || application.osDistanceHashMap.get(o2.getOsid()) == null || application.osDistanceHashMap.get(o2.getOsid()).getDistance() == null)
                             distance2 = Double.MAX_VALUE;
                         else {
@@ -178,11 +178,14 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     ValenetUtils.convertJsonToStringHour(item.getDataAgendamento());
         }
 
-        if(item.getOsid() == null) {
+        if (item.getOsid() == null) {
             osId = "-";
         } else {
             osId = item.getOsid() + "";
         }
+
+        if (item.getOsPescada() != null && item.getOsPescada())
+            ((MViewHolder) holder).imageViewFishedOs.setVisibility(View.VISIBLE);
 
         if (item.getStatusOs() == null)
             ((MViewHolder) holder).imageViewStatusOs.setVisibility(View.GONE);
@@ -235,6 +238,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         final TextView textViewAddress;
         final TextView textViewOsId;
         final ImageView imageViewStatusOs;
+        final ImageView imageViewFishedOs;
         final ViewGroup osItemView;
 
         MViewHolder(View container) {
@@ -244,6 +248,7 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             this.textViewDate = container.findViewById(R.id.text_view_os_date_toolbar);
             this.textViewDistance = container.findViewById(R.id.text_view_distance_toolbar);
             this.imageViewStatusOs = container.findViewById(R.id.image_view_status_os);
+            this.imageViewFishedOs = container.findViewById(R.id.image_view_fished_os);
             this.textViewCity = container.findViewById(R.id.text_view_os_city_toolbar);
             this.textViewAddress = container.findViewById(R.id.text_view_os_address_toolbar);
             this.textViewOsId = container.findViewById(R.id.text_view_os_id);

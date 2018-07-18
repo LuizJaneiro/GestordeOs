@@ -152,9 +152,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         ButterKnife.bind(this);
 
         setupScheduleToolbar();
-        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Hoje"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Até Hoje"));
         tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Amanhã"));
-        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Próximos Dias"));
+        tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Próx. Dias"));
         tabLayoutToolbarSearchable.setTabGravity(TabLayout.GRAVITY_FILL);
 
         this.presenter = new MainPresenterImp(this);

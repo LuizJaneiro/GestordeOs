@@ -520,7 +520,7 @@ public class OsScheduleTodayFragment extends Fragment implements MainActivity.na
                 OrdemDeServico ordemDeServico = ordemDeServicoArrayList.get(i);
                 if (ordemDeServico.getDataAgendamento() != null) {
                     Date osDate = DateUtils.parseDate(ordemDeServico.getDataAgendamento());
-                    if (DateUtils.areDatesSameDay(currentDate, osDate))
+                    if (DateUtils.isDateBeforeOrEqual(osDate, currentDate))
                         todayOrdemDeServicoList.add(ordemDeServico);
                 }
             }

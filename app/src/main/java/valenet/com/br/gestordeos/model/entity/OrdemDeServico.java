@@ -110,6 +110,9 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
     @SerializedName("cancelado")
     @Expose
     private Boolean cancelado;
+    @SerializedName("OSPescada")
+    @Expose
+    private Boolean osPescada;
 
 
     public final static Parcelable.Creator<OrdemDeServico> CREATOR = new Creator<OrdemDeServico>() {
@@ -162,6 +165,7 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         this.dataCheckin = ((String) in.readValue((String.class.getClassLoader())));
         this.dataCheckout = ((String) in.readValue((String.class.getClassLoader())));
         this.cancelado = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
+        this.osPescada = ((Boolean) in.readValue((Boolean.class.getClassLoader())));
     }
 
     public OrdemDeServico() {
@@ -431,6 +435,14 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         this.cancelado = cancelado;
     }
 
+    public Boolean getOsPescada() {
+        return osPescada;
+    }
+
+    public void setOsPescada(Boolean osPescada) {
+        this.osPescada = osPescada;
+    }
+
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(osid);
@@ -465,6 +477,7 @@ public class OrdemDeServico extends RealmObject implements Parcelable {
         dest.writeValue(dataCheckin);
         dest.writeValue(dataCheckout);
         dest.writeValue(cancelado);
+        dest.writeValue(osPescada);
     }
 
     public int describeContents() {

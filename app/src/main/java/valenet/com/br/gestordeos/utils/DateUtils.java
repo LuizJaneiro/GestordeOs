@@ -61,6 +61,7 @@ public class DateUtils{
      */
     public static Date parseDate(String strdate)
     {
+        strdate = strdate.replace("Z", "");
         Date result = null;
         strdate = strdate.trim();
         if (strdate.length() > 10) {
@@ -109,7 +110,7 @@ public class DateUtils{
                 i++;
             }
         }
-
+        result = new Date(result.getTime() + 180 * 60 * 1000); // soma 30 minutos
         return result;
     }
 
@@ -139,6 +140,24 @@ public class DateUtils{
         boolean sameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
         boolean sameMonth = cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
         boolean sameDay = cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+
+        if(sameDay && sameMonth && sameYear)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean isDateBeforeOrEqual(Date date1, Date date2){
+        if(date1 == null || date2 == null)
+            return false;
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameYear = cal1.get(Calendar.YEAR) <= cal2.get(Calendar.YEAR);
+        boolean sameMonth = cal1.get(Calendar.MONTH) <= cal2.get(Calendar.MONTH);
+        boolean sameDay = cal1.get(Calendar.DAY_OF_MONTH) <= cal2.get(Calendar.DAY_OF_MONTH);
 
         if(sameDay && sameMonth && sameYear)
             return true;
