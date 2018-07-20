@@ -348,7 +348,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        if (!cameFromHistory) {
+        if (cameFromSchedule && !cameFromHistory) {
             inflater.inflate(R.menu.menu_os_options, menu);
         }
         return true;

@@ -17,7 +17,7 @@ public class LoginLocal {
         return repository;
     }
 
-    public void saveUser(final User user){
+    public void saveUser(final User user) {
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -26,7 +26,7 @@ public class LoginLocal {
         });
     }
 
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         RealmResults<User> users = realm.where(User.class).findAll();
         User user = null;
         if (users != null && users.size() > 0)
@@ -34,7 +34,7 @@ public class LoginLocal {
         return user;
     }
 
-    public void deleteUser(User currentUser){
+    public void deleteUser(User currentUser) {
         if (currentUser != null) {
             final RealmResults<User> results = realm.where(User.class).equalTo("coduser", currentUser.getCoduser()).findAll();
             realm.executeTransaction(new Realm.Transaction() {
@@ -45,7 +45,8 @@ public class LoginLocal {
             });
         }
     }
-    public void deleteAllUsers(){
+
+    public void deleteAllUsers() {
         final RealmResults<User> results = realm.where(User.class).findAll();
         realm.executeTransaction(new Realm.Transaction() {
             @Override

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -180,6 +181,14 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                     @Override
                     public Object call(Boolean aBoolean) {
                         if (aBoolean) {
+                            Intent myService = new Intent(getApplicationContext(), LocationService.class);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                startForegroundService(myService);
+                            } else {
+                                startService(myService);
+                            }
+
                             final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
                             final LocationRequest locationRequest = LocationRequest.create()
                                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -678,13 +687,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void loadAppConfig(List<AppConfig> appConfigs) {
-        for (AppConfig appConfig : appConfigs) {
+/*        for (AppConfig appConfig : appConfigs) {
             if (appConfig.getChave() != null && appConfig.getValor() != null) {
                 String appConfigKey = appConfig.getChave();
                 if(!appConfigKey.equals("APIKey")) {
                     Integer appConfigValue = Integer.parseInt(appConfig.getValor());
                     if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
-                        LocationService.intervalSendPointsSeconds = appConfigValue;
+                        application. setIntervalSendPoints(appConfigValue);
                     }
                     if (appConfigKey.equals("MinDistance")) {
                         LocationService.LOCATION_DISTANCE = appConfigValue;
@@ -695,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 }
             }
         }
-        LocationService.setLocationListener();
+        LocationService.setLocationListener();*/
     }
 
     private void setupScheduleToolbar() {

@@ -1,40 +1,24 @@
 package valenet.com.br.gestordeos.application;
 
-import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
-import io.fabric.sdk.android.services.common.CommonUtils;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
-import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationDataList;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
@@ -42,15 +26,14 @@ public class LocationService extends Service {
     private static final String TAG = "BOOMBOOMTESTGPS";
     public static LocationManager mLocationManager = null;
     //milliseconds
-    public static int LOCATION_INTERVAL = 10;
+    public static int LOCATION_INTERVAL = 30;
     //meters
     public static float LOCATION_DISTANCE = 0;
-    public static int intervalSendPointsSeconds = 60;
     public static LocationListener mLocationListerStatic;
+    GestorDeOsApplication application;
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
-        GestorDeOsApplication application;
 
         public LocationListener(String provider) {
             Log.e(TAG, "LocationListener " + provider);
@@ -71,36 +54,9 @@ public class LocationService extends Service {
                 Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser + " batteryLevel: " + application.batteryLevel);
                 if (OsLocationDataListLocal.getInstance() != null) {
                     OsLocationDataListLocal.getInstance().addOsLocationdataOnListLocal(new OsLocationData(location.getLatitude(), location.getLongitude(), currentTime,
-                                                                                        codUser, application.batteryLevel));
+                            codUser, application.batteryLevel));
                 }
             }
-
-            new Handler().postDelayed(new Runnable() {
-                public void run() {
-                    final OsLocationDataListLocal osLocationDataListLocal = OsLocationDataListLocal.getInstance();
-                    if(osLocationDataListLocal != null){
-                        List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
-                        if(osLocationDataList != null && osLocationDataList.size() > 0){
-                            OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
-                            osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
-                            final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
-                            application.API_INTERFACE.sendUserPostions(osLocationDataArray).enqueue(new Callback<Integer>() {
-                                @Override
-                                public void onResponse(Call<Integer> call, Response<Integer> response) {
-                                    if(response.isSuccessful() && response.body() != null){
-                                            osLocationDataListLocal.deleteOsLocationDataLists();
-                                            List<OsLocationData> osLocationDataList = osLocationDataListLocal.getOsLocationDataList();
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<Integer> call, Throwable t) {
-                                }
-                            });
-                        }
-                    }
-                }
-            }, intervalSendPointsSeconds * 1000);
         }
 
         @Override
@@ -150,7 +106,7 @@ public class LocationService extends Service {
 
     @Override
     public void onCreate() {
-        Log.e(TAG, "onCreate");
+        Log.e(TAG, "onLocation:onCreate");
         initializeLocationManager();
         try {
             mLocationManager.requestLocationUpdates(
@@ -162,11 +118,41 @@ public class LocationService extends Service {
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mNotificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel;
+            channel = new NotificationChannel("default",
+                    "YOUR_CHANNEL_NAME",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("YOUR_NOTIFICATION_CHANNEL_DISCRIPTION");
+            mNotificationManager.createNotificationChannel(channel);
+            Notification.Builder builder = new Notification.Builder(this, channel.getId())
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText("Localização rodando em background")
+                    .setAutoCancel(true);
+
+            Notification notification = builder.build();
+            startForeground(1, notification);
+
+        } else {
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                    .setContentTitle(getString(R.string.app_name))
+                    .setContentText("Localização rodando em background")
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setAutoCancel(true);
+
+            Notification notification = builder.build();
+
+            startForeground(1, notification);
+        }
     }
 
     @Override
     public void onDestroy() {
-        Log.e(TAG, "onDestroy");
+        Log.e(TAG, "onLocation:onDestroy");
         super.onDestroy();
         if (mLocationManager != null) {
             for (int i = 0; i < mLocationListeners.length; i++) {
@@ -176,6 +162,10 @@ public class LocationService extends Service {
                     Log.i(TAG, "fail to remove location listners, ignore", ex);
                 }
             }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            stopForeground(true); //true will remove notification
         }
     }
 
