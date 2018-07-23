@@ -26,9 +26,9 @@ public class LocationService extends Service {
     private static final String TAG = "BOOMBOOMTESTGPS";
     public static LocationManager mLocationManager = null;
     //milliseconds
-    public static int LOCATION_INTERVAL = 30;
+    public static int LOCATION_INTERVAL = 60;
     //meters
-    public static float LOCATION_DISTANCE = 0;
+    public static float LOCATION_DISTANCE = 20;
     public static LocationListener mLocationListerStatic;
     GestorDeOsApplication application;
 
@@ -94,9 +94,10 @@ public class LocationService extends Service {
 
     public static void setLocationListener() {
         try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL * 1000, LOCATION_DISTANCE,
-                    mLocationListerStatic);
+            if (mLocationManager != null)
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, LOCATION_INTERVAL * 1000, LOCATION_DISTANCE,
+                        mLocationListerStatic);
         } catch (java.lang.SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {

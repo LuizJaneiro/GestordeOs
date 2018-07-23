@@ -687,13 +687,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void loadAppConfig(List<AppConfig> appConfigs) {
-/*        for (AppConfig appConfig : appConfigs) {
+        for (AppConfig appConfig : appConfigs) {
             if (appConfig.getChave() != null && appConfig.getValor() != null) {
                 String appConfigKey = appConfig.getChave();
-                if(!appConfigKey.equals("APIKey")) {
+                if (!appConfigKey.equals("APIKey")) {
                     Integer appConfigValue = Integer.parseInt(appConfig.getValor());
                     if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
-                        application. setIntervalSendPoints(appConfigValue);
+                        application.setIntervalSendPoints(appConfigValue);
                     }
                     if (appConfigKey.equals("MinDistance")) {
                         LocationService.LOCATION_DISTANCE = appConfigValue;
@@ -704,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 }
             }
         }
-        LocationService.setLocationListener();*/
+        LocationService.setLocationListener();
     }
 
     private void setupScheduleToolbar() {
