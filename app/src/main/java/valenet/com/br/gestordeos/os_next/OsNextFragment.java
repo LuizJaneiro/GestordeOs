@@ -148,7 +148,7 @@ public class OsNextFragment extends Fragment implements MainActivity.navigateInt
             public void onRefresh() {
                 if (myLocation != null)
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, true);
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(), true, osType, false);
                 else {
                     loadOsListWithoutLocation();
                 }

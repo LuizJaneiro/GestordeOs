@@ -142,7 +142,7 @@ public class OsScheduleTomorrowFragment extends Fragment implements MainActivity
             public void onRefresh() {
                 if (myLocation != null)
                     presenter.loadOsList(myLocation.getLatitude(), myLocation.getLongitude(),
-                            LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, true);
+                            LoginLocal.getInstance().getCurrentUser().getCoduser(), false, osType, false);
                 else {
                     loadOsListWithoutLocation();
                 }
