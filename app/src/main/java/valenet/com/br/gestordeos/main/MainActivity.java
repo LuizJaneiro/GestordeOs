@@ -297,6 +297,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         if (requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
             if (resultCode == Activity.RESULT_OK) {
+                selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
                 presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         false, osType, false);
             }
@@ -304,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
+                selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
                 presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
                         false, osType, false);
             }

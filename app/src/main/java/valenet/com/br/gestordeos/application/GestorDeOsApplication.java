@@ -175,7 +175,7 @@ public class GestorDeOsApplication extends android.app.Application {
     public void onTerminate() {
         Log.e("no such an algorithm", "applicationOnTerminate");
         super.onTerminate();
-        if(handler != null)
+        if (handler != null)
             handler.removeCallbacks(getResponceAfterInterval);
     }
 
@@ -253,7 +253,6 @@ public class GestorDeOsApplication extends android.app.Application {
                     if (osLocationDataList != null && osLocationDataList.size() > 0) {
                         OsLocationData[] osLocationDataArray = new OsLocationData[osLocationDataList.size()];
                         osLocationDataArray = osLocationDataList.toArray(osLocationDataArray);
-                        final OsLocationData[] finalOsLocationDataArray = osLocationDataArray;
                         API_INTERFACE.sendUserPostions(osLocationDataArray).enqueue(new Callback<Integer>() {
                             @Override
                             public void onResponse(Call<Integer> call, Response<Integer> response) {
