@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.Calendar;
@@ -51,10 +52,11 @@ public class LocationService extends Service {
             }
 
             if (codUser != null) {
-                Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser + " batteryLevel: " + application.batteryLevel);
+                Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser + " batteryLevel: " + application.batteryLevel
+                        + " imei: " + application.imei);
                 if (OsLocationDataListLocal.getInstance() != null) {
                     OsLocationDataListLocal.getInstance().addOsLocationdataOnListLocal(new OsLocationData(location.getLatitude(), location.getLongitude(), currentTime,
-                            codUser, application.batteryLevel));
+                            codUser, application.batteryLevel, application.imei));
                 }
             }
         }

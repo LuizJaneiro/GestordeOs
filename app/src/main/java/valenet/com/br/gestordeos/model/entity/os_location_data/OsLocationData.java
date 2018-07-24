@@ -9,33 +9,36 @@ import io.realm.RealmObject;
 
 public class OsLocationData extends RealmObject {
 
-    @SerializedName("latitude")
+    @SerializedName("Latitude")
     @Expose
     private Double latitude;
-    @SerializedName("longitude")
+    @SerializedName("Longitude")
     @Expose
     private Double longitude;
-    @SerializedName("dataColeta")
+    @SerializedName("DataColeta")
     @Expose
     private Date dataColeta;
-    @SerializedName("codUser")
+    @SerializedName("CodUser")
     @Expose
     private Integer codUser;
-
-    @SerializedName("nivelBateria")
+    @SerializedName("NivelBateria")
     @Expose
     private Integer nivelBateria;
+    @SerializedName("IMEI")
+    @Expose
+    private String imei;
 
-    public OsLocationData(){
+    public OsLocationData() {
 
     }
 
-    public OsLocationData(Double latitude, Double longitude, Date date, Integer codUser, Integer nivelBateria) {
+    public OsLocationData(Double latitude, Double longitude, Date date, Integer codUser, Integer nivelBateria, String imei) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.dataColeta = date;
         this.codUser = codUser;
         this.nivelBateria = nivelBateria;
+        this.imei = imei;
     }
 
     public Double getLatitude() {
@@ -78,6 +81,14 @@ public class OsLocationData extends RealmObject {
         this.nivelBateria = nivelBateria;
     }
 
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -86,7 +97,7 @@ public class OsLocationData extends RealmObject {
                 ", date=" + dataColeta +
                 ", codUser=" + codUser +
                 ", nivelBateria=" + nivelBateria +
-                '}';
+                ", IMEI=" + imei + '}';
     }
 
 }

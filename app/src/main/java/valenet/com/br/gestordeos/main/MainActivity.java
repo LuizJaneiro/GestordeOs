@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -146,11 +147,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private Integer osType = 0;
     private boolean isHistory = false;
 
+    private TelephonyManager tm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        tm = (TelephonyManager) getSystemService(this.TELEPHONY_SERVICE);
 
         setupScheduleToolbar();
         tabLayoutToolbarSearchable.addTab(tabLayoutToolbarSearchable.newTab().setText("Até Hoje"));
@@ -176,16 +181,21 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         this.showLoading();
         this.presenter.getAppConfig();
         RxPermissions.getInstance(MainActivity.this)
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_PHONE_STATE)
                 .map(new Func1<Boolean, Object>() {
+                    @SuppressLint("MissingPermission")
                     @Override
                     public Object call(Boolean aBoolean) {
                         if (aBoolean) {
                             Intent myService = new Intent(getApplicationContext(), LocationService.class);
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                application.imei = tm.getImei();
                                 startForegroundService(myService);
+
                             } else {
+                                application.imei = tm.getDeviceId();
                                 startService(myService);
                             }
 

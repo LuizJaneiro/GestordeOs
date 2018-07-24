@@ -58,6 +58,7 @@ public class GestorDeOsApplication extends android.app.Application {
     private static Context appContext;
 
     public static int batteryLevel = 0;
+    public static String imei = "";
     private static Handler handler = new Handler();
     private static Runnable getResponceAfterInterval = new Runnable() {
 
