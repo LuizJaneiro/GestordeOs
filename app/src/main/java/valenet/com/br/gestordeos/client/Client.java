@@ -1,5 +1,7 @@
 package valenet.com.br.gestordeos.client;
 
+import valenet.com.br.gestordeos.model.entity.ModelCheck;
+
 public interface Client {
     interface ClientView {
         void showProgress();
@@ -48,17 +50,13 @@ public interface Client {
         interface onCheckinListener {
             void onSuccessCheckin();
 
-            void onErrorCheckin();
-
-            void onErrorInternetCheckin();
+            void onErrorCheckin(ModelCheck modelCheck);
         }
 
         interface onCheckoutListener {
             void onSuccessCheckout();
 
-            void onErrorCheckout();
-
-            void onErrorInternetCheckout();
+            void onErrorCheckout(ModelCheck modelCheck);
         }
 
         interface onFinshedListenerScheduleFish {

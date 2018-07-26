@@ -32,9 +32,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.model.entity.ModelCheck;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.model.realm.ModelCheckListLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
@@ -87,6 +89,42 @@ public class GestorDeOsApplication extends android.app.Application {
                 }
             }
 
+            final ModelCheckListLocal modelCheckListLocal = ModelCheckListLocal.getInstance();
+            if (modelCheckListLocal != null) {
+                List<ModelCheck> modelCheckList = modelCheckListLocal.getModelCheckList();
+                if (modelCheckList != null && modelCheckList.size() > 0) {
+                    for (final ModelCheck modelCheck : modelCheckList) {
+                        Log.e(TAG, "onLocationSendModelCheckList size:" + modelCheckList.size());
+                        if (modelCheck.isCheckin()) {
+                            API_INTERFACE.putCheckin(modelCheck.getOsId(), modelCheck.getCodUser(), modelCheck.getLatitude(), modelCheck.getLongitude(),
+                                    modelCheck.getCheckinDate()).enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    modelCheckListLocal.deleteModelCheckListLocal(modelCheck);
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+
+                                }
+                            });
+                        } else {
+                            API_INTERFACE.putCheckout(modelCheck.getOsId(), modelCheck.getCodUser(), modelCheck.getLatitude(), modelCheck.getLongitude(),
+                                    modelCheck.getCheckoutDate()).enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    modelCheckListLocal.deleteModelCheckListLocal(modelCheck);
+                                }
+
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }
+                }
+            }
 
             handler.postDelayed(this, intervalSendPointsSeconds * 1000);
 
@@ -271,9 +309,44 @@ public class GestorDeOsApplication extends android.app.Application {
                     }
                 }
 
+                final ModelCheckListLocal modelCheckListLocal = ModelCheckListLocal.getInstance();
+                if (modelCheckListLocal != null) {
+                    List<ModelCheck> modelCheckList = modelCheckListLocal.getModelCheckList();
+                    if (modelCheckList != null && modelCheckList.size() > 0) {
+                        Log.e(TAG, "onLocationSendModelCheckList size:" + modelCheckList.size());
+                        for (final ModelCheck modelCheck : modelCheckList) {
+                            if (modelCheck.isCheckin()) {
+                                API_INTERFACE.putCheckin(modelCheck.getOsId(), modelCheck.getCodUser(), modelCheck.getLatitude(), modelCheck.getLongitude(),
+                                        modelCheck.getCheckinDate()).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        modelCheckListLocal.deleteModelCheckListLocal(modelCheck);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+
+                                    }
+                                });
+                            } else {
+                                API_INTERFACE.putCheckout(modelCheck.getOsId(), modelCheck.getCodUser(), modelCheck.getLatitude(), modelCheck.getLongitude(),
+                                        modelCheck.getCheckoutDate()).enqueue(new Callback<Void>() {
+                                    @Override
+                                    public void onResponse(Call<Void> call, Response<Void> response) {
+                                        modelCheckListLocal.deleteModelCheckListLocal(modelCheck);
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<Void> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
 
                 handler.postDelayed(this, intervalSendPointsSecond * 1000);
-
             }
         };
         handler.removeCallbacks(getResponceAfterInterval);

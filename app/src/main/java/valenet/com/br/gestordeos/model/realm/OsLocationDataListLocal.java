@@ -81,7 +81,6 @@ public class OsLocationDataListLocal {
                 }
             });
         }
-
     }
 
     public void deleteOsLocationDataLists() {

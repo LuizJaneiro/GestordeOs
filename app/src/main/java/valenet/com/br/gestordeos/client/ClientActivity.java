@@ -55,6 +55,7 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.model.realm.OsListLocal;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -380,9 +381,9 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     @Override
     public void onBackPressed() {
         Intent resultIntent = new Intent();
-        if (reloadOs)
+        if (reloadOs) {
             setResult(Activity.RESULT_OK, resultIntent);
-        else
+        } else
             setResult(Activity.RESULT_CANCELED, resultIntent);
         finish();
     }

@@ -1,9 +1,13 @@
 package valenet.com.br.gestordeos.client;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
+import valenet.com.br.gestordeos.model.entity.ModelCheck;
 
 public class ClientInteractorImp implements Client.ClientInteractor {
     // region Members
@@ -20,37 +24,47 @@ public class ClientInteractorImp implements Client.ClientInteractor {
     // region Methods
 
     @Override
-    public void checkin(Integer osId, Integer codUser, Double latitude, Double longitude, final onCheckinListener listener) {
-        application.API_INTERFACE.putCheckin(osId, codUser, latitude, longitude).enqueue(new Callback<Void>() {
+    public void checkin(final Integer osId, final Integer codUser, final Double latitude, final Double longitude, final onCheckinListener listener) {
+        application.API_INTERFACE.putCheckin(osId, codUser, latitude, longitude, null).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     listener.onSuccessCheckin();
-                else
-                    listener.onErrorCheckin();
+                else {
+                    Date currentDate = Calendar.getInstance().getTime();
+                    ModelCheck modelCheck = new ModelCheck(osId, codUser, latitude, longitude, true, currentDate, null);
+                    listener.onErrorCheckin(modelCheck);
+                }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                listener.onErrorInternetCheckin();
+                Date currentDate = Calendar.getInstance().getTime();
+                ModelCheck modelCheck = new ModelCheck(osId, codUser, latitude, longitude, true, currentDate, null);
+                listener.onErrorCheckin(modelCheck);
             }
         });
     }
 
     @Override
-    public void checkout(Integer osId, Integer codUser, Double latitude, Double longitude, final onCheckoutListener listener) {
-        application.API_INTERFACE.putCheckout(osId, codUser, latitude, longitude).enqueue(new Callback<Void>() {
+    public void checkout(final Integer osId, final Integer codUser, final Double latitude, final Double longitude, final onCheckoutListener listener) {
+        application.API_INTERFACE.putCheckout(osId, codUser, latitude, longitude, null).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     listener.onSuccessCheckout();
-                else
-                    listener.onErrorCheckout();
+                else {
+                    Date currentDate = Calendar.getInstance().getTime();
+                    ModelCheck modelCheck = new ModelCheck(osId, codUser, latitude, longitude, false, null, currentDate);
+                    listener.onErrorCheckout(modelCheck);
+                }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                listener.onErrorInternetCheckout();
+                Date currentDate = Calendar.getInstance().getTime();
+                ModelCheck modelCheck = new ModelCheck(osId, codUser, latitude, longitude, false, null, currentDate);
+                listener.onErrorCheckout(modelCheck);
             }
         });
     }
@@ -60,7 +74,7 @@ public class ClientInteractorImp implements Client.ClientInteractor {
         application.API_INTERFACE.putAgendaPesca(agendaEventoId, coduser).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     listener.successPutScheduleFish();
                 else
                     listener.errorNetworkPutScheduleFish();

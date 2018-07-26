@@ -69,6 +69,7 @@ import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.model.realm.OsListLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
 import valenet.com.br.gestordeos.os_history.OsHistoryFragment;
 import valenet.com.br.gestordeos.os_next.OsNextFragment;
@@ -278,6 +279,13 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             if (resultCode == RESULT_CODE_BACK_SEARCH) {
                 if (searchViewContainer != null)
                     searchViewContainer.collapse();
+            }
+            if (resultCode == Activity.RESULT_OK) {
+                if (searchViewContainer != null)
+                    searchViewContainer.collapse();
+                selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
+                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                        false, osType, false);
             }
         }
 
@@ -522,6 +530,9 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         if (ordemDeServicoNext != null)
             this.ordemDeServicoNextArrayList = (ArrayList) ordemDeServicoNext;
+
+        if (navView != null)
+            selectDrawerItem(getCheckedItem(navView));
     }
 
     @Override
@@ -637,6 +648,16 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     @Override
     public void showErrorMainService() {
+        OsListLocal osListLocal = OsListLocal.getInstance();
+        if(osListLocal != null) {
+            ArrayList<OrdemDeServico> scheduleOrdemDeServicoList = (ArrayList) osListLocal.getScheduleOsList();
+            ArrayList<OrdemDeServico> nextOrdemDeServicoList = (ArrayList) osListLocal.getNextOsList();
+            if (scheduleOrdemDeServicoList != null)
+                this.ordemDeServicoScheduleArrayList = (ArrayList<OrdemDeServico>) scheduleOrdemDeServicoList;
+
+            if (nextOrdemDeServicoList != null)
+                this.ordemDeServicoNextArrayList = (ArrayList) nextOrdemDeServicoList;
+        }
         if (navView != null)
             selectDrawerItem(getCheckedItem(navView));
     }

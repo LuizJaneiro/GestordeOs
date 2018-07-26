@@ -1,5 +1,6 @@
 package valenet.com.br.gestordeos.model.service;
 
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,11 +45,11 @@ public interface ApiInterface {
 
     @PUT("OrdemDeServico/Checkin")
     Call<Void> putCheckin(@Query("osid") Integer osId, @Query("coduser") Integer codUser, @Query("latitude") Double latitude,
-                          @Query("longitude") Double Longitude);
+                          @Query("longitude") Double Longitude, @Query("data") Date date);
 
     @PUT("OrdemDeServico/Checkout")
     Call<Void> putCheckout(@Query("osid") Integer osId, @Query("coduser") Integer codUser, @Query("latitude") Double latitude,
-                           @Query("longitude") Double Longitude);
+                           @Query("longitude") Double Longitude, @Query("data") Date date);
 
     @PUT("OrdemDeServico/AgendaPesca")
     Call<Void> putAgendaPesca(@Query("idEvento") Integer agendaEventoId, @Query("coduser") Integer coduser);

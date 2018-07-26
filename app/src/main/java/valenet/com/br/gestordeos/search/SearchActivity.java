@@ -1,5 +1,6 @@
 package valenet.com.br.gestordeos.search;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ import valenet.com.br.gestordeos.main.OsItemAdapter;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
+import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.os_history.OsItemHistoryAdapter;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -45,6 +47,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private final int RESULT_CODE_BACK = 1;
     private final int RESULT_CODE_BACK_SEARCH = 201;
+    private final int CODE_MAP = 1000;
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
@@ -71,6 +74,7 @@ public class SearchActivity extends AppCompatActivity {
     private HashMap<String, Boolean> selectedFilters;
 
     private Boolean cameFromHistoryFragment;
+    private Boolean isReload = false;
     private boolean cameFromSchedule;
 
     @Override
@@ -108,7 +112,7 @@ public class SearchActivity extends AppCompatActivity {
         cameFromSchedule = getIntent().getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
 
 
-        if(filtredList == null || osTypeModelArrayList == null) {
+        if (filtredList == null || osTypeModelArrayList == null) {
             //TODO carrega do banco de dados a lista de os
         } else {
             if (osTypeModelArrayList != null && osTypeModelArrayList.size() > 0) {
@@ -139,9 +143,9 @@ public class SearchActivity extends AppCompatActivity {
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if(i == EditorInfo.IME_ACTION_SEARCH) {
+                if (i == EditorInfo.IME_ACTION_SEARCH) {
                     try {
-                        InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                         filter(searchEditText.getText().toString(), true);
                     } catch (Exception e) {
@@ -187,7 +191,7 @@ public class SearchActivity extends AppCompatActivity {
             searchView.showSearch(false);
             return true;
         }
-        if(id == android.R.id.home){
+        if (id == android.R.id.home) {
             onBackPressed();
             return true;
         }
@@ -198,7 +202,26 @@ public class SearchActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent resultIntent = new Intent();
         setResult(RESULT_CODE_BACK_SEARCH, resultIntent);
+        if (isReload)
+            setResult(RESULT_OK, resultIntent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
+            if (resultCode == Activity.RESULT_OK) {
+                isReload = true;
+                onBackPressed();
+            }
+        }
+
+        if (requestCode == CODE_MAP) {
+            if (resultCode == Activity.RESULT_OK) {
+                isReload = true;
+                onBackPressed();
+            }
+        }
     }
 
     private void setupSearchView() {
@@ -209,7 +232,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     filter(query, true);
                 } else {
-                    if(searchList == null || searchList.size() == 0)
+                    if (searchList == null || searchList.size() == 0)
                         setAdapter(filtredList);
                     else
                         setAdapter(searchList);
@@ -222,7 +245,7 @@ public class SearchActivity extends AppCompatActivity {
                 if (!newText.isEmpty()) {
                     filter(newText, false);
                 } else {
-                    if(searchList == null || searchList.size() == 0)
+                    if (searchList == null || searchList.size() == 0)
                         setAdapter(filtredList);
                     else
                         setAdapter(searchList);
@@ -233,7 +256,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setAdapter(ArrayList<OrdemDeServico> list) {
-        if(!cameFromHistoryFragment) {
+        if (!cameFromHistoryFragment) {
             if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE))
                 adapter = new OsItemAdapter(list, this, this, myLocation, ValenetUtils.SHARED_PREF_KEY_OS_DISTANCE, cameFromSchedule);
             else if (this.orderFilters.get(ValenetUtils.SHARED_PREF_KEY_OS_NAME))
@@ -254,7 +277,7 @@ public class SearchActivity extends AppCompatActivity {
     public void filter(String s, boolean submit) {
         ArrayList<OrdemDeServico> filteredList = new ArrayList<>();
         ArrayList<OrdemDeServico> ordemDeServicoListArray = new ArrayList<>();
-        if(searchList != null && searchList.size() > 0)
+        if (searchList != null && searchList.size() > 0)
             ordemDeServicoListArray = searchList;
         else
             ordemDeServicoListArray = filtredList;
@@ -262,10 +285,10 @@ public class SearchActivity extends AppCompatActivity {
         if (ordemDeServicoListArray != null) {
             for (int i = 0; i < ordemDeServicoListArray.size(); i++) {
                 OrdemDeServico ordemDeServico = ordemDeServicoListArray.get(i);
-                if(s.matches("[0-9]+")){
+                if (s.matches("[0-9]+")) {
                     Integer id = ordemDeServico.getOsid();
                     String idString = id.toString();
-                    if(idString.contains(s))
+                    if (idString.contains(s))
                         filteredList.add(ordemDeServico);
                 } else {
                     String name = ValenetUtils.firstAndLastWord(ordemDeServico.getCliente()).toUpperCase();

@@ -1,7 +1,11 @@
 package valenet.com.br.gestordeos.client;
 
+import valenet.com.br.gestordeos.model.entity.ModelCheck;
+import valenet.com.br.gestordeos.model.realm.ModelCheckListLocal;
+import valenet.com.br.gestordeos.model.realm.OsListLocal;
+
 public class ClientPresenterImp implements Client.ClientPresenter, Client.ClientInteractor.onCheckoutListener, Client.ClientInteractor.onCheckinListener,
-            Client.ClientInteractor.onFinshedListenerScheduleFish {
+        Client.ClientInteractor.onFinshedListenerScheduleFish {
 
     // region Members
     private Client.ClientView view;
@@ -49,17 +53,19 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
     }
 
     @Override
-    public void onErrorCheckin() {
+    public void onErrorCheckin(ModelCheck modelCheck) {
+        ModelCheckListLocal modelCheckListLocal = ModelCheckListLocal.getInstance();
+        OsListLocal osListLocal = OsListLocal.getInstance();
         hideAllViews();
-        view.showLayoutClient();
-        view.showErrorCheckin();
-    }
-
-    @Override
-    public void onErrorInternetCheckin() {
-        hideAllViews();
-        view.showLayoutClient();
-        view.showErrorInternetCheckin();
+        if (modelCheckListLocal != null && osListLocal != null) {
+            modelCheckListLocal.insertModelCheck(modelCheck);
+            osListLocal.putOsDateCheckinCheckout(modelCheck.getOsId(), "checkin realizado", null);
+            view.showLayoutClient();
+            view.showSuccessCheckin();
+        } else {
+            view.showLayoutClient();
+            view.showErrorCheckin();
+        }
     }
 
     @Override
@@ -70,17 +76,19 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
     }
 
     @Override
-    public void onErrorCheckout() {
+    public void onErrorCheckout(ModelCheck modelCheck) {
+        ModelCheckListLocal modelCheckListLocal = ModelCheckListLocal.getInstance();
+        OsListLocal osListLocal = OsListLocal.getInstance();
         hideAllViews();
-        view.showLayoutClient();
-        view.showErrorCheckout();
-    }
-
-    @Override
-    public void onErrorInternetCheckout() {
-        hideAllViews();
-        view.showLayoutClient();
-        view.showErrorInternetCheckout();
+        if (modelCheckListLocal != null) {
+            modelCheckListLocal.insertModelCheck(modelCheck);
+            osListLocal.putOsDateCheckinCheckout(modelCheck.getOsId(), null, "checkout Realizado");
+            view.showLayoutClient();
+            view.showSuccessCheckout();
+        } else {
+            view.showLayoutClient();
+            view.showErrorCheckout();
+        }
     }
 
     @Override
