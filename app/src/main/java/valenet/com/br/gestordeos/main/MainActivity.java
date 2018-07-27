@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
@@ -36,6 +37,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -271,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                         return null;
                     }
                 }).subscribe();
+
+        showTutorial();
     }
 
     @Override
@@ -885,15 +891,18 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 switch (position) {
                     case 0:
                         OsScheduleTodayFragment fragmentToday = (OsScheduleTodayFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        fragmentToday.setOsListNavigation();
+                        if(fragmentToday != null)
+                            fragmentToday.setOsListNavigation();
                         break;
                     case 1:
                         OsScheduleTomorrowFragment fragmentTomorrow = (OsScheduleTomorrowFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        fragmentTomorrow.setOsListNavigation();
+                        if(fragmentTomorrow != null)
+                            fragmentTomorrow.setOsListNavigation();
                         break;
                     case 2:
                         OsScheduleNextDaysFragment fragmentNextDays = (OsScheduleNextDaysFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        fragmentNextDays.setOsListNavigation();
+                        if(fragmentNextDays != null)
+                            fragmentNextDays.setOsListNavigation();
                         break;
                 }
             }
@@ -961,5 +970,68 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         void navigateToOsSearch();
 
         void navigateToOsMap();
+    }
+
+    private void showTutorial() {
+        new TapTargetSequence(this)
+                .targets(
+                        TapTarget.forToolbarNavigationIcon(toolbarSearchable, "Este é o Menu", "Nele você poderá navegar entre as telas do Gestor de OS e realizar funções como visualização da sua agenda," +
+                                "pesca de OSs e visualização do seu histórico.")
+                                .cancelable(true)
+                                .transparentTarget(true)
+                                .id(1),
+                        TapTarget.forView(tabLayoutToolbarSearchable, "Gonna")
+                                // All options below are optional
+                                .outerCircleColor(R.color.text_btn)      // Specify a color for the outer circle
+                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                .titleTextSize(20)                  // Specify the size (in sp) of the title text
+                                .titleTextColor(R.color.white)      // Specify the color of the title text
+                                .descriptionTextSize(10)            // Specify the size (in sp) of the description text
+                                .descriptionTextColor(R.color.text_color_light)  // Specify the color of the description text
+                                .textColor(R.color.btn_negative_dialog)            // Specify a color for both the title and description text
+                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                                .dimColor(R.color.text_color_os_details)            // If set, will dim behind the view with 30% opacity of the given color
+                                .drawShadow(true)                   // Whether to draw a drop shadow or not
+                                .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
+                                .tintTarget(true)                   // Whether to tint the target view's color
+                                .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
+                                //.icon(Drawable)                     // Specify a custom drawable to draw as the target
+                                .targetRadius(60),                  // Specify the target radius (in dp),
+                        TapTarget.forView(searchViewContainer, "You", "Up")
+                                // All options below are optional
+                                .outerCircleColor(R.color.text_btn)      // Specify a color for the outer circle
+                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
+                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
+                                .titleTextSize(20)                  // Specify the size (in sp) of the title text
+                                .titleTextColor(R.color.white)      // Specify the color of the title text
+                                .descriptionTextSize(10)            // Specify the size (in sp) of the description text
+                                .descriptionTextColor(R.color.text_color_light)  // Specify the color of the description text
+                                .textColor(R.color.btn_negative_dialog)            // Specify a color for both the title and description text
+                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
+                                .dimColor(R.color.text_color_os_details)            // If set, will dim behind the view with 30% opacity of the given color
+                                .drawShadow(true)                // Whether tapping outside the outer circle dismisses the view
+                                .tintTarget(true)                   // Whether to tint the target view's color
+                                .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
+                                .cancelable(true)
+                                .icon(getResources().getDrawable(R.drawable.ic_canceled_os)))
+                .listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                    }
+                })
+        .start();
+
     }
 }
