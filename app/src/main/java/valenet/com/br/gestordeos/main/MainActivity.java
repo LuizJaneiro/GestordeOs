@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
@@ -33,13 +32,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.getkeepsafe.taptargetview.TapTargetView;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -119,6 +119,36 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     @BindView(R.id.text_view_loading)
     TextView textViewLoading;
 
+    //tutorial variables
+    @BindView(R.id.tutorial_text_view_os_id)
+    TextView tutorialTextViewOsId;
+    @BindView(R.id.tutorial_text_view_distance_toolbar)
+    TextView tutorialTextViewDistanceToolbar;
+    @BindView(R.id.tutorial_image_view_status_os)
+    ImageView tutorialImageViewStatusOs;
+    @BindView(R.id.tutorial_image_view_fished_os)
+    ImageView tutorialImageViewFishedOs;
+    @BindView(R.id.tutorial_content_os_details)
+    RelativeLayout tutorialContentOsDetails;
+    @BindView(R.id.tutorial_text_view_client_name_toolbar)
+    TextView tutorialTextViewClientNameToolbar;
+    @BindView(R.id.tutorial_text_view_os_type_toolbar)
+    TextView tutorialTextViewOsTypeToolbar;
+    @BindView(R.id.tutorial_text_view_os_date_toolbar)
+    TextView tutorialTextViewOsDateToolbar;
+    @BindView(R.id.tutorial_text_view_os_city_toolbar)
+    TextView tutorialTextViewOsCityToolbar;
+    @BindView(R.id.tutorial_text_view_os_address_toolbar)
+    TextView tutorialTextViewOsAddressToolbar;
+    @BindView(R.id.tutorial_content_text_view)
+    RelativeLayout tutorialContentTextView;
+    @BindView(R.id.tutorial_content_os_view)
+    RelativeLayout tutorialContentOsView;
+    @BindView(R.id.tutorial_os_item_view)
+    RelativeLayout tutorialOsItemView;
+    @BindView(R.id.tutorial_screen)
+    LinearLayout tutorialScreen;
+
 
     ActionBarDrawerToggle drawerToggle;
 
@@ -154,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private TelephonyManager tm;
 
+    private boolean showTutorial = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -183,100 +215,102 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
         //this.presenter.sendUserPoint();
 
-        this.showLoading();
-        this.presenter.getAppConfig();
-        RxPermissions.getInstance(MainActivity.this)
-                .request(Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE)
-                .map(new Func1<Boolean, Object>() {
-                    @SuppressLint("MissingPermission")
-                    @Override
-                    public Object call(Boolean aBoolean) {
-                        if (aBoolean) {
-                            Intent myService = new Intent(getApplicationContext(), LocationService.class);
+        if(!showTutorial) {
+            this.showLoading();
+            this.presenter.getAppConfig();
+            RxPermissions.getInstance(MainActivity.this)
+                    .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.READ_PHONE_STATE)
+                    .map(new Func1<Boolean, Object>() {
+                        @SuppressLint("MissingPermission")
+                        @Override
+                        public Object call(Boolean aBoolean) {
+                            if (aBoolean) {
+                                Intent myService = new Intent(getApplicationContext(), LocationService.class);
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                application.imei = tm.getImei();
-                                startForegroundService(myService);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    application.imei = tm.getImei();
+                                    startForegroundService(myService);
 
-                            } else {
-                                application.imei = tm.getDeviceId();
-                                startService(myService);
-                            }
+                                } else {
+                                    application.imei = tm.getDeviceId();
+                                    startService(myService);
+                                }
 
-                            final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
-                            final LocationRequest locationRequest = LocationRequest.create()
-                                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                    .setNumUpdates(1)
-                                    .setInterval(10000);
-                            locationSubscription = locationProvider
-                                    .checkLocationSettings(
-                                            new LocationSettingsRequest.Builder()
-                                                    .addLocationRequest(locationRequest)
-                                                    .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
-                                                    .build()
-                                    )
-                                    .subscribeOn(Schedulers.io())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .doOnNext(new Action1<LocationSettingsResult>() {
-                                        @Override
-                                        public void call(LocationSettingsResult locationSettingsResult) {
-                                            Status status = locationSettingsResult.getStatus();
-                                            if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
-                                                try {
-                                                    status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                                                } catch (IntentSender.SendIntentException th) {
-                                                    Log.e("MainActivity", "Error opening settings activity.", th);
+                                final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
+                                final LocationRequest locationRequest = LocationRequest.create()
+                                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                        .setNumUpdates(1)
+                                        .setInterval(10000);
+                                locationSubscription = locationProvider
+                                        .checkLocationSettings(
+                                                new LocationSettingsRequest.Builder()
+                                                        .addLocationRequest(locationRequest)
+                                                        .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+                                                        .build()
+                                        )
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .doOnNext(new Action1<LocationSettingsResult>() {
+                                            @Override
+                                            public void call(LocationSettingsResult locationSettingsResult) {
+                                                Status status = locationSettingsResult.getStatus();
+                                                if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                                                    try {
+                                                        status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                                    } catch (IntentSender.SendIntentException th) {
+                                                        Log.e("MainActivity", "Error opening settings activity.", th);
+                                                    }
                                                 }
                                             }
-                                        }
-                                    })
-                                    .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
-                                        @SuppressLint("MissingPermission")
-                                        @Override
-                                        public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
-                                            //noinspection MissingPermission
-                                            return locationProvider.getUpdatedLocation(locationRequest);
-                                        }
-                                    })
-                                    .map(new Func1<Location, Boolean>() {
-                                        @Override
-                                        public Boolean call(Location location) {
-                                            presenter.loadOsTypes();
-                                            if (location != null) {
-                                                myLocation = location;
-                                                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                        false, osType, false);
-                                                return true;
-                                            } else {
-                                                return false;
+                                        })
+                                        .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
+                                            @SuppressLint("MissingPermission")
+                                            @Override
+                                            public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
+                                                //noinspection MissingPermission
+                                                return locationProvider.getUpdatedLocation(locationRequest);
                                             }
-                                        }
-                                    })
-                                    .subscribe(new Observer<Boolean>() {
-                                        @Override
-                                        public void onCompleted() {
+                                        })
+                                        .map(new Func1<Location, Boolean>() {
+                                            @Override
+                                            public Boolean call(Location location) {
+                                                presenter.loadOsTypes();
+                                                if (location != null) {
+                                                    myLocation = location;
+                                                    presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                                                            false, osType, false);
+                                                    return true;
+                                                } else {
+                                                    return false;
+                                                }
+                                            }
+                                        })
+                                        .subscribe(new Observer<Boolean>() {
+                                            @Override
+                                            public void onCompleted() {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onError(Throwable e) {
+                                            @Override
+                                            public void onError(Throwable e) {
 
-                                        }
+                                            }
 
-                                        @Override
-                                        public void onNext(Boolean aBoolean) {
+                                            @Override
+                                            public void onNext(Boolean aBoolean) {
 
-                                        }
-                                    });
-                        } else {
-                            Toasty.error(MainActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
+                                            }
+                                        });
+                            } else {
+                                Toasty.error(MainActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
+                            }
+                            return null;
                         }
-                        return null;
-                    }
-                }).subscribe();
-
-        showTutorial();
+                    }).subscribe();
+        } else {
+            showTutorial();
+        }
     }
 
     @Override
@@ -655,7 +689,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     @Override
     public void showErrorMainService() {
         OsListLocal osListLocal = OsListLocal.getInstance();
-        if(osListLocal != null) {
+        if (osListLocal != null) {
             ArrayList<OrdemDeServico> scheduleOrdemDeServicoList = (ArrayList) osListLocal.getScheduleOsList();
             ArrayList<OrdemDeServico> nextOrdemDeServicoList = (ArrayList) osListLocal.getNextOsList();
             if (scheduleOrdemDeServicoList != null)
@@ -891,17 +925,17 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 switch (position) {
                     case 0:
                         OsScheduleTodayFragment fragmentToday = (OsScheduleTodayFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        if(fragmentToday != null)
+                        if (fragmentToday != null)
                             fragmentToday.setOsListNavigation();
                         break;
                     case 1:
                         OsScheduleTomorrowFragment fragmentTomorrow = (OsScheduleTomorrowFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        if(fragmentTomorrow != null)
+                        if (fragmentTomorrow != null)
                             fragmentTomorrow.setOsListNavigation();
                         break;
                     case 2:
                         OsScheduleNextDaysFragment fragmentNextDays = (OsScheduleNextDaysFragment) osSchedulePagerAdapter.getRegisteredFragment(position);
-                        if(fragmentNextDays != null)
+                        if (fragmentNextDays != null)
                             fragmentNextDays.setOsListNavigation();
                         break;
                 }
@@ -973,65 +1007,118 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     private void showTutorial() {
-        new TapTargetSequence(this)
-                .targets(
-                        TapTarget.forToolbarNavigationIcon(toolbarSearchable, "Este é o Menu", "Nele você poderá navegar entre as telas do Gestor de OS e realizar funções como visualização da sua agenda," +
-                                "pesca de OSs e visualização do seu histórico.")
-                                .cancelable(true)
-                                .transparentTarget(true)
-                                .id(1),
-                        TapTarget.forView(tabLayoutToolbarSearchable, "Gonna")
-                                // All options below are optional
-                                .outerCircleColor(R.color.text_btn)      // Specify a color for the outer circle
-                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
-                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
-                                .titleTextSize(20)                  // Specify the size (in sp) of the title text
-                                .titleTextColor(R.color.white)      // Specify the color of the title text
-                                .descriptionTextSize(10)            // Specify the size (in sp) of the description text
-                                .descriptionTextColor(R.color.text_color_light)  // Specify the color of the description text
-                                .textColor(R.color.btn_negative_dialog)            // Specify a color for both the title and description text
-                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
-                                .dimColor(R.color.text_color_os_details)            // If set, will dim behind the view with 30% opacity of the given color
-                                .drawShadow(true)                   // Whether to draw a drop shadow or not
-                                .cancelable(false)                  // Whether tapping outside the outer circle dismisses the view
-                                .tintTarget(true)                   // Whether to tint the target view's color
-                                .transparentTarget(true)           // Specify whether the target is transparent (displays the content underneath)
-                                //.icon(Drawable)                     // Specify a custom drawable to draw as the target
-                                .targetRadius(60),                  // Specify the target radius (in dp),
-                        TapTarget.forView(searchViewContainer, "You", "Up")
-                                // All options below are optional
-                                .outerCircleColor(R.color.text_btn)      // Specify a color for the outer circle
-                                .outerCircleAlpha(0.96f)            // Specify the alpha amount for the outer circle
-                                .targetCircleColor(R.color.white)   // Specify a color for the target circle
-                                .titleTextSize(20)                  // Specify the size (in sp) of the title text
-                                .titleTextColor(R.color.white)      // Specify the color of the title text
-                                .descriptionTextSize(10)            // Specify the size (in sp) of the description text
-                                .descriptionTextColor(R.color.text_color_light)  // Specify the color of the description text
-                                .textColor(R.color.btn_negative_dialog)            // Specify a color for both the title and description text
-                                .textTypeface(Typeface.SANS_SERIF)  // Specify a typeface for the text
-                                .dimColor(R.color.text_color_os_details)            // If set, will dim behind the view with 30% opacity of the given color
-                                .drawShadow(true)                // Whether tapping outside the outer circle dismisses the view
-                                .tintTarget(true)                   // Whether to tint the target view's color
-                                .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
-                                .cancelable(true)
-                                .icon(getResources().getDrawable(R.drawable.ic_canceled_os)))
-                .listener(new TapTargetSequence.Listener() {
-                    @Override
-                    public void onSequenceFinish() {
+        hidePager();
+        hideContainer();
+        hideEmptyListView();
+        hideErrorConnectionView();
+        hideErrorServerView();
+        hideLoading();
+        if(tutorialScreen != null) {
+            tutorialScreen.setVisibility(View.VISIBLE);
+            toolbarSearchable.inflateMenu(R.menu.menu_os_list);
+            new TapTargetSequence(this)
+                    .targets(
+                            TapTarget.forToolbarNavigationIcon(toolbarSearchable, "Este é o Menu", "Nele você pode navegar entre as telas do Gestor de OS e realizar funções como visualização da sua agenda," +
+                                    " pesca de OSs e visualização do seu histórico.")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(1),
+                            TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_map, "Este é o Botão de Mapa", "Sempre que visualizar um botão como esse na barra superior direita" +
+                                    " você pode alternar entre a visualização de lista e a de mapa das suas OSs.")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(2),
+                            TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_filter, "Este é o Botão de Filtro", "Este botão te direciona para a tela de filtragem onde você pode " +
+                                    "filtrar as OSs mostradas por tipo de serviço e ordenar a lista de acordo com sua necessidade (distância, nome do cliente e hora).")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(3),
+                            TapTarget.forView(searchViewContainer, "Esta é a Barra de Busca", "Por ela você pode buscar por OSs dentro das listas por código, tipo de serviço" +
+                                    " ou nome do cliente.")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(4),
+                            TapTarget.forView(tutorialOsItemView, "Este card representa uma OS", "No card está contido algumas informações como ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(6),
+                            TapTarget.forView(tutorialTextViewOsId, "... Código da OS ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(7),
+                            TapTarget.forView(tutorialTextViewDistanceToolbar, "... Distância estimada entre sua localização e a OS ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(8),
+                            TapTarget.forView(tutorialTextViewClientNameToolbar, "... Nome do cliente ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(9),
+                            TapTarget.forView(tutorialTextViewOsTypeToolbar, "... Tipo do serviço ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(10),
+                            TapTarget.forView(tutorialTextViewOsDateToolbar, "... Data ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(11),
+                            TapTarget.forView(tutorialTextViewOsAddressToolbar, "... Endereço da OS ...")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(12),
+                            TapTarget.forView(tutorialImageViewStatusOs, "... E finalmente o Status da OS", "Cada status é representado por um ícone diferente, qualquer dúvida" +
+                                    " você pode sempre consultar o manual disponível para download no menu lateral.")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(13),
+                            TapTarget.forView(tutorialOsItemView,"Card da OS", "Ao clicar no card da OS você é direcionado para uma outra tela onde" +
+                                    " pode consultar mais detalhes da OS, realizar checkin e checkout, navegação até o local da OS, ligar para o cliente, entre outras funcionalidades.")
+                                    .targetCircleColor(R.color.white)
+                                    .drawShadow(true)
+                                    .cancelable(true)
+                                    .transparentTarget(true)
+                                    .id(14))
+                    .listener(new TapTargetSequence.Listener() {
+                        @Override
+                        public void onSequenceFinish() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onSequenceCanceled(TapTarget lastTarget) {
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
 
-                    }
-                })
-        .start();
-
+                        }
+                    })
+                    .start();
+        }
     }
 }

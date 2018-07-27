@@ -43,6 +43,7 @@
         <include layout="@layout/layout_progress"/>
         <include layout="@layout/layout_error_internet_connection"/>
         <include layout="@layout/layout_error_from_server"/>
+        <include layout="@layout/tutorial_view"/>
 
     </LinearLayout>
     <!-- The drawer is given a fixed width in dp and extends the full height of
