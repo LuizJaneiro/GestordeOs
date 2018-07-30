@@ -36,7 +36,6 @@ public class ValenetUtils {
     public static final String KEY_ORDER_FILTERS = "KEY_ORDER_FILTERS";
     public static final String KEY_FILTERS = "KEY_FILTERS";
     public static final String KEY_CAME_FROM_MAPS = "KEY_CAME_FROM_MAPS";
-    public static final String KEY_OS_DISTANCE_HASHMAP = "KEY_OS_DISTANCE_HASHMAP";
     public static final String KEY_CAME_FROM_SCHEDULE = "KEY_CAME_FROM_SCHEDULE";
     public static final String KEY_CAME_FROM_OS_HISTORY = "KEY_CAME_FROM_OS_HISTORY";
     public static final String SHARED_PREF_KEY_EMAIL_LOGIN = "SHARED_PREF_KEY_EMAIL_LOGIN";
@@ -46,11 +45,7 @@ public class ValenetUtils {
     public static final String SHARED_PREF_KEY_OS_DISTANCE = "SHARED_PREF_KEY_OS_DISTANCE";
     public static final String SHARED_PREF_KEY_OS_NAME = "SHARED_PREF_KEY_OS_NAME";
     public static final String SHARED_PREF_KEY_OS_TIME = "SHARED_PREF_KEY_OS_TIME";
-    public static final String SHARED_PREF_KEY_OS_NEXT = "SHARED_PREF_KEY_OS_NEXT";
-    public static final String SHARED_PREF_KEY_APP_CONFIG = "SHARED_PREF_KEY_APP_CONFIG";
-    public static final String SHARED_PREF_KEY_APP_CONFIG_INTERVALO = "SHARED_PREF_KEY_APP_CONFIG_INTERVALO";
-    public static final String SHARED_PREF_KEY_APP_CONFIG_MIN_DISTANCE = "SHARED_PREF_KEY_APP_CONFIG_MIN_DISTANCE";
-    public static final String SHARED_PREF_KEY_APP_CONFIG_MIN_TIME = "SHARED_PREF_KEY_APP_CONFIG_MIN_TIME";
+    public static final String SHARED_PREF_KEY_TUTORIAL = "SHARED_PREF_KEY_TUTORIAL";
     public static final int REQUEST_CODE_CLIENT = 3000;
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;

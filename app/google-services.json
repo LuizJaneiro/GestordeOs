@@ -1,27 +1,27 @@
 {
   "project_info": {
-    "project_number": "491865867844",
-    "firebase_url": "https://projeto-teste-16442.firebaseio.com",
-    "project_id": "projeto-teste-16442",
-    "storage_bucket": "projeto-teste-16442.appspot.com"
+    "project_number": "463495431921",
+    "firebase_url": "https://gestor-de-os.firebaseio.com",
+    "project_id": "gestor-de-os",
+    "storage_bucket": "gestor-de-os.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:491865867844:android:b03a0b0c9ed85d62",
+        "mobilesdk_app_id": "1:463495431921:android:b03a0b0c9ed85d62",
         "android_client_info": {
           "package_name": "valenet.com.br.gestordeos"
         }
       },
       "oauth_client": [
         {
-          "client_id": "491865867844-jvi4nsqhnbl6mr7oa8fje35dpsolg9fo.apps.googleusercontent.com",
+          "client_id": "463495431921-2m7g8sdohj9mgfc9a298n4k6a3el5qgm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAyFejgBBHMjcpGUHptTpe_qqzKviarwsU"
+          "current_key": "AIzaSyCSH-8t8dqTaPRdlQsqOZ_lvz0DT3QmMFA"
         }
       ],
       "services": {

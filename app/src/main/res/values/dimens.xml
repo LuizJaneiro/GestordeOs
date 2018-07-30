@@ -8,4 +8,5 @@
          https://developer.android.com/design/patterns/navigation-drawer.html -->
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="line_width">2dp</dimen>
+    <dimen name="height_minimun_tutorial_view">120dp</dimen>
 </resources>

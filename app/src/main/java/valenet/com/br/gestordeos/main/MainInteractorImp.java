@@ -15,6 +15,7 @@ import valenet.com.br.gestordeos.model.entity.google_distance.Example;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
+import valenet.com.br.gestordeos.model.realm.ModelCheckListLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 

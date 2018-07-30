@@ -16,6 +16,17 @@
             android:checkable="true"/>
     </group>
 
+    <group android:id="@+id/group_menu_1">
+        <item android:id="@+id/nav_item_tutorial"
+            android:icon="@drawable/ic_tutorial"
+            android:title="Tutorial"
+            android:checkable="true"/>
+        <item android:id="@+id/nav_item_download_manual"
+            android:icon="@drawable/ic_tutorial_download"
+            android:title="Download do manual"
+            android:checkable="true"/>
+    </group>
+
     <group android:id="@+id/group_menu">
         <item android:id="@+id/nav_item_exit"
             android:icon="@drawable/ic_exit"

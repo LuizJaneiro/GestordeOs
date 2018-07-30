@@ -4,10 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
@@ -15,6 +18,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +26,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
@@ -184,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private TelephonyManager tm;
 
-    private boolean showTutorial = true;
+    private boolean showTutorial = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -213,101 +218,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         this.orderFilters.put(ValenetUtils.SHARED_PREF_KEY_OS_NAME,
                 sharedPref.getBoolean(ValenetUtils.SHARED_PREF_KEY_OS_NAME, false));
 
-        //this.presenter.sendUserPoint();
+        LoginLocal loginLocal = LoginLocal.getInstance();
+        if (loginLocal != null) {
+            sharedPref = getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_TUTORIAL, Context.MODE_PRIVATE);
+            showTutorial = sharedPref.getBoolean(loginLocal.getCurrentUser().getCoduser().toString(), true);
+        }
 
-        if(!showTutorial) {
-            this.showLoading();
-            this.presenter.getAppConfig();
-            RxPermissions.getInstance(MainActivity.this)
-                    .request(Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.READ_PHONE_STATE)
-                    .map(new Func1<Boolean, Object>() {
-                        @SuppressLint("MissingPermission")
-                        @Override
-                        public Object call(Boolean aBoolean) {
-                            if (aBoolean) {
-                                Intent myService = new Intent(getApplicationContext(), LocationService.class);
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    application.imei = tm.getImei();
-                                    startForegroundService(myService);
-
-                                } else {
-                                    application.imei = tm.getDeviceId();
-                                    startService(myService);
-                                }
-
-                                final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
-                                final LocationRequest locationRequest = LocationRequest.create()
-                                        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                                        .setNumUpdates(1)
-                                        .setInterval(10000);
-                                locationSubscription = locationProvider
-                                        .checkLocationSettings(
-                                                new LocationSettingsRequest.Builder()
-                                                        .addLocationRequest(locationRequest)
-                                                        .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
-                                                        .build()
-                                        )
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .doOnNext(new Action1<LocationSettingsResult>() {
-                                            @Override
-                                            public void call(LocationSettingsResult locationSettingsResult) {
-                                                Status status = locationSettingsResult.getStatus();
-                                                if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
-                                                    try {
-                                                        status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
-                                                    } catch (IntentSender.SendIntentException th) {
-                                                        Log.e("MainActivity", "Error opening settings activity.", th);
-                                                    }
-                                                }
-                                            }
-                                        })
-                                        .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
-                                            @SuppressLint("MissingPermission")
-                                            @Override
-                                            public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
-                                                //noinspection MissingPermission
-                                                return locationProvider.getUpdatedLocation(locationRequest);
-                                            }
-                                        })
-                                        .map(new Func1<Location, Boolean>() {
-                                            @Override
-                                            public Boolean call(Location location) {
-                                                presenter.loadOsTypes();
-                                                if (location != null) {
-                                                    myLocation = location;
-                                                    presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
-                                                            false, osType, false);
-                                                    return true;
-                                                } else {
-                                                    return false;
-                                                }
-                                            }
-                                        })
-                                        .subscribe(new Observer<Boolean>() {
-                                            @Override
-                                            public void onCompleted() {
-
-                                            }
-
-                                            @Override
-                                            public void onError(Throwable e) {
-
-                                            }
-
-                                            @Override
-                                            public void onNext(Boolean aBoolean) {
-
-                                            }
-                                        });
-                            } else {
-                                Toasty.error(MainActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
-                            }
-                            return null;
-                        }
-                    }).subscribe();
+        if (!showTutorial) {
+            initMainActivity();
         } else {
             showTutorial();
         }
@@ -455,6 +374,15 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 showContainer();
                 isSchedule = false;
                 break;
+            case R.id.nav_item_tutorial:
+                isHistory = false;
+                setupScheduleToolbar();
+                hideContainer();
+                showPager();
+                isSchedule = true;
+                break;
+            case R.id.nav_item_download_manual:
+                break;
             case R.id.nav_item_exit:
                 isSchedule = true;
                 isHistory = false;
@@ -483,8 +411,12 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             fragmentManager.beginTransaction().replace(R.id.container, fragment).commitAllowingStateLoss();
         }
 
-        item.setChecked(true);
+        if (item.getItemId() != R.id.nav_item_tutorial && item.getItemId() != R.id.nav_item_download_manual)
+            item.setChecked(true);
         drawerLayout.closeDrawers();
+
+        if(item.getItemId() == R.id.nav_item_tutorial)
+            showTutorial();
     }
 
     private MenuItem getCheckedItem(NavigationView navigationView) {
@@ -1007,118 +939,237 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     }
 
     private void showTutorial() {
-        hidePager();
-        hideContainer();
-        hideEmptyListView();
-        hideErrorConnectionView();
-        hideErrorServerView();
-        hideLoading();
-        if(tutorialScreen != null) {
-            tutorialScreen.setVisibility(View.VISIBLE);
-            toolbarSearchable.inflateMenu(R.menu.menu_os_list);
-            new TapTargetSequence(this)
-                    .targets(
-                            TapTarget.forToolbarNavigationIcon(toolbarSearchable, "Este é o Menu", "Nele você pode navegar entre as telas do Gestor de OS e realizar funções como visualização da sua agenda," +
-                                    " pesca de OSs e visualização do seu histórico.")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(1),
-                            TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_map, "Este é o Botão de Mapa", "Sempre que visualizar um botão como esse na barra superior direita" +
-                                    " você pode alternar entre a visualização de lista e a de mapa das suas OSs.")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(2),
-                            TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_filter, "Este é o Botão de Filtro", "Este botão te direciona para a tela de filtragem onde você pode " +
-                                    "filtrar as OSs mostradas por tipo de serviço e ordenar a lista de acordo com sua necessidade (distância, nome do cliente e hora).")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(3),
-                            TapTarget.forView(searchViewContainer, "Esta é a Barra de Busca", "Por ela você pode buscar por OSs dentro das listas por código, tipo de serviço" +
-                                    " ou nome do cliente.")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(4),
-                            TapTarget.forView(tutorialOsItemView, "Este card representa uma OS", "No card está contido algumas informações como ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(6),
-                            TapTarget.forView(tutorialTextViewOsId, "... Código da OS ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(7),
-                            TapTarget.forView(tutorialTextViewDistanceToolbar, "... Distância estimada entre sua localização e a OS ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(8),
-                            TapTarget.forView(tutorialTextViewClientNameToolbar, "... Nome do cliente ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(9),
-                            TapTarget.forView(tutorialTextViewOsTypeToolbar, "... Tipo do serviço ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(10),
-                            TapTarget.forView(tutorialTextViewOsDateToolbar, "... Data ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(11),
-                            TapTarget.forView(tutorialTextViewOsAddressToolbar, "... Endereço da OS ...")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(12),
-                            TapTarget.forView(tutorialImageViewStatusOs, "... E finalmente o Status da OS", "Cada status é representado por um ícone diferente, qualquer dúvida" +
-                                    " você pode sempre consultar o manual disponível para download no menu lateral.")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(13),
-                            TapTarget.forView(tutorialOsItemView,"Card da OS", "Ao clicar no card da OS você é direcionado para uma outra tela onde" +
-                                    " pode consultar mais detalhes da OS, realizar checkin e checkout, navegação até o local da OS, ligar para o cliente, entre outras funcionalidades.")
-                                    .targetCircleColor(R.color.white)
-                                    .drawShadow(true)
-                                    .cancelable(true)
-                                    .transparentTarget(true)
-                                    .id(14))
-                    .listener(new TapTargetSequence.Listener() {
-                        @Override
-                        public void onSequenceFinish() {
+        final Activity activity = this;
+        android.app.AlertDialog.Builder builderCad;
+        builderCad = new android.app.AlertDialog.Builder(this);
+        builderCad.setTitle("Atenção");
+        builderCad.setMessage("Deseja realizar o tutorial de inicialização?");
+        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                hidePager();
+                hideContainer();
+                hideEmptyListView();
+                hideErrorConnectionView();
+                hideErrorServerView();
+                hideLoading();
+                if (tutorialScreen != null) {
+                    tutorialScreen.setVisibility(View.VISIBLE);
+                    toolbarSearchable.inflateMenu(R.menu.menu_os_list);
+                    new TapTargetSequence(activity)
+                            .targets(
+                                    TapTarget.forToolbarNavigationIcon(toolbarSearchable, "Este é o Menu", "Nele você pode navegar entre as telas do Gestor de OS e realizar funções como visualização da sua agenda, visualizar Oss próximas a você e visualizar o seu histórico.\n" +
+                                            "Nele você ainda pode baixar o manual do aplicativo e visualizar este tutorial sempre que quiser.")
+                                            .targetCircleColor(R.color.white)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(1),
+                                    TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_map, "Este é o Botão de Mapa", "Sempre que visualizar um botão como esse na barra superior direita" +
+                                            " você pode alternar entre a visualização de lista e a de mapa das suas OSs.")
+                                            .targetCircleColor(R.color.white)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(2),
+                                    TapTarget.forToolbarMenuItem(toolbarSearchable, R.id.menu_filter, "Este é o Botão de Filtro", "Este botão te direciona para a tela de filtragem onde você pode " +
+                                            "filtrar as OSs mostradas por tipo de serviço e ordenar a lista de acordo com sua necessidade (distância, nome do cliente e hora).")
+                                            .targetCircleColor(R.color.white)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(3),
+                                    TapTarget.forView(searchViewContainer, "Esta é a Barra de Busca", "Por ela você pode buscar por OSs dentro das listas por código, tipo de serviço" +
+                                            " ou nome do cliente.")
+                                            .targetCircleColor(R.color.white)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(4),
+                                    TapTarget.forView(tutorialOsItemView, "Este card representa uma OS", "No card está contido algumas informações como ...")
+                                            .targetCircleColor(R.color.white)
+                                            .targetRadius(150)
+                                            .drawShadow(false)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(6),
+                                    TapTarget.forView(tutorialTextViewOsId, "... Código da OS ...")
+                                            .targetCircleColor(R.color.white)
+                                            .targetRadius(30)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(7),
+                                    TapTarget.forView(tutorialTextViewDistanceToolbar, "... Distância estimada entre sua localização e a OS ...")
+                                            .targetCircleColor(R.color.white)
+                                            .targetRadius(30)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(8),
+                                    TapTarget.forView(tutorialImageViewStatusOs, "... E finalmente o Status da OS", "Cada status é representado por um ícone diferente, qualquer dúvida" +
+                                            " você pode sempre consultar o manual disponível para download no menu lateral.")
+                                            .targetRadius(20)
+                                            .targetCircleColor(R.color.white)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(13),
+                                    TapTarget.forView(tutorialOsItemView, "Card da OS", "Ao clicar no card da OS você é direcionado para uma outra tela onde" +
+                                            " pode consultar mais detalhes da OS, realizar checkin e checkout, navegação até o local da OS, ligar para o cliente, entre outras funcionalidades.")
+                                            .targetCircleColor(R.color.white)
+                                            .targetRadius(150)
+                                            .drawShadow(false)
+                                            .cancelable(false)
+                                            .transparentTarget(true)
+                                            .id(14))
+                            .listener(new TapTargetSequence.Listener() {
+                                @Override
+                                public void onSequenceFinish() {
+                                    if (tutorialScreen != null)
+                                        tutorialScreen.setVisibility(View.GONE);
+                                    LoginLocal loginLocal = LoginLocal.getInstance();
+                                    if (loginLocal != null) {
+                                        SharedPreferences sharedPref = activity.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_TUTORIAL, Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putBoolean(loginLocal.getCurrentUser().getCoduser().toString(), false);
+                                        editor.commit();
+                                    }
+                                    selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
+                                }
 
+                                @Override
+                                public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                                }
+
+                                @Override
+                                public void onSequenceCanceled(TapTarget lastTarget) {
+
+                                }
+                            })
+                            .start();
+                }
+            }
+        });
+        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                LoginLocal loginLocal = LoginLocal.getInstance();
+                if (loginLocal != null) {
+                    SharedPreferences sharedPref = activity.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_TUTORIAL, Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putBoolean(loginLocal.getCurrentUser().getCoduser().toString(), false);
+                    editor.commit();
+                }
+                selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
+            }
+        });
+        final android.app.AlertDialog dialog = builderCad.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
+        });
+        dialog.show();
+    }
+
+    private void initMainActivity() {
+        this.showLoading();
+        this.presenter.getAppConfig();
+        RxPermissions.getInstance(MainActivity.this)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_PHONE_STATE)
+                .map(new Func1<Boolean, Object>() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public Object call(Boolean aBoolean) {
+                        if (aBoolean) {
+                            Intent myService = new Intent(getApplicationContext(), LocationService.class);
+
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                application.imei = tm.getImei();
+                                startForegroundService(myService);
+
+                            } else {
+                                application.imei = tm.getDeviceId();
+                                startService(myService);
+                            }
+
+                            final ReactiveLocationProvider locationProvider = new ReactiveLocationProvider(MainActivity.this);
+                            final LocationRequest locationRequest = LocationRequest.create()
+                                    .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                    .setNumUpdates(1)
+                                    .setInterval(10000);
+                            locationSubscription = locationProvider
+                                    .checkLocationSettings(
+                                            new LocationSettingsRequest.Builder()
+                                                    .addLocationRequest(locationRequest)
+                                                    .setAlwaysShow(true)  //Refrence: http://stackoverflow.com/questions/29824408/google-play-services-locationservices-api-new-option-never
+                                                    .build()
+                                    )
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .doOnNext(new Action1<LocationSettingsResult>() {
+                                        @Override
+                                        public void call(LocationSettingsResult locationSettingsResult) {
+                                            Status status = locationSettingsResult.getStatus();
+                                            if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                                                try {
+                                                    status.startResolutionForResult(MainActivity.this, REQUEST_CHECK_SETTINGS);
+                                                } catch (IntentSender.SendIntentException th) {
+                                                    Log.e("MainActivity", "Error opening settings activity.", th);
+                                                }
+                                            }
+                                        }
+                                    })
+                                    .flatMap(new Func1<LocationSettingsResult, Observable<Location>>() {
+                                        @SuppressLint("MissingPermission")
+                                        @Override
+                                        public Observable<Location> call(LocationSettingsResult locationSettingsResult) {
+                                            //noinspection MissingPermission
+                                            return locationProvider.getUpdatedLocation(locationRequest);
+                                        }
+                                    })
+                                    .map(new Func1<Location, Boolean>() {
+                                        @Override
+                                        public Boolean call(Location location) {
+                                            presenter.loadOsTypes();
+                                            if (location != null) {
+                                                myLocation = location;
+                                                presenter.loadMainOsList(myLocation.getLatitude(), myLocation.getLongitude(), LoginLocal.getInstance().getCurrentUser().getCoduser(),
+                                                        false, osType, false);
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        }
+                                    })
+                                    .subscribe(new Observer<Boolean>() {
+                                        @Override
+                                        public void onCompleted() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(Throwable e) {
+
+                                        }
+
+                                        @Override
+                                        public void onNext(Boolean aBoolean) {
+
+                                        }
+                                    });
+                        } else {
+                            Toasty.error(MainActivity.this, "Erro ao conseguir permissões!", Toast.LENGTH_LONG, true).show();
                         }
-
-                        @Override
-                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-
-                        }
-
-                        @Override
-                        public void onSequenceCanceled(TapTarget lastTarget) {
-
-                        }
-                    })
-                    .start();
-        }
+                        return null;
+                    }
+                }).subscribe();
     }
 }
