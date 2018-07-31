@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,7 +84,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
         editTextRefuseOsObservation.setRawInputType(InputType.TYPE_CLASS_TEXT);
 
         if (getSupportActionBar() != null) {
-            
+
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
@@ -168,7 +167,7 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
 
     @Override
     public void loadReasonsRefuseOs(List<ReasonRefuseOs> reasonRefuseOsList) {
-        if(reasonRefuseOsList != null){
+        if (reasonRefuseOsList != null) {
             this.reasonRefuseOsArray = (ArrayList<ReasonRefuseOs>) reasonRefuseOsList;
             arrayReasonsString = new ArrayList<>();
 
@@ -201,19 +200,19 @@ public class RefuseOsActivity extends AppCompatActivity implements RefuseOs.Refu
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_send_os_reasons:
-                if(selectedItem == null || selectedItem.equals("Motivo")){
+                if (selectedItem == null || selectedItem.equals("Motivo")) {
                     Toasty.error(this, "Você deve selecionar o motivo da recusa primeiro!", Toast.LENGTH_LONG).show();
-                }else if (editTextRefuseOsObservation != null && editTextRefuseOsObservation.getText().toString().length() > 144) {
+                } else if (editTextRefuseOsObservation != null && editTextRefuseOsObservation.getText().toString().length() > 144) {
                     Toasty.error(this, "A observação deve conter no máximo 144 caracteres!", Toast.LENGTH_LONG).show();
                 } else {
                     ReasonRefuseOs reasonRefuseOsSelected = null;
-                    for(ReasonRefuseOs reasonRefuseOs : reasonRefuseOsArray){
-                        if(reasonRefuseOs.getDescricao().equals(selectedItem)){
+                    for (ReasonRefuseOs reasonRefuseOs : reasonRefuseOsArray) {
+                        if (reasonRefuseOs.getDescricao().equals(selectedItem)) {
                             reasonRefuseOsSelected = reasonRefuseOs;
                             break;
                         }
                     }
-                    if(reasonRefuseOsSelected != null)
+                    if (reasonRefuseOsSelected != null)
                         presenter.putRefuseOs(osId, reasonRefuseOsSelected.getID(), editTextRefuseOsObservation.getText().toString());
                 }
                 break;

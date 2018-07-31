@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
@@ -40,7 +38,7 @@ public class OsSchedulePagerAdapter extends FragmentStatePagerAdapter {
         this.osType = osType;
     }
 
-    public Fragment getRegisteredFragment(int position){
+    public Fragment getRegisteredFragment(int position) {
         return registeredFragments.get(position);
     }
 

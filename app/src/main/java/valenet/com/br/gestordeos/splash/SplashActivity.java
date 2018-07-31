@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        if(LoginLocal.getInstance().getCurrentUser() == null)
+        if (LoginLocal.getInstance().getCurrentUser() == null)
             intent = new Intent(this, LoginActivity.class);
         else
             intent = new Intent(this, MainActivity.class);
@@ -38,7 +38,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(intent);
-                overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 finish();
             }
         }, time);

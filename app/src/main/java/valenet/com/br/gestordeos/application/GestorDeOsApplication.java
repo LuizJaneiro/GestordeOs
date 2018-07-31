@@ -1,8 +1,6 @@
 package valenet.com.br.gestordeos.application;
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +9,12 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
+
+import com.crashlytics.android.Crashlytics;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
@@ -25,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import retrofit2.Call;
@@ -41,10 +41,6 @@ import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
 import valenet.com.br.gestordeos.model.service.ApiUtils;
-
-import com.crashlytics.android.Crashlytics;
-
-import io.fabric.sdk.android.Fabric;
 import valenet.com.br.gestordeos.provider_location.ProviderLocation;
 
 public class GestorDeOsApplication extends android.app.Application {

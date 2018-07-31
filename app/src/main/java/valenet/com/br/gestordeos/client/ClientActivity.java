@@ -18,7 +18,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -55,7 +54,6 @@ import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.end_os.EndOsActivity;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
-import valenet.com.br.gestordeos.model.realm.OsListLocal;
 import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
@@ -592,8 +590,18 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     codUser = loginLocal.getCurrentUser().getCoduser();
                 if (myLocation == null)
                     getLocationAndRequestCheck(true);
-                else
-                    presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                else {
+                    if (ordemDeServico.getLongitude() != null && ordemDeServico.getLatitude() != null) {
+                        Location osLocation = new Location("");
+                        osLocation.setLatitude(osLocation.getLatitude());
+                        osLocation.setLongitude(osLocation.getLongitude());
+                        if (myLocation.distanceTo(osLocation) > 50)
+                            Toasty.error(ClientActivity.this, "Você está muito distante da OS para realizar o check-in!", Toast.LENGTH_LONG, true).show();
+                        else
+                            presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                    } else
+                        presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                }
             }
         });
 

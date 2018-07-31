@@ -58,11 +58,9 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
-import valenet.com.br.gestordeos.application.GestorDeOsApplication;
 import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.OsTypeModel;
-import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 import valenet.com.br.gestordeos.os_filter.OsFilterActivity;
@@ -369,9 +367,9 @@ public class MapsActivity extends AppCompatActivity implements Maps.MapsView {
         if (requestCode == CODE_MAP) {
             if (resultCode == Activity.RESULT_OK) {
                 OsListLocal osListLocal = OsListLocal.getInstance();
-                if(osListLocal != null) {
+                if (osListLocal != null) {
                     ArrayList<OrdemDeServico> ordemDeServicoList;
-                    if(cameFromSchedule)
+                    if (cameFromSchedule)
                         ordemDeServicoList = (ArrayList) osListLocal.getScheduleOsList();
                     else
                         ordemDeServicoList = (ArrayList) osListLocal.getNextOsList();

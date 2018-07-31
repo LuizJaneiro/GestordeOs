@@ -3,22 +3,21 @@ package valenet.com.br.gestordeos.main;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -190,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     private TelephonyManager tm;
 
     private boolean showTutorial = false;
+    private DownloadManager downloadManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -329,6 +329,39 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
         startActivityForResult(intent, REQ_CODE_FILTER);
     }
 
+    private void downloadManual() {
+        android.app.AlertDialog.Builder builderCad;
+        builderCad = new android.app.AlertDialog.Builder(this);
+        builderCad.setTitle("Atenção");
+        builderCad.setMessage("Deseja realizar o download do manual?");
+        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri = Uri.parse("http://api3.valenet.com.br/manual.pdf");
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Long reference = downloadManager.enqueue(request);
+            }
+        });
+        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        final android.app.AlertDialog dialog = builderCad.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
+        });
+        dialog.show();
+    }
+
     private void navigateToMap() {
         if (navigateInterface != null) {
             navigateInterface.navigateToOsMap();
@@ -382,6 +415,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                 isSchedule = true;
                 break;
             case R.id.nav_item_download_manual:
+                isSchedule = true;
                 break;
             case R.id.nav_item_exit:
                 isSchedule = true;
@@ -415,8 +449,10 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
             item.setChecked(true);
         drawerLayout.closeDrawers();
 
-        if(item.getItemId() == R.id.nav_item_tutorial)
+        if (item.getItemId() == R.id.nav_item_tutorial)
             showTutorial();
+        if (item.getItemId() == R.id.nav_item_download_manual)
+            downloadManual();
     }
 
     private MenuItem getCheckedItem(NavigationView navigationView) {

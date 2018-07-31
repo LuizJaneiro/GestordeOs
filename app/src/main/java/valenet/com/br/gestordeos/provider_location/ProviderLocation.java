@@ -67,7 +67,6 @@ public class ProviderLocation extends Service {
                 .setNumUpdates(1);
 
 
-
         subscription = locationProvider.getUpdatedLocation(request)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,9 +74,9 @@ public class ProviderLocation extends Service {
                     @Override
                     public void call(Location location) {
                         if (LoginLocal.getInstance().getCurrentUser() != null) {
-                            HashMap<String,Object> params = new HashMap<>();
-                            params.put("latitude",location.getLatitude());
-                            params.put("longitude",location.getLongitude());
+                            HashMap<String, Object> params = new HashMap<>();
+                            params.put("latitude", location.getLatitude());
+                            params.put("longitude", location.getLongitude());
                             //Chama a funcao de registrar a localizacao do usuario
 /*                            ParseCloud.callFunctionInBackground("setProviderLocation", params, new FunctionCallback<Object>() {
                                 @Override

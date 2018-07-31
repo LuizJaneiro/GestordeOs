@@ -128,13 +128,13 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void hideProgress() {
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.GONE);
     }
 
     @Override
     public void showErrorEmptyUser() {
-        if(textInputEmail != null) {
+        if (textInputEmail != null) {
             textInputEmail.requestFocus();
             textInputEmail.setError(getResources().getString(R.string.error_field_required));
         }
@@ -142,7 +142,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void showErrorEmptyPassword() {
-        if(textInputPassword != null) {
+        if (textInputPassword != null) {
             textInputPassword.requestFocus();
             textInputPassword.setError(getResources().getString(R.string.error_field_required));
         }
@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void showProgress() {
-        if(loadingView != null)
+        if (loadingView != null)
             loadingView.setVisibility(View.VISIBLE);
     }
 
@@ -161,13 +161,13 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
 
     @Override
     public void showLoginView() {
-        if(loginView!= null)
+        if (loginView != null)
             loginView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideLoginView() {
-        if(loginView != null)
+        if (loginView != null)
             loginView.setVisibility(View.GONE);
     }
 
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     public void saveLoginData(String userName, String password) {
         SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_EMAIL_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        if(checkBoxRememberMe.isChecked()) {
+        if (checkBoxRememberMe.isChecked()) {
             editor.putString(ValenetUtils.SHARED_PREF_KEY_EMAIL_CLIENT, userName);
             editor.putString(ValenetUtils.SHARED_PREF_KEY_PASSWORD_CLIENT, password);
         } else {

@@ -142,8 +142,8 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
         checkBoxSelectAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(!isChecked) {
-                    if(osTypeAdapter != null){
+                if (!isChecked) {
+                    if (osTypeAdapter != null) {
                         osTypeAdapter.selectAll(false);
                         osTypeAdapter = new OsTypeAdapter(OsFilterActivity.this, osTypeModelList);
                         recyclerBtnFilters.setAdapter(osTypeAdapter);
@@ -151,7 +151,7 @@ public class OsFilterActivity extends AppCompatActivity implements OsFilter.OsFi
                         layoutOsFilterList.requestFocus();
                     }
                 } else {
-                    if(osTypeAdapter != null){
+                    if (osTypeAdapter != null) {
                         osTypeAdapter.selectAll(true);
                         osTypeAdapter = new OsTypeAdapter(OsFilterActivity.this, osTypeModelList);
                         recyclerBtnFilters.setAdapter(osTypeAdapter);

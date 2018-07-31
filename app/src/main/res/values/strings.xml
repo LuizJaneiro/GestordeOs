@@ -15,6 +15,7 @@
     <string name="title_activity_map">Mapa de OS</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_manual">Manual</string>
     <string name="text_search_box">Buscar por OS (Código, tipo ou cliente)</string>
 
     <string name="text_open_drawer">Open Drawer</string>

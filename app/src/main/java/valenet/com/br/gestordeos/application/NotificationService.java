@@ -5,8 +5,9 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class NotificationService extends FirebaseMessagingService{
+public class NotificationService extends FirebaseMessagingService {
     private static final String TAG = "NOTIFICATION";
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         // TODO: Handle FCM messages here.
@@ -14,7 +15,7 @@ public class NotificationService extends FirebaseMessagingService{
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated.
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-        if(remoteMessage.getNotification().getBody() != null) {
+        if (remoteMessage.getNotification().getBody() != null) {
             Log.d(TAG, "Notification Message Title: " + remoteMessage.getNotification().getTitle());
             Log.d(TAG, "Notification Message Body: " + remoteMessage.getNotification().getBody());
         } else
