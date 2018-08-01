@@ -599,7 +599,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                             Toasty.error(ClientActivity.this, "Você está muito distante da OS para realizar o check-in!", Toast.LENGTH_LONG, true).show();
                         else
                             presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
-                    } else
+                    } else     
                         presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                 }
             }

@@ -1072,6 +1072,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                                         editor.putBoolean(loginLocal.getCurrentUser().getCoduser().toString(), false);
                                         editor.commit();
                                     }
+                                    initMainActivity();
                                     selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
                                 }
 
@@ -1100,6 +1101,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                     editor.putBoolean(loginLocal.getCurrentUser().getCoduser().toString(), false);
                     editor.commit();
                 }
+                initMainActivity();
                 selectDrawerItem(navView.getMenu().findItem(R.id.nav_item_schedule));
             }
         });
