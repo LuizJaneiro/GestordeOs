@@ -50,6 +50,7 @@ public class ValenetUtils {
     public static final int REQUEST_CODE_CLIENT = 3000;
     public static final Integer GROUP_OS_MERCANTIL = 1;
     public static final Integer GROUP_OS_CORRETIVA = 2;
+    public static final String TELEFONE_CENTRAL = "08000262626";
 
     public static String removeAccent(String str) {
         return Normalizer.normalize(str, Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");

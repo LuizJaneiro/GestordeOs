@@ -87,5 +87,26 @@ public class ClientInteractorImp implements Client.ClientInteractor {
         });
     }
 
+    @Override
+    public void callPhone(Long nroTecnico, Long nroCliente, final onFinishedListenerCall listener) {
+        application.API_INTERFACE_VALENET_CALL.getLigacao(nroTecnico, nroCliente).enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if(response.isSuccessful()) {
+                    Boolean success = response.body();
+                    if(success)
+                        listener.successCall();
+                    else
+                        listener.errorCall();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                listener.errorCall();
+            }
+        });
+    }
+
     // endRegion Methods
 }

@@ -1,13 +1,14 @@
 package valenet.com.br.gestordeos.model.entity;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
 
-public class User extends RealmObject{
+public class User extends RealmObject {
 
     @SerializedName("Coduser")
     @Expose
@@ -21,6 +22,9 @@ public class User extends RealmObject{
     @SerializedName("Nome")
     @Expose
     private String nome;
+    @SerializedName("Telefone")
+    @Expose
+    private String telefone;
 
 
     public Integer getCoduser() {
@@ -53,6 +57,14 @@ public class User extends RealmObject{
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
 }

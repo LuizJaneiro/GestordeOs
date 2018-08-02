@@ -32,7 +32,7 @@ public class ApiValenet {
         return retrofitGoogleDistance;
     }
 
-    public static Retrofit getConnectioApiValenetCall() {
+    public static Retrofit getConnectionApiValenetCall() {
         if (retrofitApiValenetCall == null) {
             retrofitApiValenetCall = new Retrofit.Builder()
                     .baseUrl(ValenetUtils.BASE_URL_API_VALENET_CALL)

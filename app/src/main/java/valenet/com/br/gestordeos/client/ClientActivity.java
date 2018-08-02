@@ -488,46 +488,19 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     }
 
     public void callPhone(final String phone) {
-        android.app.AlertDialog.Builder builderCad;
-        builderCad = new android.app.AlertDialog.Builder(this);
-        builderCad.setTitle("Atenção");
-        builderCad.setMessage("Deseja realizar a ligação?");
-        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                Intent intent;
-                intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + phone));
-                // intent.setData(Uri.parse("tel:" + "03131975107000"));
+        Intent intent;
+        intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + phone));
+        // intent.setData(Uri.parse("tel:" + "03131975107000"));
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                        startActivity(intent);
-                    } else {
-                        ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 0);
-                    }
-                else
-                    startActivity(intent);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                startActivity(intent);
+            } else {
+                ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 0);
             }
-        });
-        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        final android.app.AlertDialog dialog = builderCad.create();
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface arg0) {
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
-            }
-        });
-        dialog.show();
-
+        else
+            startActivity(intent);
     }
 
     public void navigateToMap() {
@@ -539,22 +512,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Intent intent;
-                Uri gmmIntentUri = Uri.parse("geo:" + ordemDeServico.getLatitude()
-                        + "," + ordemDeServico.getLongitude()
-                        + "?q=" + ordemDeServico.getLatitude()
-                        + "," + ordemDeServico.getLongitude() + "(" + ordemDeServico.getCliente() + ")");
-                intent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        if (intent.resolveActivity(getPackageManager()) != null)
-                            startActivity(intent);
-                    } else {
-                        ActivityCompat.requestPermissions(ClientActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-                    }
-                else if (intent.resolveActivity(getPackageManager()) != null)
-                    startActivity(intent);
 
             }
         });
@@ -599,7 +557,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                             Toasty.error(ClientActivity.this, "Você está muito distante da OS para realizar o check-in!", Toast.LENGTH_LONG, true).show();
                         else
                             presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
-                    } else     
+                    } else
                         presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                 }
             }
@@ -708,7 +666,39 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                 break;
             case R.id.btn_call:
             case R.id.btn_call_pesca:
-                this.callPhone(this.ordemDeServico.getTelefoneCliente() + "");
+                android.app.AlertDialog.Builder builderCad;
+                builderCad = new android.app.AlertDialog.Builder(this);
+                builderCad.setTitle("Atenção");
+                builderCad.setMessage("Deseja realizar a ligação?");
+                builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LoginLocal loginLocal = LoginLocal.getInstance();
+                        if (loginLocal != null) {
+                            String nroTecnico = loginLocal.getCurrentUser().getTelefone();
+                            if (nroTecnico != null && nroTecnico.length() > 0) {
+                                presenter.callPhone(nroTecnico, ordemDeServico.getTelefoneCliente() + "");
+                            } else {
+                                callPhone(ValenetUtils.TELEFONE_CENTRAL);
+                            }
+                        }
+                    }
+                });
+                builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                final android.app.AlertDialog dialog = builderCad.create();
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface arg0) {
+                        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+                    }
+                });
+                dialog.show();
                 break;
             case R.id.btn_confirm:
                 navigateToEndOsActivity();
@@ -765,6 +755,17 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
             btnNav.setVisibility(View.GONE);
             btnConfirm.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void showSuccessCall() {
+        Toasty.success(ClientActivity.this, "Ligação efetuada com sucesso, aguarde um momento e atenda a chamada da central!", Toast.LENGTH_LONG, true).show();
+    }
+
+    @Override
+    public void showErrorCall() {
+        Toasty.error(ClientActivity.this, "Ocorreu um problema ao realizar a ligação, entre em contato com a central!", Toast.LENGTH_LONG, true).show();
+        this.callPhone(ValenetUtils.TELEFONE_CENTRAL);
     }
 
     private void getLocationAndRequestCheck(final boolean isCheckin) {

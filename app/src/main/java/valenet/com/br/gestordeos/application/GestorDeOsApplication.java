@@ -40,6 +40,7 @@ import valenet.com.br.gestordeos.model.realm.ModelCheckListLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 import valenet.com.br.gestordeos.model.service.ApiInterface;
 import valenet.com.br.gestordeos.model.service.ApiInterfaceGoogleDistance;
+import valenet.com.br.gestordeos.model.service.ApiInterfaceValenetCall;
 import valenet.com.br.gestordeos.model.service.ApiUtils;
 import valenet.com.br.gestordeos.provider_location.ProviderLocation;
 
@@ -48,6 +49,7 @@ public class GestorDeOsApplication extends android.app.Application {
     private static final String TAG = "BOOMBOOMTESTGPS";
     public static final ApiInterface API_INTERFACE = ApiUtils.getService();
     public static final ApiInterfaceGoogleDistance API_INTERFACE_GOOGLE_DISTANCE = ApiUtils.getServiceGoogleDistance();
+    public static final ApiInterfaceValenetCall API_INTERFACE_VALENET_CALL = ApiUtils.getServiceValenetCall();
     public static Realm realm;
     public static final Locale myLocale = new Locale("pt", "BR");
     //private static FirebaseAnalytics mFirebaseAnalytics;

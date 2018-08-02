@@ -5,7 +5,7 @@ import valenet.com.br.gestordeos.model.realm.ModelCheckListLocal;
 import valenet.com.br.gestordeos.model.realm.OsListLocal;
 
 public class ClientPresenterImp implements Client.ClientPresenter, Client.ClientInteractor.onCheckoutListener, Client.ClientInteractor.onCheckinListener,
-        Client.ClientInteractor.onFinshedListenerScheduleFish {
+        Client.ClientInteractor.onFinshedListenerScheduleFish, Client.ClientInteractor.onFinishedListenerCall {
 
     // region Members
     private Client.ClientView view;
@@ -36,6 +36,17 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
         hideAllViews();
         view.showProgress();
         interactor.checkout(osId, codUser, latitude, longitude, this);
+    }
+
+    @Override
+    public void callPhone(String nroTecnico, String nroCliente) {
+        hideAllViews();
+        view.showProgress();
+        String nroTecnicoTratado = nroTecnico.replaceAll("[^0-9]", "");
+        String nroClienteTratado = nroCliente.replaceAll("[^0-9]", "");
+        Long nroTecnicoInteger = Long.parseLong(nroTecnicoTratado);
+        Long nroClienteInteger = Long.parseLong(nroClienteTratado);
+        interactor.callPhone(nroTecnicoInteger, nroClienteInteger, this);
     }
 
     @Override
@@ -111,10 +122,23 @@ public class ClientPresenterImp implements Client.ClientPresenter, Client.Client
         view.showErrorInternetFishing();
     }
 
+    @Override
+    public void successCall() {
+        hideAllViews();
+        view.showLayoutClient();
+        view.showSuccessCall();
+    }
+
+    @Override
+    public void errorCall() {
+        hideAllViews();
+        view.showLayoutClient();
+        view.showErrorCall();
+    }
+
     private void hideAllViews() {
         view.hideLayoutClient();
         view.hideProgress();
     }
-
     // endregion Methods
 }

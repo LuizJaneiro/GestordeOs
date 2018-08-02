@@ -29,6 +29,10 @@ public interface Client {
         void showErrorFishing();
 
         void showErrorInternetFishing();
+
+        void showSuccessCall();
+
+        void showErrorCall();
     }
 
     interface ClientPresenter {
@@ -37,6 +41,8 @@ public interface Client {
         void checkout(Integer osId, Integer codUser, Double latitude, Double longitude);
 
         void putScheduleFishEvent(Integer agendaEventoId, Integer coduser);
+
+        void callPhone(String nroTecnico, String nroCliente);
     }
 
     interface ClientInteractor {
@@ -46,6 +52,8 @@ public interface Client {
         void checkout(Integer osId, Integer codUser, Double latitude, Double longitude, onCheckoutListener listener);
 
         void putScheduleFishEvent(Integer agendaEventoId, Integer coduser, onFinshedListenerScheduleFish listener);
+
+        void callPhone(Long nroTecnico, Long nroCliente, onFinishedListenerCall listener);
 
         interface onCheckinListener {
             void onSuccessCheckin();
@@ -65,6 +73,12 @@ public interface Client {
             void errorServicePutScheduleFish();
 
             void errorNetworkPutScheduleFish();
+        }
+
+        interface onFinishedListenerCall {
+            void successCall();
+
+            void errorCall();
         }
     }
 }
