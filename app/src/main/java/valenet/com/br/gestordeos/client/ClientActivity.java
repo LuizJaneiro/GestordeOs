@@ -553,10 +553,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                         Location osLocation = new Location("");
                         osLocation.setLatitude(osLocation.getLatitude());
                         osLocation.setLongitude(osLocation.getLongitude());
-                        if (myLocation.distanceTo(osLocation) > 50)
-                            Toasty.error(ClientActivity.this, "Você está muito distante da OS para realizar o check-in!", Toast.LENGTH_LONG, true).show();
-                        else
-                            presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
+                        presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                     } else
                         presenter.checkin(ordemDeServico.getOsid(), codUser, myLocation.getLatitude(), myLocation.getLongitude());
                 }
