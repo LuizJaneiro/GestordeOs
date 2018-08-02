@@ -26,6 +26,7 @@ public class ValenetUtils {
     //server testes
     //public static final String BASE_URL = "http://api3.valenet.com.br/";
     public static final String BASE_URL_GOOGLE_DISTANCE = "https://maps.googleapis.com/maps/";
+    public static final String BASE_URL_API_VALENET_CALL = "http://os2.valenet.com.br:3000/";
     public static final String KEY_FILTERED_LIST = "KEY_FILTERED_LIST";
     public static final String KEY_OS_LIST = "KEY_OS_LIST";
     public static final String KEY_OS_TYPE = "KEY_OS_TYPE";

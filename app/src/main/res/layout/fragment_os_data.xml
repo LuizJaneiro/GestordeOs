@@ -273,6 +273,17 @@
                     android:textSize="16sp" />
 
             </RelativeLayout>
+            
+            <TextView
+                android:id="@+id/text_view_download_pdf_os"
+                fontPath="fonts/Lato-Bold.ttf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2.5dp"
+                android:gravity="center"
+                android:text="@string/download_em_pdf"
+                android:textColor="@color/text_color_os_details"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 

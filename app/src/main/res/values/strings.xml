@@ -23,4 +23,5 @@
 
     <string name="text_meta_title">meta_title</string>
     <string name="text_meta_position">meta_position</string>
+    <string name="download_em_pdf"><u>Download em PDF</u></string>
 </resources>

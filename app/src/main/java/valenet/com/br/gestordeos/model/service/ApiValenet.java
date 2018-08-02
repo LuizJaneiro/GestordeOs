@@ -8,6 +8,7 @@ public class ApiValenet {
 
     private static Retrofit retrofit = null;
     private static Retrofit retrofitGoogleDistance = null;
+    private static Retrofit retrofitApiValenetCall = null;
 
     public static Retrofit getConnection() {
         if (retrofit == null) {
@@ -30,4 +31,16 @@ public class ApiValenet {
         }
         return retrofitGoogleDistance;
     }
+
+    public static Retrofit getConnectioApiValenetCall() {
+        if (retrofitApiValenetCall == null) {
+            retrofitApiValenetCall = new Retrofit.Builder()
+                    .baseUrl(ValenetUtils.BASE_URL_API_VALENET_CALL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofitApiValenetCall;
+    }
+
 }

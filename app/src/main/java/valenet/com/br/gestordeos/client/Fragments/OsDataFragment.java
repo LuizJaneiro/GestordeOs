@@ -1,9 +1,15 @@
 package valenet.com.br.gestordeos.client.Fragments;
 
 
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +18,7 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
@@ -51,12 +58,14 @@ public class OsDataFragment extends Fragment {
     TextView textViewOsAgendado;
     @BindView(R.id.os_layout_agendado)
     RelativeLayout osLayoutAgendado;
+    @BindView(R.id.text_view_download_pdf_os)
+    TextView textViewDownloadPdfOs;
 
     Unbinder unbinder;
 
-
     private OrdemDeServico ordemDeServico;
     private boolean cameFromSchedule;
+    private DownloadManager downloadManager;
 
     public OsDataFragment() {
         // Required empty public constructor
@@ -126,5 +135,40 @@ public class OsDataFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @OnClick(R.id.text_view_download_pdf_os)
+    public void onViewClicked() {
+        final Activity activity = this.getActivity();
+        android.app.AlertDialog.Builder builderCad;
+        builderCad = new android.app.AlertDialog.Builder(activity);
+        builderCad.setTitle("Atenção");
+        builderCad.setMessage("Deseja realizar o download do PDF?");
+        builderCad.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri uri = Uri.parse("http://api3.valenet.com.br/ordemdeservico/downloados?osid=" + ordemDeServico.getOsid());
+                DownloadManager.Request request = new DownloadManager.Request(uri);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                Long reference = downloadManager.enqueue(request);
+            }
+        });
+        builderCad.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        final android.app.AlertDialog dialog = builderCad.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface arg0) {
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.btn_negative_dialog));
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.btn_positive_dialog));
+            }
+        });
+        dialog.show();
     }
 }

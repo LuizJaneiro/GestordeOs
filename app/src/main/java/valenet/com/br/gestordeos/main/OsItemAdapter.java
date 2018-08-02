@@ -23,6 +23,7 @@ import valenet.com.br.gestordeos.client.ClientActivity;
 import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 import valenet.com.br.gestordeos.model.entity.google_distance.OsDistanceAndPoints;
 import valenet.com.br.gestordeos.utils.ClickGuard;
+import valenet.com.br.gestordeos.utils.DateUtils;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -98,15 +99,13 @@ public class OsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         if (o1.getDataAgendamento() == null)
                             date1 = new Date(Long.MAX_VALUE);
                         else {
-                            String dateString = ValenetUtils.convertJsonToStringDate(o1.getDataAgendamento());
-                            date1 = ValenetUtils.convertStringToDate(dateString);
+                            date1 = DateUtils.parseDate(o1.getDataAgendamento());
                         }
 
                         if (o2.getDataAgendamento() == null)
                             date2 = new Date(Long.MAX_VALUE);
                         else {
-                            String dateString = ValenetUtils.convertJsonToStringDate(o2.getDataAgendamento());
-                            date2 = ValenetUtils.convertStringToDate(dateString);
+                            date2 = DateUtils.parseDate(o2.getDataAgendamento());
                         }
 
                         return date1.compareTo(date2);
