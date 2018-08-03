@@ -18,11 +18,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 import valenet.com.br.gestordeos.R;
+import valenet.com.br.gestordeos.main.MainActivity;
 import valenet.com.br.gestordeos.model.entity.os_location_data.OsLocationData;
 import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
-public class LocationService extends Service {
+public class LocationService extends Service implements LocationListener.stopService{
     private static final String TAG = "BOOMBOOMTESTGPS";
     public static LocationManager mLocationManager = null;
     //milliseconds
@@ -30,54 +31,9 @@ public class LocationService extends Service {
     //meters
     public static float LOCATION_DISTANCE = 20;
     public static LocationListener mLocationListerStatic;
-    GestorDeOsApplication application;
-
-    private class LocationListener implements android.location.LocationListener {
-        Location mLastLocation;
-
-        public LocationListener(String provider) {
-            Log.e(TAG, "LocationListener " + provider);
-            mLastLocation = new Location(provider);
-        }
-
-        @Override
-        public void onLocationChanged(Location location) {
-            mLastLocation.set(location);
-            Date currentTime = Calendar.getInstance().getTime();
-            Integer codUser = null;
-            if (LoginLocal.getInstance() != null) {
-                if (LoginLocal.getInstance().getCurrentUser() != null)
-                    codUser = LoginLocal.getInstance().getCurrentUser().getCoduser();
-            }
-
-            if (codUser != null) {
-                Log.e(TAG, "onLocationChanged: " + location + " current time: " + currentTime.toString() + " codUser: " + codUser + " batteryLevel: " + application.batteryLevel
-                        + " imei: " + application.imei);
-                if (OsLocationDataListLocal.getInstance() != null) {
-                    OsLocationDataListLocal.getInstance().addOsLocationdataOnListLocal(new OsLocationData(location.getLatitude(), location.getLongitude(), currentTime,
-                            codUser, application.batteryLevel, application.imei));
-                }
-            }
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {
-            Log.e(TAG, "onProviderDisabled: " + provider);
-        }
-
-        @Override
-        public void onProviderEnabled(String provider) {
-            Log.e(TAG, "onProviderEnabled: " + provider);
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {
-            Log.e(TAG, "onStatusChanged: " + provider);
-        }
-    }
 
     public LocationListener[] mLocationListeners = new LocationListener[]{
-            new LocationListener(LocationManager.GPS_PROVIDER)
+            new LocationListener(LocationManager.GPS_PROVIDER, this)
     };
 
     @Override
@@ -109,6 +65,20 @@ public class LocationService extends Service {
     @Override
     public void onCreate() {
         Log.e(TAG, "onLocation:onCreate");
+        Date initTime;
+        Date endTime;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 8);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        initTime = cal.getTime();
+
+        cal.set(Calendar.HOUR_OF_DAY, 20);
+        endTime = cal.getTime();
+
+        LocationListener.initTime = initTime;
+        LocationListener.endTime = endTime;
         initializeLocationManager();
         try {
             mLocationManager.requestLocationUpdates(
@@ -176,5 +146,11 @@ public class LocationService extends Service {
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
+    }
+
+    @Override
+    public void stopService() {
+        stopForeground(true);
+        stopSelf();
     }
 }

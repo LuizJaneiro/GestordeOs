@@ -51,7 +51,11 @@ import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -70,6 +74,7 @@ import rx.schedulers.Schedulers;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 import valenet.com.br.gestordeos.R;
 import valenet.com.br.gestordeos.application.GestorDeOsApplication;
+import valenet.com.br.gestordeos.application.LocationListener;
 import valenet.com.br.gestordeos.application.LocationService;
 import valenet.com.br.gestordeos.login.LoginActivity;
 import valenet.com.br.gestordeos.model.entity.AppConfig;
@@ -190,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
 
     private boolean showTutorial = false;
     private DownloadManager downloadManager;
+    public static Intent myService = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -730,18 +736,42 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
     public void loadAppConfig(List<AppConfig> appConfigs) {
         for (AppConfig appConfig : appConfigs) {
             if (appConfig.getChave() != null && appConfig.getValor() != null) {
-                String appConfigKey = appConfig.getChave();
-                if (!appConfigKey.equals("APIKey")) {
-                    Integer appConfigValue = Integer.parseInt(appConfig.getValor());
-                    if (appConfigKey.equals("IntervaloMinimoEnvioDePontos")) {
+                Integer appConfigValue;
+                DateFormat sdf = new SimpleDateFormat("hh:mm");
+                Date convertedDate;
+                switch(appConfig.getChave()) {
+                    case "APIKey":
+                        break;
+                    case "IntervaloMinimoEnvioDePontos":
+                        appConfigValue = Integer.parseInt(appConfig.getValor());
                         application.setIntervalSendPoints(appConfigValue);
-                    }
-                    if (appConfigKey.equals("MinDistance")) {
+                        break;
+                    case "MinDistance":
+                        appConfigValue = Integer.parseInt(appConfig.getValor());
                         LocationService.LOCATION_DISTANCE = appConfigValue;
-                    }
-                    if (appConfigKey.equals("MinTime")) {
+                        break;
+                    case "MinTime":
+                        appConfigValue = Integer.parseInt(appConfig.getValor());
                         LocationService.LOCATION_INTERVAL = appConfigValue;
-                    }
+                        break;
+                    case "InicioJornada":
+                        convertedDate = new Date();
+                        try {
+                            convertedDate = sdf.parse(appConfig.getValor());
+                            LocationListener.initTime = convertedDate;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case "FimJornada":
+                        convertedDate = new Date();
+                        try {
+                            convertedDate = sdf.parse(appConfig.getValor());
+                            LocationListener.endTime = convertedDate;
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                 }
             }
         }
@@ -1127,8 +1157,7 @@ public class MainActivity extends AppCompatActivity implements Main.MainView {
                     @Override
                     public Object call(Boolean aBoolean) {
                         if (aBoolean) {
-                            Intent myService = new Intent(getApplicationContext(), LocationService.class);
-
+                            myService = new Intent(getApplicationContext(), LocationService.class);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 application.imei = tm.getImei();
                                 startForegroundService(myService);
