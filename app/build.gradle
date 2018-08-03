@@ -22,8 +22,8 @@ android {
         applicationId "valenet.com.br.gestordeos"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 11
-        versionName "1.7.2.1"
+        versionCode 13
+        versionName "1.7.2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

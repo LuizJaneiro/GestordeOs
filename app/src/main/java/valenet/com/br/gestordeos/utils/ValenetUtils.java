@@ -19,8 +19,6 @@ import valenet.com.br.gestordeos.model.entity.OrdemDeServico;
 
 public class ValenetUtils {
 
-    // homologacao
-    //public static final String BASE_URL = "https://api.valenet.com.br/api/";
     // local
     public static final String BASE_URL = "http://192.168.32.243/";
     //server testes

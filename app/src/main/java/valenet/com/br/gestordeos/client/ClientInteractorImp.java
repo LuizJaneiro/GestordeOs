@@ -89,7 +89,7 @@ public class ClientInteractorImp implements Client.ClientInteractor {
 
     @Override
     public void callPhone(Long nroTecnico, Long nroCliente, final onFinishedListenerCall listener) {
-        application.API_INTERFACE_VALENET_CALL.getLigacao(nroTecnico, nroCliente).enqueue(new Callback<Boolean>() {
+        application.API_INTERFACE_VALENET_CALL.getLigacao(31989339423L, 31994017247L).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
                 if(response.isSuccessful()) {

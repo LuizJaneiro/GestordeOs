@@ -312,7 +312,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         tabLayout.addTab(tabLayout.newTab().setText("Observações"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        if (ordemDeServico.getTelefoneCliente() == null) {
+        if (ordemDeServico.getTelefoneCliente() == null && ordemDeServico.getTelefoneCliente().length() > 0) {
             btnCall.setEnabled(false);
             btnCall.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
             btnCallPesca.setBackgroundTintList(getResources().getColorStateList(R.color.selector_color_btn_call_transparent));
