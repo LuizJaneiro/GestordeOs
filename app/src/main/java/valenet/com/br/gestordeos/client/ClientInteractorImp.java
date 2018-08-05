@@ -24,6 +24,7 @@ public class ClientInteractorImp implements Client.ClientInteractor {
     // region Methods
 
     @Override
+    //Função que realiza o checkin
     public void checkin(final Integer osId, final Integer codUser, final Double latitude, final Double longitude, final onCheckinListener listener) {
         application.API_INTERFACE.putCheckin(osId, codUser, latitude, longitude, null).enqueue(new Callback<Void>() {
             @Override
@@ -47,6 +48,7 @@ public class ClientInteractorImp implements Client.ClientInteractor {
     }
 
     @Override
+    //função que realiza o checkout
     public void checkout(final Integer osId, final Integer codUser, final Double latitude, final Double longitude, final onCheckoutListener listener) {
         application.API_INTERFACE.putCheckout(osId, codUser, latitude, longitude, null).enqueue(new Callback<Void>() {
             @Override
@@ -70,6 +72,7 @@ public class ClientInteractorImp implements Client.ClientInteractor {
     }
 
     @Override
+    //função que realiza a pesca de uma OS
     public void putScheduleFishEvent(Integer agendaEventoId, Integer coduser, final onFinshedListenerScheduleFish listener) {
         application.API_INTERFACE.putAgendaPesca(agendaEventoId, coduser).enqueue(new Callback<Void>() {
             @Override

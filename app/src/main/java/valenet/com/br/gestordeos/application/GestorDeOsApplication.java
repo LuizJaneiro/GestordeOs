@@ -20,6 +20,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -45,11 +46,14 @@ import valenet.com.br.gestordeos.model.service.ApiUtils;
 import valenet.com.br.gestordeos.provider_location.ProviderLocation;
 
 public class GestorDeOsApplication extends android.app.Application {
+    /**
+     * Classe que gerencia tudo que roda em background no app
+     */
 
-    private static final String TAG = "BOOMBOOMTESTGPS";
-    public static final ApiInterface API_INTERFACE = ApiUtils.getService();
-    public static final ApiInterfaceGoogleDistance API_INTERFACE_GOOGLE_DISTANCE = ApiUtils.getServiceGoogleDistance();
-    public static final ApiInterfaceValenetCall API_INTERFACE_VALENET_CALL = ApiUtils.getServiceValenetCall();
+    private static final String TAG = "BOOMBOOMTESTGPS"; //Tag GPS
+    public static final ApiInterface API_INTERFACE = ApiUtils.getService(); //Interface da API2
+    public static final ApiInterfaceGoogleDistance API_INTERFACE_GOOGLE_DISTANCE = ApiUtils.getServiceGoogleDistance(); //Interface da API Google
+    public static final ApiInterfaceValenetCall API_INTERFACE_VALENET_CALL = ApiUtils.getServiceValenetCall(); //Interface da API do telefone
     public static Realm realm;
     public static final Locale myLocale = new Locale("pt", "BR");
     //private static FirebaseAnalytics mFirebaseAnalytics;
@@ -60,6 +64,7 @@ public class GestorDeOsApplication extends android.app.Application {
     public static int batteryLevel = 0;
     public static String imei = "";
     private static Handler handler = new Handler();
+    //Thread que envia os pontos geograficos periodicamente e que checa se existem checkin e checkout para ser enviados
     private static Runnable getResponceAfterInterval = new Runnable() {
 
         public void run() {
@@ -139,13 +144,6 @@ public class GestorDeOsApplication extends android.app.Application {
     };
 
     public static int intervalSendPointsSeconds = 60;
-
-//private String appId = "DIWBEIDNHNWA64DD295FWD293QB3A5NDODOP5WI";
-//producao
-//private String server = "http://audiobookapi.kumon.com.br/use/";
-// homologacao
-//private String server = "http://audiobookapitst.kumon.com.br/use/";
-//private String server = "http://192.168.1.24:1775/use/";
 
 // endregion Members
 
@@ -279,6 +277,7 @@ public class GestorDeOsApplication extends android.app.Application {
 
     }
 
+    //Setter da  thread que envia pontos geograficos e checa se existem checkin e checkout para serem enviados
     public static void setIntervalSendPoints(final Integer intervalSendPointsSecond) {
         intervalSendPointsSeconds = intervalSendPointsSecond;
         getResponceAfterInterval = new Runnable() {

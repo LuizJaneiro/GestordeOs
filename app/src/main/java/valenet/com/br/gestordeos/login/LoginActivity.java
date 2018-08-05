@@ -28,6 +28,9 @@ import valenet.com.br.gestordeos.utils.ClickGuard;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class LoginActivity extends AppCompatActivity implements Login.LoginView {
+    /**
+     * Tela de Login
+     */
 
     @BindView(R.id.edit_text_email)
     EditText editTextEmail;
@@ -172,6 +175,7 @@ public class LoginActivity extends AppCompatActivity implements Login.LoginView 
     }
 
     @Override
+    //Salva os dados de login do usuario no Shared Preferences
     public void saveLoginData(String userName, String password) {
         SharedPreferences sharedPref = this.getSharedPreferences(ValenetUtils.SHARED_PREF_KEY_EMAIL_LOGIN, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();

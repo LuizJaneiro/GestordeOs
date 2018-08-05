@@ -24,6 +24,9 @@ import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 
 public class LocationService extends Service implements LocationListener.stopService{
+    /**
+     * Service que controla como os pontos geográficos vão ser coletados
+     */
     private static final String TAG = "BOOMBOOMTESTGPS";
     public static LocationManager mLocationManager = null;
     //milliseconds

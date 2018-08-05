@@ -26,6 +26,9 @@ import valenet.com.br.gestordeos.model.realm.LoginLocal;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class EndOsActivity extends AppCompatActivity {
+    /**
+     * Tela de encerramento da OS
+     */
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;

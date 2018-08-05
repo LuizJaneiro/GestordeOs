@@ -58,6 +58,9 @@ import valenet.com.br.gestordeos.refuse_os.RefuseOsActivity;
 import valenet.com.br.gestordeos.utils.ValenetUtils;
 
 public class ClientActivity extends AppCompatActivity implements Client.ClientView {
+    /**
+     * Tela de detalhes da OS
+     */
 
     @BindView(R.id.text_view_toolbar_title)
     TextView textViewToolbarTitle;
@@ -135,7 +138,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
         cameFromSchedule = intent.getBooleanExtra(ValenetUtils.KEY_CAME_FROM_SCHEDULE, false);
         cameFromHistory = intent.getBooleanExtra(ValenetUtils.KEY_CAME_FROM_OS_HISTORY, false);
 
-        if (!cameFromHistory) {
+        if (!cameFromHistory) { //verifica se veio da tela de historico
             RxPermissions.getInstance(ClientActivity.this)
                     .request(Manifest.permission.ACCESS_FINE_LOCATION)
                     .map(new Func1<Boolean, Object>() {
@@ -212,20 +215,20 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
                     }).subscribe();
         }
 
-        if (cameFromSchedule || cameFromHistory) {
+        if (cameFromSchedule || cameFromHistory) { //Se vier da agenda renderiza o menu da agenda
             if (layoutButtonsSchedule != null && layoutButtonsFishing != null) {
                 layoutButtonsFishing.setVisibility(View.GONE);
                 layoutButtonsSchedule.setVisibility(View.VISIBLE);
             }
         } else {
-            if (layoutButtonsSchedule != null && layoutButtonsFishing != null) {
+            if (layoutButtonsSchedule != null && layoutButtonsFishing != null) { //se nao renderiza o menu de pesca
                 layoutButtonsSchedule.setVisibility(View.GONE);
                 layoutButtonsFishing.setVisibility(View.VISIBLE);
             }
         }
 
         if (!cameFromHistory) {
-            if (ordemDeServico.getDataCheckin() == null || ordemDeServico.getDataCheckin().length() == 0)
+            if (ordemDeServico.getDataCheckin() == null || ordemDeServico.getDataCheckin().length() == 0) //verifica se a OS ja tem checkin realizado
                 this.showLayoutOsCanCheckin();
             else
                 this.showLayoutOsCheckedIn();
@@ -370,7 +373,7 @@ public class ClientActivity extends AppCompatActivity implements Client.ClientVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ValenetUtils.REQUEST_CODE_CLIENT) {
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) { //Algo foi alterado e a tela da MAIN precisa ser atualizada
                 reloadOs = true;
             }
         }

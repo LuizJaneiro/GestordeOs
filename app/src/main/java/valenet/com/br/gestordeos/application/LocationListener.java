@@ -16,6 +16,9 @@ import valenet.com.br.gestordeos.model.realm.OsLocationDataListLocal;
 import static valenet.com.br.gestordeos.main.MainActivity.myService;
 
 public class LocationListener implements android.location.LocationListener {
+    /**
+     * Listener que escuta o GPS e atualiza os pontos caso necessário
+     */
     private static final String TAG = "BOOMBOOMTESTGPS";
     Location mLastLocation;
     public static Date initTime = null;
@@ -57,6 +60,7 @@ public class LocationListener implements android.location.LocationListener {
             minuteEndtime = Integer.MIN_VALUE;
         }
 
+        //Verifica se está dentro do tempo delimitado via API
         if ((hourInitime == hourCurrentTime && minuteInitTime <= minuteCurrentTime) || (hourEndTime == hourCurrentTime && minuteEndtime >= minuteCurrentTime)
                 || (hourInitime < hourCurrentTime && hourEndTime > hourCurrentTime)) {
             mLastLocation.set(location);
